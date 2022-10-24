@@ -1,0 +1,274 @@
+.root-div {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.root-div > header {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0.25em 0.5em;
+  background-color: rgb(247, 251, 255);
+  width: max(20%, 120px);
+}
+
+.root-div h1 {
+  margin: 0.5em 0;
+}
+
+.root-div h1 > * {
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-bar {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flow-root;
+}
+
+.nav-title {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-bar > form {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.new-project-btn,
+.new-todo-btn {
+  width: 28px;
+  font-weight: 100;
+  aspect-ratio: 1/1;
+  background-color: transparent;
+  border: 0;
+  line-height: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.new-todo-btn {
+  width: 24px;
+}
+
+.nav-bar > ul {
+  min-height: 60vh;
+  max-height: 80%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flow-root;
+}
+
+.nav-bar ul > li {
+  display: block;
+  padding: 0.1em 0.4em;
+  border: 0;
+  border-top: 1px solid black;
+  position: relative;
+  word-wrap: break-word;
+}
+
+.nav-bar ul a {
+  text-decoration: none;
+  width: 100%;
+  text-align: left;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.nav-bar ul > *:last-of-type {
+  border-bottom: 1px solid black;
+}
+/* 
+.nav-bar li:has(.nav-active) {
+  background-color: rgb(71, 71, 243);
+  color: white;
+} */
+
+.user-actions {
+  display: flex;
+  gap: 0.25em;
+  position: absolute;
+  bottom: 2%;
+}
+/* 
+.user-actions > button {
+  outline: none;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 0.25em 0.5em;
+  font-size: 18px;
+  color: #000;
+  background-color: #fff;
+  transition: background-color 200ms linear;
+}
+
+.user-actions > button:hover,
+.user-actions > button:focus {
+  background-color: #0003;
+} */
+
+.root-div > main {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.index {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.new-project {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.np-name {
+  width: 300px;
+  font-size: 30px;
+  outline: none;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+  padding: 0.1em;
+}
+
+.np-desc {
+  width: 400px;
+  max-height: 200px;
+  resize: none;
+}
+
+.new-project > button {
+  padding: 0.25rem 0.5rem;
+}
+
+.project {
+  width: 100%;
+  min-height: 100%;
+  padding: 2rem 1rem;
+  overflow: hidden;
+}
+
+.project-title {
+  margin-bottom: 1rem;
+  border-bottom: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.project-title > form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.project-delete,
+.project-edit,
+.set-fav-btn {
+  width: 25px;
+}
+
+.delete-todo-btn,
+.todo-edit {
+  width: 18px;
+}
+
+.project-delete,
+.delete-todo-btn,
+.project-edit,
+.set-fav-btn,
+.todo-edit {
+  background-color: white;
+  border-radius: 50%;
+  border: 0;
+  margin: 0;
+  aspect-ratio: 1/1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  transition: scale 250ms;
+}
+
+.project-delete:hover,
+.delete-todo-btn:hover,
+.project-edit:hover,
+.set-fav-btn:hover,
+.todo-edit:hover {
+  scale: 1.25;
+}
+
+.project-description {
+  max-width: 75%;
+}
+
+.new-todo > button {
+  padding: 0.25rem 0.5rem;
+  border-radius: 50%;
+  border: 0.5px solid black;
+  margin: 0.5rem 0;
+}
+
+.new-todo-form {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+ul:has(.todo-el) {
+  list-style: none;
+}
+
+li:has(.todo-el) {
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.todo-el {
+  width: max(50%, 200px);
+}
+
+.todo-el > p {
+  line-break: normal;
+  font-size: 15px;
+  margin: 0;
+}
+
+.delete-todo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  translate: -150% 0;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4em;
+}

@@ -1,0 +1,32 @@
+{
+  "name": "todo-app",
+  "homepage": "https://Tobshub.github.io/Tuu-Duu",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ionic/react": "^6.3.2",
+    "bootstrap": "^5.2.2",
+    "ionicons": "^6.0.3",
+    "localforage": "^1.10.0",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.5.0",
+    "react-dom": "^18.2.0",
+    "react-router": "^6.4.2",
+    "react-router-dom": "^6.4.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@vitejs/plugin-react": "^2.1.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.1.0"
+  }
+}
