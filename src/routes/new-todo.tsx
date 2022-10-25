@@ -31,15 +31,12 @@ const NewTodo = () => {
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        onClick={(e) => e.target.select()}
       />
       <textarea
         name="content"
-        type="text"
         placeholder="Todo Content: "
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        onClick={(e) => e.target.select()}
       />
       <div>
         <button
