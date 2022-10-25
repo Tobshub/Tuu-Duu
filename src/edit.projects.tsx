@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Form, redirect, useLoaderData } from "react-router-dom";
 import { editProject, getProject } from "./dummyDB";
-import NewProject from "./routes/new-project";
 import { Projects } from "./types/project";
 
 export async function loader({ params }) {
