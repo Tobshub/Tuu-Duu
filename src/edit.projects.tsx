@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import { Form, redirect, useLoaderData } from "react-router-dom";
 import { editProject, getProject } from "./dummyDB";
 import { Projects } from "./types/project";
@@ -40,7 +40,6 @@ const EditProject = () => {
         name="name"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        onClick={(e) => e.target.select()}
         placeholder="Project Name"
         id="usr"
         className="form-control np-name"
