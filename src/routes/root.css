@@ -64,6 +64,7 @@
 }
 
 .nav-bar > ul {
+  width: 100%;
   min-height: 60vh;
   max-height: 80%;
   overflow-x: hidden;
@@ -82,7 +83,8 @@
 
 .nav-bar ul a {
   text-decoration: none;
-  width: 100%;
+
+  display: block;
   text-align: left;
   font-style: italic;
   font-weight: 600;
@@ -247,7 +249,7 @@ ul:has(.todo-el) {
 }
 
 li:has(.todo-el) {
-  margin-bottom: 1rem;
+  margin: 0.6rem 0;
   position: relative;
 }
 
@@ -261,11 +263,11 @@ li:has(.todo-el) {
   margin: 0;
 }
 
-.delete-todo {
+.todo-actions {
   position: absolute;
   top: 0;
   left: 0;
-  translate: -150% 0;
+  translate: -150% 10%;
   width: fit-content;
   display: flex;
   flex-direction: column;

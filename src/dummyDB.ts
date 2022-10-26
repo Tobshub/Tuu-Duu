@@ -33,7 +33,8 @@ const getProjectIndex = async (id: string, db?: (Projects[] | null)): Promise<nu
   return null;
 }
 
-export const getProject = async (id: string): Promise<Projects | null> => {
+export const getProject = async (id: (string | undefined)): Promise<Projects | null> => {
+  if (!id) return null;
   const projects = await getProjects();
   const index = await getProjectIndex(id, projects);
   const project = (projects && index !== null)? projects[index] : null;
@@ -71,7 +72,8 @@ export const deleteProject = async (id: (string | undefined)) => {
   return switchToProjects;
 }
 
-export const addTodos = async (id: string, data: ToDos) => {
+export const addTodos = async (id: (string | undefined), data: ToDos) => {
+  if (!id) return;
   const projects = await getProjects();
   const index = await getProjectIndex(id, projects);
   if (!projects || !projects.length || index === null) return;
@@ -88,18 +90,27 @@ export const editTodo = async (id: string, key: number, data: ToDos) => {
   const projects = await getProjects();
   const index = await getProjectIndex(id, projects);
   if (!projects || index === null) return;
-  projects[index].ToDos? projects[index].ToDos[key] = data : null;
+  const todos = projects[index].ToDos;
+  todos? todos[key] = data : null;
+  projects[index].ToDos = todos;
   await editProject(projects[index], id);
   return;
 }
 
-export const deleteTodo = async (id: string, key: number) => {
+export const deleteTodo = async (id: (string), key: number) => {
   const projects = await getProjects();
   const index = await getProjectIndex(id, projects);
   if (!projects || index === null) return;
   const todosArr = projects[index].ToDos;
-  todosArr.splice(key, 1);
+  todosArr?.splice(key, 1);
   projects[index].ToDos = todosArr;
   await editProject(projects[index], id);
   return;
+}
+
+export const getTodo = async (id: string, key: number): Promise<ToDos | undefined> =>  {
+  const project = await getProject(id);
+  const todos = project?.ToDos;
+  if (!todos) return;
+  return todos[key];
 }

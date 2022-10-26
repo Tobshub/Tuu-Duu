@@ -5,20 +5,29 @@ import Root, { loader as rootLoader } from "./routes/root";
 import "./main.css";
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 import Index, { loader as indexLoader } from "./routes";
-import NewProject, { action as newProjectAction } from "./routes/new-project";
+import NewProject, {
+  action as newProjectAction,
+} from "./routes/project-routes/new-project";
 import Project, {
   loader as projectLoader,
   action as projectAction,
-} from "./routes/project";
+} from "./routes/project-routes/project";
 import Todos, {
   loader as todosLoader,
   action as todosAction,
-} from "./routes/todo";
-import NewTodo, { action as newTodoAction } from "./routes/new-todo";
+} from "./routes/todo-routes/todo";
+import NewTodo, {
+  action as newTodoAction,
+  loader as newTodoLoader,
+} from "./routes/todo-routes/new-todo";
 import EditProject, {
   loader as editProjectLoader,
   action as editProjectAction,
-} from "./edit.projects";
+} from "./routes/project-routes/edit-projects";
+import EditTodo, {
+  loader as editTodoLoader,
+  action as editTodoAction,
+} from "./routes/todo-routes/edit-todo";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +55,7 @@ const router = createBrowserRouter([
             element: <Project />,
             loader: projectLoader,
             action: projectAction,
+            errorElement: <>Error displaying this :(</>,
             children: [
               {
                 index: true,
@@ -56,8 +66,15 @@ const router = createBrowserRouter([
               {
                 path: "/projects/:projectId/todos/new",
                 element: <NewTodo />,
+                loader: newTodoLoader,
                 action: newTodoAction,
                 errorElement: <>Can't create todos now</>,
+              },
+              {
+                path: "/projects/:projectId/todos/:todoIndex/edit",
+                element: <EditTodo />,
+                loader: editTodoLoader,
+                action: editTodoAction,
               },
             ],
           },
