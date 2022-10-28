@@ -15,9 +15,11 @@ export const action = async ({
   const id = (Math.random() + 1).toString(36).substring(2);
 
   const data: Projects = {
-    name: name.toString(),
+    name: name ? name.toString() : "Untitled",
     description: description.toString(),
     id,
+    favorite: false,
+    tasks: [],
   };
 
   await addProject(data);
@@ -25,8 +27,8 @@ export const action = async ({
 };
 
 const NewProject = () => {
-  const [title, setTitle] = useState("Project Title");
-  const [description, setDesc] = useState("Project Description");
+  const [title, setTitle] = useState("");
+  const [description, setDesc] = useState("");
   const navigate = useNavigate();
 
   return (

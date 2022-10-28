@@ -1,5 +1,8 @@
 ## Features (incoming) :
 
+- tasks that function as a box of todos (basically)
+- hierachy goes as : projects > tasks > todos
+- todo can be added to tasks on the edit task screen
 - Settings page + settings
 - Database + User Auth
 - Log out function

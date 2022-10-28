@@ -1,5 +1,5 @@
 import localforage from "localforage";
-import { Projects, ToDos } from "./types/project";
+import { Projects, Task } from "./types/project";
 
 
 export const addProject = async (project: Projects) => {
@@ -64,53 +64,18 @@ export const deleteProject = async (id: (string | undefined)) => {
   const projects = await getProjects();
   if(!projects || !projects.length) return null;
   const index = await getProjectIndex(id, projects);
-  if(index === null) return null;
+  if(index === null) {
+    console.log('project does not exists in database')
+    return null};
   const removed = (projects && index !== null)? projects.splice(index, 1) : null;
   
   localforage.setItem('projects', projects);
-  const switchToProjects = (index > 0)? projects[index - 1].id : projects[index + 1].id;
-  return switchToProjects;
 }
 
-export const addTodos = async (id: (string | undefined), data: ToDos) => {
-  if (!id) return;
-  const projects = await getProjects();
-  const index = await getProjectIndex(id, projects);
-  if (!projects || !projects.length || index === null) return;
-  if (projects[index].ToDos !== undefined) {
-    projects[index].ToDos?.push(data);
-  } else {
-    projects[index].ToDos = [data];
-  }
-  await editProject(projects[index], id);
-  return;
-}
-
-export const editTodo = async (id: string, key: number, data: ToDos) => {
-  const projects = await getProjects();
-  const index = await getProjectIndex(id, projects);
-  if (!projects || index === null) return;
-  const todos = projects[index].ToDos;
-  todos? todos[key] = data : null;
-  projects[index].ToDos = todos;
-  await editProject(projects[index], id);
-  return;
-}
-
-export const deleteTodo = async (id: (string), key: number) => {
-  const projects = await getProjects();
-  const index = await getProjectIndex(id, projects);
-  if (!projects || index === null) return;
-  const todosArr = projects[index].ToDos;
-  todosArr?.splice(key, 1);
-  projects[index].ToDos = todosArr;
-  await editProject(projects[index], id);
-  return;
-}
-
-export const getTodo = async (id: string, key: number): Promise<ToDos | undefined> =>  {
+export const addTask = async (id: string, task: Task) => {
   const project = await getProject(id);
-  const todos = project?.ToDos;
-  if (!todos) return;
-  return todos[key];
+  project?.tasks?.push(task);
+  if (!project) return;
+  await editProject(project, id);
+  return;
 }

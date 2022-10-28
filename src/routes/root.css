@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: row;
   overflow: hidden;
+  position: relative;
 }
 
 .root-div > header {
@@ -73,7 +74,8 @@
 }
 
 .nav-bar ul > li {
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 0.1em 0.4em;
   border: 0;
   border-top: 1px solid black;
@@ -83,8 +85,7 @@
 
 .nav-bar ul a {
   text-decoration: none;
-
-  display: block;
+  width: 100%;
   text-align: left;
   font-style: italic;
   font-weight: 600;
@@ -130,6 +131,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .index {
@@ -196,16 +198,14 @@
   width: 25px;
 }
 
-.delete-todo-btn,
-.todo-edit {
-  width: 18px;
+.nav .project-delete {
+  width: 16px;
+  background-color: transparent;
 }
 
 .project-delete,
-.delete-todo-btn,
 .project-edit,
-.set-fav-btn,
-.todo-edit {
+.set-fav-btn {
   background-color: white;
   border-radius: 50%;
   border: 0;
@@ -219,58 +219,11 @@
 }
 
 .project-delete:hover,
-.delete-todo-btn:hover,
 .project-edit:hover,
-.set-fav-btn:hover,
-.todo-edit:hover {
+.set-fav-btn:hover {
   scale: 1.25;
 }
 
 .project-description {
   max-width: 75%;
-}
-
-.new-todo > button {
-  padding: 0.25rem 0.5rem;
-  border-radius: 50%;
-  border: 0.5px solid black;
-  margin: 0.5rem 0;
-}
-
-.new-todo-form {
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-ul:has(.todo-el) {
-  list-style: none;
-}
-
-li:has(.todo-el) {
-  margin: 0.6rem 0;
-  position: relative;
-}
-
-.todo-el {
-  width: max(50%, 200px);
-}
-
-.todo-el > p {
-  line-break: normal;
-  font-size: 15px;
-  margin: 0;
-}
-
-.todo-actions {
-  position: absolute;
-  top: 0;
-  left: 0;
-  translate: -150% 10%;
-  width: fit-content;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4em;
 }

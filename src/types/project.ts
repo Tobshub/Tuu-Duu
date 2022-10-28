@@ -3,16 +3,21 @@ export interface Projects {
   description: string,
   id?: string,
   favorite?: boolean,
-  ToDos?: ToDos[],
+  tasks?: Task[],
 }
 
-export interface ToDos {
-  title: string,
+export interface Task {
+  name: string,
+  todos?: ToDo[],
+  status: TaskStatus,
+  deadline?: Date;
+}
+
+export interface ToDo {
   content: string,
-  status: ToDoStatus,
 }
 
-export enum ToDoStatus {
+export enum TaskStatus {
   IDLE = 'idle',
   IN_PROGRESS = 'in progess',
   COMPLETE = 'completed',

@@ -1,7 +1,10 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ReactDOM from "react-dom/client";
-import Root, { loader as rootLoader } from "./routes/root";
+import Root, {
+  loader as rootLoader,
+  action as rootAction,
+} from "./routes/root";
 import "./main.css";
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 import Index, { loader as indexLoader } from "./routes";
@@ -12,28 +15,20 @@ import Project, {
   loader as projectLoader,
   action as projectAction,
 } from "./routes/project-routes/project";
-import Todos, {
-  loader as todosLoader,
-  action as todosAction,
-} from "./routes/todo-routes/todo";
-import NewTodo, {
-  action as newTodoAction,
-  loader as newTodoLoader,
-} from "./routes/todo-routes/new-todo";
 import EditProject, {
   loader as editProjectLoader,
   action as editProjectAction,
 } from "./routes/project-routes/edit-projects";
-import EditTodo, {
-  loader as editTodoLoader,
-  action as editTodoAction,
-} from "./routes/todo-routes/edit-todo";
+import NewTask, {
+  action as newTaskAction,
+} from "./routes/task-routes/new-task";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
     loader: rootLoader,
+    action: rootAction,
     errorElement: <>404 Not found</>,
     children: [
       {
@@ -51,6 +46,12 @@ const router = createBrowserRouter([
             action: newProjectAction,
           },
           {
+            path: "/projects/:projectId/edit",
+            element: <EditProject />,
+            loader: editProjectLoader,
+            action: editProjectAction,
+          },
+          {
             path: "/projects/:projectId",
             element: <Project />,
             loader: projectLoader,
@@ -58,31 +59,15 @@ const router = createBrowserRouter([
             errorElement: <>Error displaying this :(</>,
             children: [
               {
-                index: true,
-                element: <Todos />,
-                loader: todosLoader,
-                action: todosAction,
+                path: "/projects/:projectId/tasks/new",
+                element: <NewTask />,
+                action: newTaskAction,
               },
               {
-                path: "/projects/:projectId/todos/new",
-                element: <NewTodo />,
-                loader: newTodoLoader,
-                action: newTodoAction,
-                errorElement: <>Can't create todos now</>,
-              },
-              {
-                path: "/projects/:projectId/todos/:todoIndex/edit",
-                element: <EditTodo />,
-                loader: editTodoLoader,
-                action: editTodoAction,
+                path: "/projects/:projectId/tasks/edit",
+                element: <>Edit task or add Todos</>,
               },
             ],
-          },
-          {
-            path: "/projects/:projectId/edit",
-            element: <EditProject />,
-            loader: editProjectLoader,
-            action: editProjectAction,
           },
         ],
       },

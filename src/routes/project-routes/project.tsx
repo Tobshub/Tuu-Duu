@@ -12,12 +12,14 @@ import {
   getProject,
   setFavorite,
 } from "../../dummyDB";
-import { Projects, ToDos } from "../../types/project";
-import EditSVG from "../../assets/Edit.svg";
-import DeleteSVG from "../../assets/Delete.svg";
-import FavSVG from "../../assets/Star_filled.svg";
-import UnFavSVG from "../../assets/Star_blank.svg";
+import { Projects, Task } from "../../types/project";
+import EditSVG from "../../images/Edit.svg";
+import DeleteSVG from "../../images/Delete.svg";
+import FavSVG from "../../images/Star_filled.svg";
+import UnFavSVG from "../../images/Star_blank.svg";
 import { useState } from "react";
+import ADDsvg from "../../images/Add.svg";
+import "../task-routes/tasks.css";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
@@ -44,6 +46,10 @@ export const action = async ({
     return redirect(`/projects/${id}`);
   } else if (formData.edit) {
     return redirect(`/projects/${id}/edit`);
+  } else if (formData.new) {
+    return redirect(`/projects/${id}/tasks/new`);
+  } else if (formData.editTask) {
+    return redirect(`/projects/${id}/tasks/edit`);
   }
 };
 
@@ -84,11 +90,50 @@ const Project = () => {
         Description:
         <br /> {project.description}
       </p>
-      <div className="project-todos">
-        <Outlet />
+      <div className="project-tasks">
+        <Tasks tasks={project.tasks} />
       </div>
+      <Outlet />
     </div>
   );
 };
 
 export default Project;
+
+const Tasks = ({ tasks }: { tasks: Task[] | undefined }) => {
+  return (
+    <div>
+      <Form method="post">
+        <button type="submit" name="new" value={1} className="new-task-btn">
+          <img src={ADDsvg} />
+        </button>
+      </Form>
+      <div>
+        {tasks && tasks.length ? (
+          tasks.map((task, key) => (
+            <div key={key}>
+              <h2>{task.name}</h2>
+              <div>{task.deadline?.toDateString()}</div>
+              <ul>
+                {task.todos && task.todos.length ? (
+                  task.todos.map((todo, key) => (
+                    <li key={key}>{todo.content}</li>
+                  ))
+                ) : (
+                  <em>No todos yet.</em>
+                )}
+                <Form method="post">
+                  <button type="submit" name="editTask" value={1}>
+                    edit task(pen goes here)
+                  </button>
+                </Form>
+              </ul>
+            </div>
+          ))
+        ) : (
+          <em>No tasks for this project.</em>
+        )}
+      </div>
+    </div>
+  );
+};
