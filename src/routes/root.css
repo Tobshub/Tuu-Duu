@@ -13,7 +13,7 @@
   justify-content: flex-start;
   align-items: flex-start;
   padding: 0.25em 0.5em;
-  background-color: rgb(247, 251, 255);
+  background-color: #080400;
   width: max(20%, 120px);
 }
 
@@ -73,12 +73,12 @@
   display: flow-root;
 }
 
-.nav-bar ul > li {
+.nav-bar ul li {
   display: flex;
   align-items: center;
   padding: 0.1em 0.4em;
   border: 0;
-  border-top: 1px solid black;
+  border-top: 1px solid #fff;
   position: relative;
   word-wrap: break-word;
 }
@@ -89,10 +89,11 @@
   text-align: left;
   font-style: italic;
   font-weight: 600;
+  color: #fff;
 }
 
-.nav-bar ul > *:last-of-type {
-  border-bottom: 1px solid black;
+.nav-bar ul li:last-of-type {
+  border-bottom: 1px solid #fff;
 }
 /* 
 .nav-bar li:has(.nav-active) {
@@ -150,14 +151,13 @@
 }
 
 .np-name {
-  width: 300px;
   font-size: 30px;
   outline: none;
   border: 0;
-  border-radius: 0;
-  border-bottom: 1px solid black;
-  border-left: 1px solid black;
-  padding: 0.1em;
+  border-radius: 10px;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #fff;
+  padding: 0.2em 0.4em;
 }
 
 .np-desc {
@@ -179,7 +179,7 @@
 
 .project-title {
   margin-bottom: 1rem;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -206,7 +206,7 @@
 .project-delete,
 .project-edit,
 .set-fav-btn {
-  background-color: white;
+  background-color: transparent;
   border-radius: 50%;
   border: 0;
   margin: 0;
@@ -226,4 +226,8 @@
 
 .project-description {
   max-width: 75%;
+}
+
+.task-container {
+  width: 100%;
 }

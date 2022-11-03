@@ -13,6 +13,7 @@ import { getProjects, deleteProject } from "../dummyDB";
 import { Projects } from "../types/project";
 import AddSVG from "../images/Add.svg";
 import DeleteSVG from "../images/Delete.svg";
+import { Nav } from "react-bootstrap";
 
 export async function loader() {
   const projects = await getProjects();
@@ -34,6 +35,7 @@ export async function action({ request }: { request: Request }) {
 
 const Root = () => {
   const { projects }: { projects: Projects[] } = useLoaderData();
+  const [isLogin, setLogin] = useState(false);
 
   return (
     <div className="root-div">
@@ -58,26 +60,7 @@ const Root = () => {
           <ul className="nav navbar-nav nav-bar">
             {projects && projects.length ? (
               projects.map((project: Projects, key: number) => (
-                <li key={key}>
-                  <NavLink
-                    to={`projects/${project.id}`}
-                    className={({ isActive }) =>
-                      isActive ? "btn btn-primary" : "btn"
-                    }
-                  >
-                    {project.name}
-                  </NavLink>
-                  <Form method="post">
-                    <button
-                      type="submit"
-                      className="project-delete"
-                      name="delete"
-                      value={project.id}
-                    >
-                      <img src={DeleteSVG} alt="delete project" />
-                    </button>
-                  </Form>
-                </li>
+                <NavItem project={project} index={key} key={key} />
               ))
             ) : (
               <em>No projects yet.</em>
@@ -86,7 +69,11 @@ const Root = () => {
         </nav>
         <div className="user-actions">
           <button className="btn btn-primary">Settings</button>
-          <button className="btn btn-danger">Logout</button>
+          <Form action="/login">
+            <button className="btn btn-danger">
+              {isLogin ? "Logout" : "Login"}
+            </button>
+          </Form>
         </div>
       </header>
       <main>
@@ -97,3 +84,33 @@ const Root = () => {
 };
 
 export default Root;
+
+const NavItem = ({ project, index }: { project: Projects; index: number }) => {
+  const [magicStyle, setMagicStyle] = useState("");
+  return (
+    <li key={index} className={magicStyle}>
+      <NavLink
+        to={`projects/${project.id}`}
+        className={({ isActive }) => (isActive ? "btn btn-primary" : "btn")}
+      >
+        {project.name}
+      </NavLink>
+      <Form method="post">
+        <button
+          type="submit"
+          className="project-delete"
+          name="delete"
+          value={project.id}
+          onClick={() => {
+            setMagicStyle("magictime holeOut");
+            setTimeout(() => {
+              setMagicStyle("magictime");
+            }, 250);
+          }}
+        >
+          <img src={DeleteSVG} alt="delete project" />
+        </button>
+      </Form>
+    </li>
+  );
+};

@@ -22,6 +22,12 @@ import EditProject, {
 import NewTask, {
   action as newTaskAction,
 } from "./routes/task-routes/new-task";
+import EditTask, {
+  loader as editTaskLoader,
+  action as editTaskAction,
+} from "./routes/task-routes/edit-task";
+import Login from "./routes/login-routes/login";
+import "./routes/login-routes/login.css";
 
 const router = createBrowserRouter([
   {
@@ -64,14 +70,20 @@ const router = createBrowserRouter([
                 action: newTaskAction,
               },
               {
-                path: "/projects/:projectId/tasks/edit",
-                element: <>Edit task or add Todos</>,
+                path: "/projects/:projectId/tasks/:taskIndex/edit",
+                element: <EditTask />,
+                loader: editTaskLoader,
+                action: editTaskAction,
               },
             ],
           },
         ],
       },
     ],
+  },
+  {
+    path: "/login",
+    element: <Login />,
   },
 ]);
 

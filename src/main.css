@@ -20,7 +20,8 @@ body {
 
 body {
   overflow: hidden;
-  background-color: #fcfcfc;
+  background-color: #0c0c0c;
+  color: #fcfcfc;
 }
 
 * {

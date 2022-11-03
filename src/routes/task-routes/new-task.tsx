@@ -27,30 +27,47 @@ export async function action({
 
 const NewTask = () => {
   const [name, setName] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [invalidDate, setInvalidDate] = useState(false);
+  const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const navigate = useNavigate();
   return (
     <div className="new-task">
-      <Form method="post">
+      <Form method="post" className={magicStyle}>
         <label htmlFor="name">Task Name:</label>
         <input
           name="name"
           value={name}
           id="name"
           className="form-control"
+          autoComplete="off"
           onChange={(e) => setName(e.target.value)}
         />
         <label htmlFor="deadline">Task Deadline:</label>
         <input
           id="deadline"
           name="deadline"
+          value={deadline}
+          onChange={(e) => {
+            setDeadline(e.target.value);
+          }}
           className="form-control"
           type="date"
         />
+        {invalidDate && <span>Invalid deadline</span>}
         <button
           type="submit"
           className="btn btn-success btn-sm"
           name="add"
           value={1}
+          onClick={(e) => {
+            if (!validDate(new Date(deadline))) {
+              e.preventDefault();
+              setInvalidDate(true);
+              return;
+            }
+            setMagicStyle("magictime holeOut");
+          }}
         >
           Add
         </button>
@@ -60,7 +77,10 @@ const NewTask = () => {
           name="cancel"
           value={1}
           onClick={() => {
-            return navigate(-1);
+            setMagicStyle("magictime holeOut");
+            setTimeout(() => {
+              navigate(-1);
+            }, 200);
           }}
         >
           Cancel
@@ -71,3 +91,12 @@ const NewTask = () => {
 };
 
 export default NewTask;
+
+export function validDate(date: Date) {
+  date.setHours(new Date().getHours() + 1);
+  if (date.getTime() < new Date().getTime()) {
+    return false;
+  } else {
+    return true;
+  }
+}

@@ -1,5 +1,5 @@
 import localforage from "localforage";
-import { Projects, Task } from "./types/project";
+import { Projects, Task, ToDo } from "./types/project";
 
 
 export const addProject = async (project: Projects) => {
@@ -18,6 +18,7 @@ export const addProject = async (project: Projects) => {
 
 export const getProjects = async (): Promise<Projects[] | null> => {
   let projects: (Projects[] | null) = await localforage.getItem('projects');
+  const delay = setTimeout(()=>{}, 200);
   return projects;
 }
 
@@ -77,5 +78,37 @@ export const addTask = async (id: string, task: Task) => {
   project?.tasks?.push(task);
   if (!project) return;
   await editProject(project, id);
+  return;
+}
+
+export const getTask = async (id: string, index: number) => {
+  const project = await getProject(id);
+  const task = project?.tasks? project.tasks[index] : null;
+  return task;
+}
+
+export const editTask = async (id: string, index: number, data: Task) => {
+  const project = await getProject(id);
+  if (!project) return;
+  project.tasks? project.tasks[index] = data : null;
+  await editProject(project, id);
+  return;
+}
+
+export const deleteTask = async (id: string, index: number) => {
+  const project = await getProject(id);
+  if (!project) return;
+  const taskList = project.tasks;
+  if (!taskList) return;
+  taskList.splice(index, 1);
+  project.tasks = taskList;
+  await editProject(project, id);
+}
+
+export const addTodo = async (id: string, index: number, todo: ToDo) => {
+  const task = await getTask(id, index);
+  if (!task) return;
+  task.todos? task.todos.push(todo) : task.todos = [todo];
+  await editTask(id, index, task);
   return;
 }
