@@ -76,8 +76,8 @@ const EditTask = () => {
             setInvalidDate(false);
           }}
         />
-        {invalidDate && <span>Invalid Date</span>}
-        <div>
+        {invalidDate && <span className="invalid-date">Invalid Date</span>}
+        <div className="display-todos">
           {task.todos && task.todos.length ? (
             task.todos.map((todo, key) => (
               <input value={todo.content} key={key} disabled />
@@ -86,19 +86,32 @@ const EditTask = () => {
             <em>No todos for this task</em>
           )}
         </div>
-        <label htmlFor="new-todo">Add a todo</label> <br />
-        <input
-          name="newTodo"
-          value={todo}
-          id="new-todo"
-          onChange={(e) => {
-            const { value } = e.target;
-            setTodo(value);
-          }}
-        />
-        <button type="submit" className="new-todo-btn" name="addTodo" value={1}>
-          <img src={AddSVG} />
-        </button>
+        <div className="input-group">
+          <input
+            name="newTodo"
+            value={todo}
+            id="new-todo"
+            className="form-control"
+            placeholder="New todo"
+            onChange={(e) => {
+              const { value } = e.target;
+              setTodo(value);
+            }}
+          />
+          <div className="input-group-btn">
+            <button
+              type="submit"
+              className="new-todo-btn"
+              name="addTodo"
+              value={1}
+              onClick={() => {
+                setTimeout(() => setTodo(""), 100);
+              }}
+            >
+              <img src={AddSVG} />
+            </button>
+          </div>
+        </div>
         <button
           type="submit"
           className="btn btn-success"

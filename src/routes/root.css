@@ -83,6 +83,16 @@
   word-wrap: break-word;
 }
 
+.nav-bar ul li .dropdown-toggle {
+  width: 20px;
+  position: absolute;
+  right: 10px;
+  z-index: 100;
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
 .nav-bar ul a {
   text-decoration: none;
   width: 100%;
@@ -100,6 +110,22 @@
   background-color: rgb(71, 71, 243);
   color: white;
 } */
+
+.nav-dropdown {
+  position: absolute;
+  right: 0;
+  top: 80%;
+  z-index: 200;
+  background-color: #080400aa;
+  width: fit-content;
+  padding: 0.5rem;
+  border-radius: 5px;
+  /* color: #000; */
+  font-size: 15px;
+  display: flex;
+  /* flex-direction: column; */
+  gap: 0.5em;
+}
 
 .user-actions {
   display: flex;

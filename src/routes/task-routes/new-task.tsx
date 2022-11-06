@@ -50,11 +50,12 @@ const NewTask = () => {
           value={deadline}
           onChange={(e) => {
             setDeadline(e.target.value);
+            setInvalidDate(false);
           }}
           className="form-control"
           type="date"
         />
-        {invalidDate && <span>Invalid deadline</span>}
+        {invalidDate && <span className="invalid-date">Invalid deadline</span>}
         <button
           type="submit"
           className="btn btn-success btn-sm"

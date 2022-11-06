@@ -31,6 +31,8 @@ form:has(.new-task-btn) {
   border-radius: 50%;
   width: 24px;
   background-color: transparent;
+  display: grid;
+  place-items: center;
 }
 
 .new-task,
@@ -82,6 +84,11 @@ form:has(.new-task-btn) {
   width: 500px;
 }
 
+.invalid-date {
+  font-size: 15px;
+  color: red;
+}
+
 .todos {
   padding: 0;
   list-style: none;
@@ -92,4 +99,16 @@ form:has(.new-task-btn) {
 
 .todos > li {
   border: 1px solid black;
+}
+
+.display-todos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.input-group-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

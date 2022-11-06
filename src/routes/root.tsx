@@ -9,10 +9,11 @@ import {
   redirect,
   useLoaderData,
 } from "react-router-dom";
-import { getProjects, deleteProject } from "../dummyDB";
+import { getProjects, deleteProject, getProject } from "../dummyDB";
 import { Projects } from "../types/project";
 import AddSVG from "../images/Add.svg";
 import DeleteSVG from "../images/Delete.svg";
+import InlineMenuSVG from "../images/inline-menu.svg";
 import { Nav } from "react-bootstrap";
 
 export async function loader() {
@@ -69,7 +70,7 @@ const Root = () => {
         </nav>
         <div className="user-actions">
           <button className="btn btn-primary">Settings</button>
-          <Form action="/login">
+          <Form action="/login?new=false&hasProjects=true">
             <button className="btn btn-danger">
               {isLogin ? "Logout" : "Login"}
             </button>
@@ -87,6 +88,8 @@ export default Root;
 
 const NavItem = ({ project, index }: { project: Projects; index: number }) => {
   const [magicStyle, setMagicStyle] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
+
   return (
     <li key={index} className={magicStyle}>
       <NavLink
@@ -95,7 +98,19 @@ const NavItem = ({ project, index }: { project: Projects; index: number }) => {
       >
         {project.name}
       </NavLink>
-      <Form method="post">
+      <button
+        onClick={() => setShowMenu(!showMenu)}
+        onBlur={() => {
+          setTimeout(() => setShowMenu(false), 100);
+        }}
+        className="dropdown-toggle"
+        data-toggle="dropdown"
+      >
+        <img src={InlineMenuSVG} alt="inline menu" />
+      </button>
+
+      {showMenu && <Menu project={project} />}
+      {/* <Form method="post">
         <button
           type="submit"
           className="project-delete"
@@ -110,7 +125,28 @@ const NavItem = ({ project, index }: { project: Projects; index: number }) => {
         >
           <img src={DeleteSVG} alt="delete project" />
         </button>
-      </Form>
+      </Form> */}
     </li>
+  );
+};
+
+const Menu = ({ project }: { project: Projects }) => {
+  return (
+    <div className="nav-dropdown dropdown magictime swashIn">
+      <Form action={`projects/${project.id}/edit`}>
+        <button className="btn btn-warning btn-sm" type="submit">
+          Edit
+        </button>
+      </Form>
+      <Form method="post">
+        <button
+          className="btn btn-danger btn-sm"
+          name="delete"
+          value={project.id}
+        >
+          Delete
+        </button>
+      </Form>
+    </div>
   );
 };

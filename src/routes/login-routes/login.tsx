@@ -1,22 +1,39 @@
 import { useState } from "react";
-import { Form } from "react-router-dom";
+import { Form, Params } from "react-router-dom";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [isLogin, setIsLogin] = useState(true);
   return (
     <div className="login-form-container">
       <Form>
+        {!isLogin && (
+          <label>
+            Username:
+            <input
+              type="text"
+              placeholder="JoeStar"
+              name="username"
+              className="form-control"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
+            />
+          </label>
+        )}
         <label>
-          Username:
+          Email:
           <input
             type="text"
-            placeholder="username"
-            name="username"
+            placeholder="joe@example.com"
+            name="email"
             className="form-control"
-            value={username}
+            value={email}
             onChange={(e) => {
-              setUsername(e.target.value);
+              setEmail(e.target.value);
             }}
           />
         </label>
@@ -24,7 +41,7 @@ const Login = () => {
           Password:
           <input
             type="password"
-            placeholder="password"
+            placeholder="joe is awesome 123"
             name="password"
             className="form-control"
             value={password}
@@ -33,13 +50,31 @@ const Login = () => {
             }}
           />
         </label>
-        <button type="submit" name="login" className="btn btn-primary">
-          Login
+        <button
+          type="submit"
+          name={isLogin ? "login" : "signIn"}
+          className="btn btn-primary"
+          onClick={(e) => {
+            let valid = isLogin
+              ? checkFilled(email, password)
+              : checkFilled(username, password, email);
+            if (!valid) {
+              e.preventDefault();
+            }
+          }}
+        >
+          {isLogin ? "Login" : "Sign Up"}
         </button>
         <label>
-          New user?
-          <button type="submit" name="switch" className="btn btn-link btn-sm">
-            Sign up
+          {isLogin ? "New user" : "Already have an account"}?
+          <button
+            type="button"
+            className="btn btn-link btn-sm"
+            onClick={() => {
+              setIsLogin(!isLogin);
+            }}
+          >
+            {isLogin ? "Sign in" : "Login"}
           </button>
         </label>
       </Form>
@@ -48,3 +83,7 @@ const Login = () => {
 };
 
 export default Login;
+
+function checkFilled(...args: string[]) {
+  return args.every((value) => value.length > 0);
+}
