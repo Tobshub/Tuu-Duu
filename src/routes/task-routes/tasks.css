@@ -1,16 +1,17 @@
 .project-tasks {
   max-width: 100%;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 0.5rem 1.5rem;
 }
 
 .task-card {
   border: 1px solid #fff;
   border-radius: 10px;
-  width: 350px;
+  max-width: 300px;
   height: fit-content;
   padding: 0.5rem 1rem;
+  background-color: #deb8871a;
 }
 
 .task-actions {
@@ -98,7 +99,9 @@ form:has(.new-task-btn) {
 }
 
 .todos > li {
-  border: 1px solid black;
+  border: 1px solid white;
+  padding: 0.5rem;
+  border-radius: 5px;
 }
 
 .display-todos {

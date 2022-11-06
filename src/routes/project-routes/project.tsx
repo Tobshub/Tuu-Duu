@@ -19,7 +19,7 @@ import DeleteSVG from "../../images/Delete.svg";
 import FavSVG from "../../images/Star_filled.svg";
 import UnFavSVG from "../../images/Star_blank.svg";
 import AddSVG from "../../images/Add.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../task-routes/tasks.css";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
@@ -128,10 +128,11 @@ const Tasks = ({ tasks }: { tasks: Task[] | undefined }) => {
 
 const TaskCard = ({ task, index }: { task: Task; index: number }) => {
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
+
   return (
     <div className={"task-card" + " " + magicStyle} key={index}>
       <h2>{task.name}</h2>
-      <div>{task.deadline?.toDateString()}</div>
+      <div>{task.deadline?.toLocaleString()}</div>
       <ul className="todos">
         {task.todos && task.todos.length ? (
           task.todos.map((todo, key) => <li key={key}>{todo.content}</li>)

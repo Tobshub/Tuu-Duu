@@ -53,7 +53,7 @@ const NewTask = () => {
             setInvalidDate(false);
           }}
           className="form-control"
-          type="date"
+          type="datetime-local"
         />
         {invalidDate && <span className="invalid-date">Invalid deadline</span>}
         <button
@@ -94,7 +94,6 @@ const NewTask = () => {
 export default NewTask;
 
 export function validDate(date: Date) {
-  date.setHours(new Date().getHours() + 1);
   if (date.getTime() < new Date().getTime()) {
     return false;
   } else {

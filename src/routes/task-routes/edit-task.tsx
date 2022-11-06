@@ -51,7 +51,9 @@ const EditTask = () => {
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const navigate = useNavigate();
   const [todo, setTodo] = useState("");
-
+  useEffect(() => {
+    console.log(deadline?.toISOString());
+  }, []);
   return (
     <div className="edit-task">
       <Form method="post" className={magicStyle}>
@@ -66,10 +68,10 @@ const EditTask = () => {
         />
         <label htmlFor="deadline">Deadline:</label>
         <input
-          type="date"
+          type="datetime-local"
           id="deadline"
           name="deadline"
-          value={deadline?.toISOString().slice(0, 10)}
+          value={deadline?.toISOString().slice(0, -5)}
           onChange={(e) => {
             const { value } = e.target;
             setDeadline(new Date(value));
