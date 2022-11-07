@@ -198,9 +198,8 @@
 
 .project {
   width: 100%;
-  min-height: 100%;
+  height: 100%;
   padding: 2rem 1rem;
-  overflow: hidden;
 }
 
 .project-title {
@@ -250,10 +249,17 @@
   scale: 1.25;
 }
 
+.set-fav-btn:active,
+.project-delete:active,
+.project-edit:active {
+  scale: 0.9;
+}
+
 .project-description {
   max-width: 75%;
 }
 
 .task-container {
+  height: 100%;
   width: 100%;
 }

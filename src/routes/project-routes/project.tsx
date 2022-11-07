@@ -21,6 +21,7 @@ import UnFavSVG from "../../images/Star_blank.svg";
 import AddSVG from "../../images/Add.svg";
 import { useEffect, useState } from "react";
 import "../task-routes/tasks.css";
+import { parse } from "node:path/win32";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
@@ -92,10 +93,14 @@ const Project = () => {
         </Form>
       </div>
       <p className="project-description">
-        Description:
-        <br /> {project.description}
+        {project.description && (
+          <>
+            Description: <br />
+            {project.description}
+          </>
+        )}
       </p>
-      <div className="task-container">
+      <div>
         <Tasks tasks={project.tasks} />
       </div>
       <Outlet />
@@ -109,7 +114,13 @@ const Tasks = ({ tasks }: { tasks: Task[] | undefined }) => {
   return (
     <div className="task-container">
       <Form method="post">
-        <button type="submit" name="new" value={1} className="new-task-btn">
+        <button
+          type="submit"
+          name="new"
+          value={1}
+          className="new-task-btn"
+          title="Add a task"
+        >
           <img src={AddSVG} />
         </button>
       </Form>
@@ -128,9 +139,22 @@ const Tasks = ({ tasks }: { tasks: Task[] | undefined }) => {
 
 const TaskCard = ({ task, index }: { task: Task; index: number }) => {
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
+  const [gridRow, setGridRow] = useState("");
+  useEffect(() => {
+    const this_card = document.querySelectorAll(".task-card")[index];
+    const height = parseInt(getComputedStyle(this_card).height);
+    const span_ratio = parseInt((height / 100).toString());
+    setGridRow(`span ${span_ratio > 2 ? span_ratio - 1 : span_ratio}`);
+  }, [task, index]);
 
   return (
-    <div className={"task-card" + " " + magicStyle} key={index}>
+    <div
+      className={`task-card ${magicStyle}`}
+      key={index}
+      style={{
+        gridRow: gridRow,
+      }}
+    >
       <h2>{task.name}</h2>
       <div>{task.deadline?.toLocaleString()}</div>
       <ul className="todos">
