@@ -21,11 +21,12 @@ import UnFavSVG from "../../images/Star_blank.svg";
 import AddSVG from "../../images/Add.svg";
 import React, { useEffect, useState } from "react";
 import "../task-routes/tasks.css";
-import { parse } from "node:path/win32";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
   const project = await getProject(id);
+  if (!project)
+    throw new Error("Invalid project-ID or problem while retrieving Project");
   return { project };
 };
 

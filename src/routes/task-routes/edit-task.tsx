@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Form, Params, To, useLoaderData, useNavigate } from "react-router-dom";
+import {
+  Form,
+  Params,
+  redirect,
+  To,
+  useLoaderData,
+  useNavigate,
+} from "react-router-dom";
 import { addTodo, editTask, getTask } from "../../dummyDB";
 import { Task, ToDo } from "../../types/project";
 import AddSVG from "../../images/Add_black.svg";
@@ -10,6 +17,7 @@ export async function loader({ params }: { params: Params<string> }) {
   if (!id || !index) return;
 
   const task = await getTask(id, parseInt(index));
+  if (!task) return redirect(`/projects/${id}/`);
   return { task };
 }
 

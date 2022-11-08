@@ -13,6 +13,8 @@ import { Projects } from "../../types/project";
 export async function loader({ params }: { params: Params<string> }) {
   const id = params.projectId;
   const project = await getProject(id);
+  if (!project)
+    throw new Error("Invalid project-ID or problem while retrieving Project");
   return project;
 }
 

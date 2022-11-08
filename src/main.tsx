@@ -28,6 +28,8 @@ import EditTask, {
 } from "./routes/task-routes/edit-task";
 import Login from "./routes/login-routes/login";
 import "./routes/login-routes/login.css";
+import RootErrorElement from "./routes/root-error";
+import ProjectErrorElement from "./routes/project-routes/project-error";
 
 const router = createBrowserRouter([
   {
@@ -35,7 +37,7 @@ const router = createBrowserRouter([
     element: <Root />,
     loader: rootLoader,
     action: rootAction,
-    errorElement: <>404 Not found</>,
+    errorElement: <RootErrorElement />,
     children: [
       {
         index: true,
@@ -56,13 +58,14 @@ const router = createBrowserRouter([
             element: <EditProject />,
             loader: editProjectLoader,
             action: editProjectAction,
+            errorElement: <ProjectErrorElement />,
           },
           {
             path: "/projects/:projectId",
             element: <Project />,
             loader: projectLoader,
             action: projectAction,
-            errorElement: <>Error displaying this :(</>,
+            errorElement: <ProjectErrorElement />,
             children: [
               {
                 path: "/projects/:projectId/tasks/new",
