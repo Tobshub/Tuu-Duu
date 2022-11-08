@@ -51,9 +51,7 @@ const EditTask = () => {
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const navigate = useNavigate();
   const [todo, setTodo] = useState("");
-  useEffect(() => {
-    console.log(deadline?.toISOString());
-  }, []);
+
   return (
     <div className="edit-task">
       <Form method="post" className={magicStyle}>

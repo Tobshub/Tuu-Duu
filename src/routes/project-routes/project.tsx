@@ -40,16 +40,22 @@ export const action = async ({
   const formData = Object.fromEntries(res);
   const id = params.projectId;
   if (!id) return;
-  if (formData.delete) {
-    await deleteProject(id);
-    return redirect("/");
-  } else if (formData.fav) {
-    await setFavorite(id);
-    return redirect(`/projects/${id}`);
-  } else if (formData.edit) {
-    return redirect(`/projects/${id}/edit`);
-  } else if (formData.new) {
-    return redirect(`/projects/${id}/tasks/new`);
+  if (formData.action) {
+    switch (formData.action) {
+      case "toggle favorite":
+        await setFavorite(id);
+        break;
+      case "edit project":
+        return redirect(`/projects/${id}/edit`);
+      case "delete project":
+        await deleteProject(id);
+        return redirect("/");
+      case "new task":
+        return redirect(`/projects/${id}/tasks/new`);
+      default:
+        console.log("no action set for that");
+        break;
+    }
   } else if (formData.editTask) {
     const key = formData.editTask;
     return redirect(`/projects/${id}/tasks/${key}/edit`);
@@ -70,8 +76,9 @@ const Project = () => {
         <Form method="post">
           <button
             type="submit"
-            name="fav"
-            value={1}
+            title="mark as favorite"
+            name="action"
+            value="toggle favorite"
             className="set-fav-btn"
             onClick={() => {
               setFav(!isFav);
@@ -79,13 +86,20 @@ const Project = () => {
           >
             <img src={isFav ? FavSVG : UnFavSVG} />
           </button>
-          <button type="submit" name="edit" value={1} className="project-edit">
+          <button
+            type="submit"
+            name="action"
+            value="edit project"
+            title="Change title or description"
+            className="project-edit"
+          >
             <img src={EditSVG} />
           </button>
           <button
             type="submit"
-            name="delete"
-            value={1}
+            name="action"
+            value="delete project"
+            title="Delete this project"
             className="project-delete"
           >
             <img src={DeleteSVG} />
@@ -116,8 +130,8 @@ const Tasks = ({ tasks }: { tasks: Task[] | undefined }) => {
       <Form method="post">
         <button
           type="submit"
-          name="new"
-          value={1}
+          name="action"
+          value="new task"
           className="new-task-btn"
           title="Add a task"
         >
