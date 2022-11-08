@@ -19,7 +19,7 @@ import DeleteSVG from "../../images/Delete.svg";
 import FavSVG from "../../images/Star_filled.svg";
 import UnFavSVG from "../../images/Star_blank.svg";
 import AddSVG from "../../images/Add.svg";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../task-routes/tasks.css";
 import { parse } from "node:path/win32";
 
