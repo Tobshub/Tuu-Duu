@@ -5,6 +5,7 @@ import {
   Form,
   useNavigate,
   Params,
+  useActionData,
 } from "react-router-dom";
 import {
   deleteProject,
@@ -13,7 +14,7 @@ import {
   getProject,
   setFavorite,
 } from "../../dummyDB";
-import { Projects, Task } from "../../types/project";
+import { Projects, Task, Todo } from "../../types/project";
 import EditSVG from "../../images/Edit.svg";
 import DeleteSVG from "../../images/Delete.svg";
 import FavSVG from "../../images/Star_filled.svg";
@@ -21,6 +22,8 @@ import UnFavSVG from "../../images/Star_blank.svg";
 import AddSVG from "../../images/Add.svg";
 import React, { useEffect, useState } from "react";
 import "../task-routes/tasks.css";
+import ActionNotifcation from "../app-notifications/action-notifcation";
+import { NotificationArgs } from "../app-notifications/notification";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
@@ -62,13 +65,32 @@ export const action = async ({
     return redirect(`/projects/${id}/tasks/${key}/edit`);
   } else if (formData.deleteTask) {
     const key = parseInt(formData.deleteTask.toString());
-    await deleteTask(id, key);
+    const removed_task = await deleteTask(id, key);
+    return { removed_task, key };
   }
 };
 
 const Project = () => {
   const { project }: { project: Projects } = useLoaderData();
   const [isFav, setFav] = useState(project.favorite ? true : false);
+  const [notificationInfo, setNotificationInfo] = useState<NotificationArgs>(
+    {}
+  );
+  const {
+    removed_task,
+    key,
+  }: { removed_task: Task | undefined; key: number | undefined } =
+    useActionData() ?? {};
+  const [deletedTasks] = useState<{ removed_task: Task; key: number }[]>([]);
+
+  useEffect(() => {
+    removed_task && key ? deletedTasks.push({ removed_task, key }) : null;
+    console.log(deletedTasks);
+  }, [removed_task]);
+
+  function restoreLastDeletedTask(task: Task, index: number) {
+    console.log(task);
+  }
 
   return (
     <div className="project">
@@ -119,6 +141,16 @@ const Project = () => {
         <Tasks tasks={project.tasks} />
       </div>
       <Outlet />
+      <ActionNotifcation
+        content={{ message: "Hello, world" }}
+        action={{
+          name: "undo",
+          execute: () => {
+            const { removed_task, key } = deletedTasks.slice(-1)[0];
+            restoreLastDeletedTask(removed_task, key);
+          },
+        }}
+      />
     </div>
   );
 };
@@ -174,7 +206,7 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
       <div>{task.deadline?.toLocaleString()}</div>
       <ul className="todos">
         {task.todos && task.todos.length ? (
-          task.todos.map((todo, key) => <li key={key}>{todo.content}</li>)
+          task.todos.map((todo, key) => <TodoComponent todo={todo} key={key} />)
         ) : (
           <em>No todos yet.</em>
         )}
@@ -204,5 +236,18 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
         </button>
       </Form>
     </div>
+  );
+};
+
+const TodoComponent = ({ todo }: { todo: Todo }) => {
+  return (
+    <li>
+      <span>{todo.content}</span>
+      {/* <span>
+        <Form>
+          <button>Mark as done</button>
+        </Form>
+      </span> */}
+    </li>
   );
 };

@@ -1,5 +1,5 @@
 import localforage from "localforage";
-import { Projects, Task, ToDo } from "./types/project";
+import { Projects, Task, Todo } from "./types/project";
 
 
 export const addProject = async (project: Projects) => {
@@ -90,7 +90,12 @@ export const getTask = async (id: string, index: number) => {
 export const editTask = async (id: string, index: number, data: Task) => {
   const project = await getProject(id);
   if (!project) return;
-  project.tasks? project.tasks[index] = data : null;
+  const preEdit = project.tasks[index];
+  const postEdit = {
+    ...preEdit,
+    ...data
+  }
+  project.tasks[index] = postEdit;
   await editProject(project, id);
   return;
 }
@@ -100,12 +105,13 @@ export const deleteTask = async (id: string, index: number) => {
   if (!project) return;
   const taskList = project.tasks;
   if (!taskList) return;
-  taskList.splice(index, 1);
+  const task = taskList.splice(index, 1);
   project.tasks = taskList;
   await editProject(project, id);
+  return task[0];
 }
 
-export const addTodo = async (id: string, index: number, todo: ToDo) => {
+export const addTodo = async (id: string, index: number, todo: Todo) => {
   const task = await getTask(id, index);
   if (!task) return;
   task.todos? task.todos.push(todo) : task.todos = [todo];

@@ -3,12 +3,11 @@ import {
   Form,
   Params,
   redirect,
-  To,
   useLoaderData,
   useNavigate,
 } from "react-router-dom";
 import { addTodo, editTask, getTask } from "../../dummyDB";
-import { Task, ToDo } from "../../types/project";
+import { Task, Todo, TodoStatus } from "../../types/project";
 import AddSVG from "../../images/Add_black.svg";
 import { validDate } from "./new-task";
 
@@ -33,10 +32,7 @@ export async function action({
   if (!id || !index) return;
   const { name, deadline, newTodo, ...formData } = Object.fromEntries(res);
   if (formData.save) {
-    const preEdit = await getTask(id, parseInt(index));
-    if (!preEdit) return;
     const task: Task = {
-      ...preEdit,
       name: name ? name.toString() : "Untitled",
       deadline: deadline ? new Date(deadline.toString()) : undefined,
     };
@@ -44,8 +40,9 @@ export async function action({
     return;
   }
   if (formData.addTodo && newTodo) {
-    const todo: ToDo = {
+    const todo: Todo = {
       content: newTodo.toString(),
+      status: TodoStatus.AWAITING,
     };
     await addTodo(id, parseInt(index), todo);
   }

@@ -15,6 +15,7 @@ import AddSVG from "../images/Add.svg";
 import DeleteSVG from "../images/Delete.svg";
 import InlineMenuSVG from "../images/inline-menu.svg";
 import { Nav } from "react-bootstrap";
+import "react-notifications/lib/notifications.css";
 
 export async function loader() {
   const projects = await getProjects();
@@ -109,28 +110,18 @@ const NavItem = ({ project, index }: { project: Projects; index: number }) => {
         <img src={InlineMenuSVG} alt="inline menu" />
       </button>
 
-      {showMenu && <Menu project={project} />}
-      {/* <Form method="post">
-        <button
-          type="submit"
-          className="project-delete"
-          name="delete"
-          value={project.id}
-          onClick={() => {
-            setMagicStyle("magictime holeOut");
-            setTimeout(() => {
-              setMagicStyle("magictime");
-            }, 250);
-          }}
-        >
-          <img src={DeleteSVG} alt="delete project" />
-        </button>
-      </Form> */}
+      {showMenu && <Menu project={project} setMagicStyle={setMagicStyle} />}
     </li>
   );
 };
 
-const Menu = ({ project }: { project: Projects }) => {
+const Menu = ({
+  project,
+  setMagicStyle,
+}: {
+  project: Projects;
+  setMagicStyle: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   return (
     <div className="nav-dropdown dropdown magictime swashIn">
       <Form action={`projects/${project.id}/edit`}>
@@ -143,6 +134,12 @@ const Menu = ({ project }: { project: Projects }) => {
           className="btn btn-danger btn-sm"
           name="delete"
           value={project.id}
+          onClick={() => {
+            setMagicStyle("magictime holeOut");
+            setTimeout(() => {
+              setMagicStyle("magictime");
+            }, 250);
+          }}
         >
           Delete
         </button>
