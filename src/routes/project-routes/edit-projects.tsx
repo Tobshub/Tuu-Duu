@@ -30,6 +30,7 @@ export async function action({
   const id = params.projectId;
   if (!id) return;
   const project = await getProject(id);
+  if (!project) return;
   const projectData: Projects = {
     ...project,
     name: name.toString(),
