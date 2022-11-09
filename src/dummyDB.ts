@@ -111,6 +111,15 @@ export const deleteTask = async (id: string, index: number) => {
   return task[0];
 }
 
+export const restoreTask = async (id: string, index: number, task: Task) => {
+  const project = await getProject(id)
+  if (!project) return;
+  const taskList = project.tasks ?? [];
+  taskList.splice(taskList.length >= index? index : taskList.length - 1, 0, task)
+  project.tasks = taskList;
+  await editProject(project, id);
+}
+
 export const addTodo = async (id: string, index: number, todo: Todo) => {
   const task = await getTask(id, index);
   if (!task) return;

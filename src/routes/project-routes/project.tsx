@@ -12,6 +12,7 @@ import {
   deleteTask,
   editProject,
   getProject,
+  restoreTask,
   setFavorite,
 } from "../../dummyDB";
 import { Projects, Task, Todo } from "../../types/project";
@@ -73,23 +74,32 @@ export const action = async ({
 const Project = () => {
   const { project }: { project: Projects } = useLoaderData();
   const [isFav, setFav] = useState(project.favorite ? true : false);
-  const [notificationInfo, setNotificationInfo] = useState<NotificationArgs>(
-    {}
-  );
+  const [showNotification, setShowNotification] = useState(false);
   const {
     removed_task,
     key,
   }: { removed_task: Task | undefined; key: number | undefined } =
     useActionData() ?? {};
-  const [deletedTasks] = useState<{ removed_task: Task; key: number }[]>([]);
+  const [deletedTasks, setDeletedTasks] = useState<
+    { removed_task: Task; key: number }[]
+  >([]);
 
   useEffect(() => {
-    removed_task && key ? deletedTasks.push({ removed_task, key }) : null;
-    console.log(deletedTasks);
+    if (removed_task && key) {
+      deletedTasks.push({ removed_task, key });
+      setShowNotification(true);
+    }
+    const removeNotification = setTimeout(() => {
+      setShowNotification(false);
+    }, 5000);
+    return () => {
+      setShowNotification(false);
+      clearTimeout(removeNotification);
+    };
   }, [removed_task]);
 
-  function restoreLastDeletedTask(task: Task, index: number) {
-    console.log(task);
+  async function restoreLastDeletedTask(task: Task, index: number) {
+    project.tasks.splice(index, 0, task);
   }
 
   return (
@@ -141,16 +151,18 @@ const Project = () => {
         <Tasks tasks={project.tasks} />
       </div>
       <Outlet />
-      <ActionNotifcation
-        content={{ message: "Hello, world" }}
-        action={{
-          name: "undo",
-          execute: () => {
-            const { removed_task, key } = deletedTasks.slice(-1)[0];
-            restoreLastDeletedTask(removed_task, key);
-          },
-        }}
-      />
+      {showNotification && (
+        <ActionNotifcation
+          content={{ message: "Task Deleted" }}
+          action={{
+            name: "Undo",
+            execute: () => {
+              const { removed_task, key } = deletedTasks.splice(-1)[0];
+              restoreLastDeletedTask(removed_task, key);
+            },
+          }}
+        />
+      )}
     </div>
   );
 };
