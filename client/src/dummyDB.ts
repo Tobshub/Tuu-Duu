@@ -1,5 +1,5 @@
 import localforage from "localforage";
-import { Projects, Task, Todo } from "./types/project";
+import { Projects, Task, Todo, TodoStatus } from "./types/project";
 
 
 export const addProject = async (project: Projects) => {
@@ -123,7 +123,16 @@ export const restoreTask = async (id: string, index: number, task: Task) => {
 export const addTodo = async (id: string, index: number, todo: Todo) => {
   const task = await getTask(id, index);
   if (!task) return;
+  todo.status = TodoStatus.AWAITING;
   task.todos? task.todos.push(todo) : task.todos = [todo];
   await editTask(id, index, task);
   return;
+}
+
+export const markTodo = async (id: string, task_index: number, todo_index: number) => {
+  const task = await getTask(id, task_index);
+  if (!task) return;
+  task.todos? task.todos[todo_index].status = TodoStatus.DONE : null;
+  await editTask(id, task_index, task);
+  console.log(todo_index, "done")
 }

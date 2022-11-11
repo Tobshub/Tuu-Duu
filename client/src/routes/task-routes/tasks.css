@@ -19,6 +19,7 @@
   padding: 0.5rem 1rem;
   /* margin-bottom: 1rem; */
   background-color: #b6b6b61a;
+  transition: box-shadow 350ms;
 }
 
 .task-card:hover {
@@ -37,7 +38,8 @@ form:has(.new-task-btn) {
 .new-task-btn,
 .edit-task-btn,
 .delete-task-btn,
-.new-todo-btn {
+.new-todo-btn,
+.mark-todo-done-btn {
   outline: none;
   border: 0;
   border-radius: 50%;
@@ -48,6 +50,10 @@ form:has(.new-task-btn) {
   transition: scale 100ms;
 }
 
+.mark-todo-done-btn {
+  width: 18px;
+}
+
 .new-task-btn:hover,
 .new-task-btn:focus,
 .edit-task-btn:hover,
@@ -55,14 +61,17 @@ form:has(.new-task-btn) {
 .delete-task-btn:hover,
 .delete-task-btn:focus,
 .new-todo-btn:hover,
-.new-todo-btn:focus {
+.new-todo-btn:focus,
+.mark-todo-done-btn:hover,
+.mark-todo-done-btn:focus {
   scale: 1.4;
 }
 
 .new-task-btn:active,
 .edit-task-btn:active,
 .delete-task-btn:active,
-.new-todo-btn:active {
+.new-todo-btn:active,
+.mark-todo-done-btn:active {
   scale: 1;
 }
 
@@ -133,6 +142,8 @@ form:has(.new-task-btn) {
   padding: 0.5rem;
   border-radius: 5px;
   transition: box-shadow 200ms;
+  display: flex;
+  justify-content: space-between;
 }
 
 .todos > li:hover {
@@ -149,4 +160,8 @@ form:has(.new-task-btn) {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+form:has(.mark-todo-done-btn) {
+  padding: 0.1em;
 }

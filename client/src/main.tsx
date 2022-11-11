@@ -26,7 +26,7 @@ import EditTask, {
   loader as editTaskLoader,
   action as editTaskAction,
 } from "./routes/task-routes/edit-task";
-import Login from "./routes/login-routes/login";
+import Login, { action as loginAction } from "./routes/login-routes/login";
 import "./routes/login-routes/login.css";
 import RootErrorElement from "./routes/root-error";
 import ProjectErrorElement from "./routes/project-routes/project-error";
@@ -87,6 +87,7 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+    action: loginAction,
   },
 ]);
 

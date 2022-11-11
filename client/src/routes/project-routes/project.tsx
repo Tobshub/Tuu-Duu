@@ -12,6 +12,7 @@ import {
   deleteTask,
   editProject,
   getProject,
+  markTodo,
   restoreTask,
   setFavorite,
 } from "../../dummyDB";
@@ -21,10 +22,10 @@ import DeleteSVG from "../../images/Delete.svg";
 import FavSVG from "../../images/Star_filled.svg";
 import UnFavSVG from "../../images/Star_blank.svg";
 import AddSVG from "../../images/Add.svg";
+import DoneSVG from "../../images/Checkmark.svg";
 import React, { useEffect, useState } from "react";
 import "../task-routes/tasks.css";
 import ActionNotifcation from "../app-notifications/action-notifcation";
-import { NotificationArgs } from "../app-notifications/notification";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
@@ -68,6 +69,13 @@ export const action = async ({
     const key = parseInt(formData.deleteTask.toString());
     const removed_task = await deleteTask(id, key);
     return { removed_task, key };
+  } else if (formData.markTodo) {
+    const todoLocation = formData.markTodo.toString().split(",");
+    const res = await markTodo(
+      id,
+      parseInt(todoLocation[0]),
+      parseInt(todoLocation[1])
+    );
   }
 };
 
@@ -218,7 +226,9 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
       <div>{task.deadline?.toLocaleString()}</div>
       <ul className="todos">
         {task.todos && task.todos.length ? (
-          task.todos.map((todo, key) => <TodoComponent todo={todo} key={key} />)
+          task.todos.map((todo, key) => (
+            <TodoComponent todo={todo} key={key} index={key} parent={index} />
+          ))
         ) : (
           <em>No todos yet.</em>
         )}
@@ -251,15 +261,31 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
   );
 };
 
-const TodoComponent = ({ todo }: { todo: Todo }) => {
+const TodoComponent = ({
+  todo,
+  index,
+  parent,
+}: {
+  todo: Todo;
+  index: number;
+  parent: number;
+}) => {
   return (
     <li>
       <span>{todo.content}</span>
-      {/* <span>
-        <Form>
-          <button>Mark as done</button>
+      <span>
+        <Form method="post">
+          <button
+            type="submit"
+            name="markTodo"
+            title="Mark as done"
+            value={[parent.toString(), index.toString()]}
+            className="mark-todo-done-btn"
+          >
+            <img src={DoneSVG} />
+          </button>
         </Form>
-      </span> */}
+      </span>
     </li>
   );
 };
