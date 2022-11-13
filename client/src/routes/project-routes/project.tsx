@@ -11,12 +11,19 @@ import {
   deleteProject,
   deleteTask,
   editProject,
+  editTask,
   getProject,
   markTodo,
   restoreTask,
   setFavorite,
 } from "../../dummyDB";
-import { Projects, Task, Todo } from "../../types/project";
+import {
+  Projects,
+  Task,
+  TaskStatus,
+  Todo,
+  TodoStatus,
+} from "../../types/project";
 import EditSVG from "../../images/Edit.svg";
 import DeleteSVG from "../../images/Delete.svg";
 import FavSVG from "../../images/Star_filled.svg";
@@ -108,6 +115,11 @@ const Project = () => {
 
   async function restoreLastDeletedTask(task: Task, index: number) {
     project.tasks.splice(index, 0, task);
+    await editTask(project.id, index, task);
+    setDeletedTasks((state) => {
+      state.pop();
+      return state;
+    });
   }
 
   return (
@@ -207,12 +219,23 @@ const Tasks = ({ tasks }: { tasks: Task[] | undefined }) => {
 const TaskCard = ({ task, index }: { task: Task; index: number }) => {
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const [gridRow, setGridRow] = useState("");
+  const [hasCompletedTodos, setHasCompletedTodos] = useState(false);
+  // change the span of task cards depending on their length
   useEffect(() => {
     const this_card = document.querySelectorAll(".task-card")[index];
     const height = parseInt(getComputedStyle(this_card).height);
     const span_ratio = parseInt((height / 100).toString());
     setGridRow(`span ${span_ratio > 2 ? span_ratio - 1 : span_ratio}`);
   }, [task, index]);
+
+  useEffect(() => {
+    let completed_todos = task.todos.filter(
+      (todo) => todo.status === TodoStatus.DONE
+    );
+    completed_todos.length
+      ? setHasCompletedTodos(true)
+      : setHasCompletedTodos(false);
+  }, [task.todos]);
 
   return (
     <div
@@ -226,11 +249,39 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
       <div>{task.deadline?.toLocaleString()}</div>
       <ul className="todos">
         {task.todos && task.todos.length ? (
-          task.todos.map((todo, key) => (
-            <TodoComponent todo={todo} key={key} index={key} parent={index} />
-          ))
+          task.todos.map((todo, key) => {
+            if (todo.status === TodoStatus.AWAITING) {
+              return (
+                <TodoComponent
+                  todo={todo}
+                  key={key}
+                  index={key}
+                  parent={index}
+                />
+              );
+            }
+          })
         ) : (
-          <em>No todos yet.</em>
+          <em>No awaiting Todos.</em>
+        )}
+
+        {hasCompletedTodos && <h5>Completed Todos: </h5>}
+        {task.todos && task.todos.length ? (
+          task.todos.map((todo, key) => {
+            if (todo.status === TodoStatus.DONE) {
+              return (
+                <TodoComponent
+                  todo={todo}
+                  key={key}
+                  index={key}
+                  parent={index}
+                />
+              );
+            }
+            return null;
+          })
+        ) : (
+          <></>
         )}
       </ul>
       <Form method="post" className="task-actions">
@@ -247,7 +298,7 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
           name="deleteTask"
           value={index}
           className="delete-task-btn"
-          onClick={(e) => {
+          onClick={() => {
             setMagicStyle("magictime holeOut");
             setTimeout(() => {
               setMagicStyle("magictime");
@@ -274,17 +325,19 @@ const TodoComponent = ({
     <li>
       <span>{todo.content}</span>
       <span>
-        <Form method="post">
-          <button
-            type="submit"
-            name="markTodo"
-            title="Mark as done"
-            value={[parent.toString(), index.toString()]}
-            className="mark-todo-done-btn"
-          >
-            <img src={DoneSVG} />
-          </button>
-        </Form>
+        {todo.status === TodoStatus.AWAITING ? (
+          <Form method="post">
+            <button
+              type="submit"
+              name="markTodo"
+              title="Mark as done"
+              value={[parent.toString(), index.toString()]}
+              className="mark-todo-done-btn"
+            >
+              <img src={DoneSVG} />
+            </button>
+          </Form>
+        ) : null}
       </span>
     </li>
   );

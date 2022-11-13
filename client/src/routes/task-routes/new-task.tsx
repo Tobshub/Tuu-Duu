@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 import { Form, Params, redirect, useNavigate } from "react-router-dom";
 import { addTask, getProject } from "../../dummyDB";
 import { Task, TaskStatus } from "../../types/project";
@@ -31,6 +31,7 @@ const NewTask = () => {
   const [invalidDate, setInvalidDate] = useState(false);
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const navigate = useNavigate();
+  const addBtnRef = useRef<HTMLButtonElement>();
   return (
     <div className="new-task">
       <Form method="post" className={magicStyle}>
@@ -60,6 +61,7 @@ const NewTask = () => {
           type="submit"
           className="btn btn-success btn-sm"
           name="add"
+          ref={addBtnRef}
           value={1}
           onClick={(e) => {
             if (!validDate(new Date(deadline))) {
@@ -68,6 +70,9 @@ const NewTask = () => {
               return;
             }
             setMagicStyle("magictime holeOut");
+            setTimeout(() => {
+              addBtnRef.current.disabled = true;
+            }, 50);
           }}
         >
           Add
