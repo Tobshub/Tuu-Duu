@@ -30,6 +30,7 @@ import Login, { action as loginAction } from "./routes/login-routes/login";
 import "./routes/login-routes/login.css";
 import RootErrorElement from "./routes/root-error";
 import ProjectErrorElement from "./routes/project-routes/project-error";
+import SettingsPage from "./routes/user-settings";
 
 const router = createBrowserRouter([
   {
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
     path: "/login",
     element: <Login />,
     action: loginAction,
+  },
+  {
+    path: "/settings",
+    element: <SettingsPage />,
   },
 ]);
 

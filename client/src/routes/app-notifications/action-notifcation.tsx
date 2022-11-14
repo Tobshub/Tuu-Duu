@@ -19,6 +19,7 @@ const ActionNotifcation = ({ content, action }: NotificationArgs) => {
           <button
             type="submit"
             disabled={waiting}
+            title={action.name + " " + action.target}
             onClick={() => {
               action.execute();
               setWaiting(true);

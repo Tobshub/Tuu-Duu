@@ -1,6 +1,6 @@
 export interface NotificationArgs {
   content?: NotificationContent,
-  action?: NotificationFunction
+  action?: NotificationAction
 }
 
 
@@ -9,7 +9,8 @@ interface NotificationContent {
   message?: string 
 }
 
-interface NotificationFunction {
+interface NotificationAction {
   name: string,
+  target: string,
   execute: (...args: any) => void, 
 }

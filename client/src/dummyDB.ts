@@ -134,5 +134,4 @@ export const markTodo = async (id: string, task_index: number, todo_index: numbe
   if (!task) return;
   task.todos? task.todos[todo_index].status = TodoStatus.DONE : null;
   await editTask(id, task_index, task);
-  console.log(todo_index, "done")
 }

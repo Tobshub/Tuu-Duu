@@ -70,8 +70,10 @@ const Root = () => {
           </ul>
         </nav>
         <div className="user-actions">
-          <button className="btn btn-primary">Settings</button>
-          <Form action="/login?new=false&hasProjects=true">
+          <Form action="/settings">
+            <button className="btn btn-primary">Settings</button>
+          </Form>
+          <Form action="/login">
             <button className="btn btn-danger">
               {isLogin ? "Logout" : "Login"}
             </button>
