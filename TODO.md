@@ -1,6 +1,6 @@
 ## Features (incoming) :
 
-- Settings page + settings (Urgent)
+- Settings page + settings
 - Database + User Auth
 - Log out function
 - tasks should show pending if all the todos have note been completed

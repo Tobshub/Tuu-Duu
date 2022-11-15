@@ -16,6 +16,9 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
     minLength: 8,
+  },
+  projects: {
+    type: Array
   }
 });
 
