@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+
 const userSchema = mongoose.Schema({
   username: {
     type: String,
@@ -17,9 +18,13 @@ const userSchema = mongoose.Schema({
     required: true,
     minLength: 8,
   },
-  projects: {
-    type: Array
-  }
+  projects: [{
+    name: String,
+    description: String,
+    id: String,
+    tasks: Array,
+    favorite: Boolean,
+  }]
 });
 
 const User = mongoose.model("users", userSchema);

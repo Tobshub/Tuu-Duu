@@ -1,3 +1,5 @@
+import { Projects } from "./project"
+
 export interface LoginServerResponse {
   success: boolean,
   message: string,
@@ -5,6 +7,8 @@ export interface LoginServerResponse {
 }
 
 export interface AppUser {
+  _id: string,
   username: string,
   email: string,
+  projects: Projects[],
 }

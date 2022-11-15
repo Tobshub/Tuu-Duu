@@ -1,4 +1,3 @@
-import { reference } from "@popperjs/core";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Form,
@@ -39,7 +38,11 @@ export async function action({
         };
         break;
     }
-    const api_data = await fetch("http://localhost:2005/api/login", {
+    const user_api_url =
+      formData.action === "Login"
+        ? "http://localhost:2005/api/login"
+        : "http://localhost:2005/api/login/new";
+    const user_api_data = await fetch(user_api_url, {
       method: "POST",
       body: JSON.stringify(request_body),
       headers: {
@@ -48,10 +51,13 @@ export async function action({
     })
       .then((data) => data.json())
       .then((data: LoginServerResponse) => {
-        return data.user;
+        if (data.success) {
+          return data.user;
+        }
+        return false;
       })
       .catch((e) => console.error(e.message));
-    return api_data ? (api_data.email ? true : false) : false;
+    return user_api_data;
   }
 }
 
@@ -72,7 +78,7 @@ const Login = () => {
 
   useEffect(() => {
     if (is_valid_user) {
-      console.log("logged in");
+      console.log(isLogin ? "logged in" : "signed up");
       navigate("/");
     }
   }, [is_valid_user]);

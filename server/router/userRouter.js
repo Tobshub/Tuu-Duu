@@ -1,3 +1,4 @@
+const controller = require("../controller/userController")
 const router = require("express").Router()
 
 router
@@ -6,15 +7,8 @@ router
       message: "sent a get request."
     })
   })
-  .post('/', async (req, res) => {
-    const { user_details } = await req.body;
-
-    res.send({
-      success: true,
-      message: "post request",
-      user: user_details
-    })
-  })
+  .post('/', controller.getUserByEmail)
+  .post('/new', controller.addNewUser)
 
 
 module.exports = router;

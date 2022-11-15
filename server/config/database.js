@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 
 const { MONGO_URI } = process.env;
 
-function db_connect(url) {
+async function db_connect(url) {
   try {
     const uri = encodeURI(url ?? MONGO_URI);
     mongoose.connect(uri, (err) => {
