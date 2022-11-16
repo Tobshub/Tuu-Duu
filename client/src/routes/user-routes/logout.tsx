@@ -1,4 +1,8 @@
+import { useContext } from "react";
 import { Form, Params, redirect, useNavigate } from "react-router-dom";
+import { removeUser } from "../../dummyDB";
+import { UserCreds } from "../../types/user-context";
+import { UserCredentails } from "../root";
 
 export async function action({
   params,
@@ -11,15 +15,14 @@ export async function action({
   const formData = Object.fromEntries(res);
   switch (formData.action) {
     case "Logout":
-      // remove user stored in:
-      //  - localforage
-      //  - UserCredentials context
+      removeUser();
       return redirect("/");
   }
 }
 
 const LogoutPage = () => {
   const navigate = useNavigate();
+  const user_credentials = useContext<UserCreds>(UserCredentails);
 
   return (
     <div className="login-form-container">
@@ -30,6 +33,13 @@ const LogoutPage = () => {
           name="action"
           value={"Logout"}
           className="btn btn-warning"
+          onClick={() => {
+            user_credentials.setUserDetails({
+              _id: "",
+              username: "",
+              email: "",
+            });
+          }}
         >
           Logout
         </button>

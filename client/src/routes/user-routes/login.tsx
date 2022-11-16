@@ -6,6 +6,7 @@ import {
   useActionData,
   useNavigate,
 } from "react-router-dom";
+import { syncProjects } from "../../dummyDB";
 import { AppUser, LoginServerResponse } from "../../types/server-response";
 import { UserCreds } from "../../types/user-context";
 import { UserCredentails } from "../root";
@@ -82,7 +83,9 @@ const LoginPage = () => {
   useEffect(() => {
     if (is_valid_user) {
       user_credentials.setUserDetails(is_valid_user);
-      navigate("/");
+      syncProjects().then((res) => {
+        navigate("/");
+      });
     }
   }, [is_valid_user]);
 

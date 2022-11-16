@@ -1,8 +1,7 @@
 ## Features (incoming) :
 
-- Settings page + settings
-- Database + User Auth
 - Log out function
+- Settings page + settings
 - tasks should show pending if all the todos have note been completed
 - user notification when deadlines are approaching
 - Delete All projects button in settings

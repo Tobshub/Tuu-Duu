@@ -1,5 +1,5 @@
 .notification-container {
-  position: absolute;
+  position: fixed;
   top: calc(100% - 5rem);
   z-index: 300;
   border: 1px solid white;

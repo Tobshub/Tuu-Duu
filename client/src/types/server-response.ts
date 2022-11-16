@@ -12,3 +12,9 @@ export interface AppUser {
   email: string,
   projects: Projects[],
 }
+
+export interface SyncServerResponse {
+  success: boolean,
+  message: string,
+  projects: Projects[],
+}

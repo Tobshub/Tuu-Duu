@@ -94,7 +94,7 @@ const Project = () => {
   const user_credentials = useContext<UserCreds>(UserCredentails);
 
   useEffect(() => {
-    if (recent_delete.removed_task && recent_delete.key) {
+    if (recent_delete.removed_task) {
       deletedTasks.push(recent_delete);
       setShowNotification(true);
     }

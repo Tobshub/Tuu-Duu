@@ -1,7 +1,7 @@
 import localforage from "localforage";
 import { resourceUsage } from "process";
 import { Projects, Task, Todo, TodoStatus } from "./types/project";
-import { AppUser } from "./types/server-response";
+import { AppUser, LoginServerResponse, SyncServerResponse } from "./types/server-response";
 import { SavedUser } from "./types/user-context";
 
 export const setUser = async ({_id, username, email}: SavedUser) => {
@@ -17,10 +17,12 @@ export const setUser = async ({_id, username, email}: SavedUser) => {
 
 export const removeUser = async () => {
   const res = await localforage.removeItem("user_details", (err) => {
+    console.log("logged out")
     if (err) {
       console.error(err);
       return false;
     }
+    return true;
   })
   return res;
 }
@@ -33,29 +35,32 @@ export const getCurrentUser = async () => {
     }
     return value;
   })
-  console.log("got user");
   return user_details; 
 }
 
 
 export const addProject = async (project: Projects) => {
-  await localforage.getItem(
-      'projects',
-      (err, value: (Projects[] | null)) => {
-        value? value.push(project) : value = [project];
-        localforage.setItem('projects', value);
-      })
+  let projects: Projects[] = JSON.parse(sessionStorage.getItem('projects'));
+  project.last_save = new Date().getTime();
+  projects ? projects.push(project) : projects = [project];
+
+  sessionStorage.setItem('projects', JSON.stringify(projects));
   syncProjects();
 }
 
 
-export const getProjects = async (): Promise<Projects[] | null> => {
-  const projects: (Projects[] | null) = await localforage.getItem('projects');
-  return projects;
+export const getProjects = (): Projects[] | null => {
+  try {
+    const projects: (Projects[] | null) = JSON.parse(sessionStorage.getItem("projects"));
+    return projects;  
+  } catch (error) {
+    return null;
+  }
+  
 }
 
 const getProjectIndex = async (id: string, db?: (Projects[] | null)): Promise<number | null> => {
-  const projects = (db)? db : await getProjects();
+  const projects = (db)? db : getProjects();
   if ( projects && projects.length) {
     for(let i = 0; i < projects.length; i++) {
       if (projects[i].id === id) {
@@ -68,36 +73,36 @@ const getProjectIndex = async (id: string, db?: (Projects[] | null)): Promise<nu
 
 export const getProject = async (id: (string | undefined)): Promise<Projects | null> => {
   if (!id) return null;
-  const projects = await getProjects();
+  const projects = getProjects();
   const index = await getProjectIndex(id, projects);
   const project = (projects && index !== null)? projects[index] : null;
   return project;
 }
 
 export const editProject = async (data: Projects, id: string) => {
-  const projects = await getProjects();
+  const projects = getProjects();
   const index = await getProjectIndex(id, projects);
   data.last_save = new Date().getTime();
   (projects && index !== null)? projects[index] = data : null;
-  await localforage.setItem('projects', projects);
+  sessionStorage.setItem('projects', JSON.stringify(projects));
   syncProjects();
 }
 
 export const setFavorite = async (id: string) => {
-  const projects = await getProjects();
+  const projects = getProjects();
   const index = await getProjectIndex(id, projects);
   if (!projects || index === null) return null;
 
   (projects[index].favorite)? projects[index].favorite = false : projects[index].favorite = true;
   projects[index].last_save = new Date().getTime();
-  localforage.setItem('projects', projects)
+  sessionStorage.setItem('projects', JSON.stringify(projects))
   syncProjects()
   return projects[index].favorite;
 }
 
 export const deleteProject = async (id: (string | undefined)) => {
   if(!id) return null;
-  const projects = await getProjects();
+  const projects = getProjects();
   if(!projects || !projects.length) return null;
   const index = await getProjectIndex(id, projects);
   if(index === null) {
@@ -105,7 +110,7 @@ export const deleteProject = async (id: (string | undefined)) => {
     return null};
   const removed = (projects && index !== null)? projects.splice(index, 1) : null;
   
-  await localforage.setItem('projects', projects);
+  sessionStorage.setItem('projects', JSON.stringify(projects));
   syncProjects("overwrite")
 }
 
@@ -174,12 +179,15 @@ export const markTodo = async (id: string, task_index: number, todo_index: numbe
 
 
 export const syncProjects = async (config? : string) => {
+  const user = await getCurrentUser()
+  
+  if (!user._id) return;
   const sync_resources = {
       user_projects: await getProjects(),
-      user_id: (await getCurrentUser())._id,
+      user_id: user._id,
       config,
   };
-  const sync_results = await fetch("http://localhost:2005/api/login/sync_projects", {
+  const sync_results: SyncServerResponse = await fetch("http://localhost:2005/api/login/sync_projects", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json"
@@ -187,6 +195,8 @@ export const syncProjects = async (config? : string) => {
     body: JSON.stringify(sync_resources)
   })
   .then(data => data.json())
-  .then(projects => projects);
-  return sync_resources;
+  .then(res => res);
+  // console.log(sync_results)
+  sessionStorage.setItem("projects", JSON.stringify(sync_results.projects))
+  return sync_results;
 }

@@ -21,8 +21,8 @@ import { UserCreds } from "../types/user-context";
 export const UserCredentails = React.createContext(null);
 
 export async function loader() {
-  const projects = await getProjects();
-  return { projects };
+  const projects = getProjects();
+  return projects;
 }
 
 export async function action({ request }: { request: Request }) {
@@ -39,7 +39,8 @@ export async function action({ request }: { request: Request }) {
 }
 
 const Root = () => {
-  const { projects }: { projects: Projects[] } = useLoaderData();
+  const projects: Projects[] = useLoaderData();
+
   const user_credentials = useContext<UserCreds>(UserCredentails);
 
   const [isLoggedIn, setLoggedIn] = useState<boolean>(
@@ -52,6 +53,9 @@ const Root = () => {
     if (user_credentials.user_details && user_credentials.user_details.email) {
       setLoggedIn(true);
       setUser(user_credentials.user_details);
+    } else {
+      setLoggedIn(false);
+      setUser({ _id: "", email: "", username: "" });
     }
   }, [user_credentials.user_details]);
 

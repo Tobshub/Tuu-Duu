@@ -124,8 +124,18 @@ const Main = () => {
   useEffect(() => {
     getCurrentUser()
       .then((user) => {
-        if (!user) return;
-        setUserCredentials((state) => ({ ...state, user_details: user }));
+        if (!user) {
+          setUserCredentials((state) => ({
+            ...state,
+            user_details: {
+              _id: "",
+              username: "",
+              email: "",
+            },
+          }));
+        } else {
+          setUserCredentials((state) => ({ ...state, user_details: user }));
+        }
       })
       .catch((e) => console.error(e.message));
   }, []);

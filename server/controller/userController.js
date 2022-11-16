@@ -82,7 +82,7 @@ exports.syncUserProjects = async (req, res) => {
     if (config === "overwrite") {
       doc.projects = user_projects;
     } else {
-      user_projects.forEach((local_project) => {
+      user_projects?.forEach((local_project) => {
         const db_index = doc.projects.findIndex(db_project => db_project.id === local_project.id);
         if (db_index === -1) {
           doc.projects.push(local_project);
@@ -98,7 +98,7 @@ exports.syncUserProjects = async (req, res) => {
     res.status(200).send({
       success: true,
       message: "projects successfully synced",
-      projects: user_projects,
+      projects: doc.projects,
     })
     doc.save();
   })
