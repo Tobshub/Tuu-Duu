@@ -24,6 +24,7 @@ const userSchema = mongoose.Schema({
     id: String,
     tasks: Array,
     favorite: Boolean,
+    last_save: Number,
   }]
 });
 

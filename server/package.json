@@ -1,7 +1,5 @@
 {
   "name": "todo-app",
-  "homepage": "https://Tobshub.github.io/Tuu-Duu",
-  "private": true,
   "version": "0.0.0",
   "scripts": {
     "server": "nodemon ./server/index.js"

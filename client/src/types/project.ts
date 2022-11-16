@@ -4,6 +4,7 @@ export interface Projects {
   id: string,
   tasks: Task[],
   favorite?: boolean,
+  last_save?: number,
 }
 
 export interface Task {

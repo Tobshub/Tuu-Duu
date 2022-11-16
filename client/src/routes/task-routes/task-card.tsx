@@ -32,6 +32,7 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
       key={index}
       style={{
         gridRow: gridRow,
+        animationDuration: "350ms",
       }}
     >
       <h2>{task.name}</h2>

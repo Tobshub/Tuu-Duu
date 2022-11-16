@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "magic.css/dist/magic.css";
 import ReactDOM from "react-dom/client";
 import Root, {
   loader as rootLoader,
   action as rootAction,
+  UserCredentails,
 } from "./routes/root";
 import "./main.css";
-import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Index, { loader as indexLoader } from "./routes";
 import NewProject, {
   action as newProjectAction,
@@ -27,13 +28,16 @@ import EditTask, {
   loader as editTaskLoader,
   action as editTaskAction,
 } from "./routes/task-routes/edit-task";
-import Login, { action as loginAction } from "./routes/login-routes/login";
-import "./routes/login-routes/login.css";
+import LoginPage, { action as loginAction } from "./routes/user-routes/login";
+import "./routes/user-routes/login.css";
 import RootErrorElement from "./routes/root-error";
 import ProjectErrorElement from "./routes/project-routes/project-error";
 import SettingsPage from "./routes/user-settings";
-import { AppUser } from "./types/server-response";
-import { UserCreds } from "./types/user-context";
+import { SavedUser, UserCreds } from "./types/user-context";
+import { getCurrentUser, setUser } from "./dummyDB";
+import LogoutPage, {
+  action as logoutAction,
+} from "./routes/user-routes/logout";
 
 const router = createBrowserRouter([
   {
@@ -90,8 +94,13 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login />,
+    element: <LoginPage />,
     action: loginAction,
+  },
+  {
+    path: "/logout",
+    element: <LogoutPage />,
+    action: logoutAction,
   },
   {
     path: "/settings",
@@ -99,18 +108,27 @@ const router = createBrowserRouter([
   },
 ]);
 
-export const UserCredentails = React.createContext(null);
-
 const Main = () => {
   const [user_credentials, setUserCredentials] = useState<UserCreds>({
     user_details: {
       _id: "",
       username: "",
       email: "",
-      projects: [],
     },
-    setUserDetails: (new_details) => setUserCredentials(new_details),
+    setUserDetails: (new_details: SavedUser) => {
+      setUserCredentials((state) => ({ ...state, user_details: new_details }));
+      setUser(new_details);
+    },
   });
+
+  useEffect(() => {
+    getCurrentUser()
+      .then((user) => {
+        if (!user) return;
+        setUserCredentials((state) => ({ ...state, user_details: user }));
+      })
+      .catch((e) => console.error(e.message));
+  }, []);
 
   return (
     <UserCredentails.Provider value={user_credentials}>

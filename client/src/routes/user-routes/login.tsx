@@ -6,9 +6,9 @@ import {
   useActionData,
   useNavigate,
 } from "react-router-dom";
-import { UserCredentails } from "../../main";
 import { AppUser, LoginServerResponse } from "../../types/server-response";
 import { UserCreds } from "../../types/user-context";
+import { UserCredentails } from "../root";
 
 export async function action({
   params,
@@ -63,7 +63,7 @@ export async function action({
   }
 }
 
-const Login = () => {
+const LoginPage = () => {
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -174,7 +174,7 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
 
 function checkFilled(...args: string[]) {
   return args.every((value) => value.length > 0);

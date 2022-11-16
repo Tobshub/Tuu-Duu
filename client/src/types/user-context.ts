@@ -1,9 +1,12 @@
 import { AppUser } from "./server-response";
 
 export interface UserCreds {
-  user_details: AppUser,
-  setUserDetails: React.Dispatch<React.SetStateAction<{
-    user_details: AppUser;
-    setUserDetails: (new_details: any) => void;
-  }>>
+  user_details: SavedUser,
+  setUserDetails: (new_details: SavedUser) => void
+}
+
+export interface SavedUser {
+  _id: string,
+  email: string,
+  username: string,
 }

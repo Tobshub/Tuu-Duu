@@ -9,15 +9,16 @@ import {
   redirect,
   useLoaderData,
 } from "react-router-dom";
-import { getProjects, deleteProject, getProject } from "../dummyDB";
+import { getProjects, deleteProject, getProject, setUser } from "../dummyDB";
 import { Projects } from "../types/project";
 import AddSVG from "../images/Add.svg";
 import DeleteSVG from "../images/Delete.svg";
 import InlineMenuSVG from "../images/inline-menu.svg";
 import { Nav } from "react-bootstrap";
 import "react-notifications/lib/notifications.css";
-import { UserCredentails } from "../main";
 import { UserCreds } from "../types/user-context";
+
+export const UserCredentails = React.createContext(null);
 
 export async function loader() {
   const projects = await getProjects();
@@ -39,16 +40,20 @@ export async function action({ request }: { request: Request }) {
 
 const Root = () => {
   const { projects }: { projects: Projects[] } = useLoaderData();
-  const [isLoggedIn, setLoggedIn] = useState(false);
-
   const user_credentials = useContext<UserCreds>(UserCredentails);
+
+  const [isLoggedIn, setLoggedIn] = useState<boolean>(
+    user_credentials.user_details && user_credentials.user_details.email
+      ? true
+      : false
+  );
 
   useEffect(() => {
     if (user_credentials.user_details && user_credentials.user_details.email) {
       setLoggedIn(true);
-      console.log("logged in");
+      setUser(user_credentials.user_details);
     }
-  }, [user_credentials]);
+  }, [user_credentials.user_details]);
 
   return (
     <div className="root-div">
@@ -58,7 +63,7 @@ const Root = () => {
         </h1>
         <nav className="nav-bar navbar navbar-default">
           <div className="nav-title">
-            <h2 className="navbar-brand">My Projects</h2>
+            <h2>My Projects</h2>
             <Form method="post">
               <button
                 type="submit"
@@ -84,7 +89,7 @@ const Root = () => {
           <Form action="/settings">
             <button className="btn btn-primary">Settings</button>
           </Form>
-          <Form action="/login">
+          <Form action={isLoggedIn ? "/logout" : "/login"}>
             <button className="btn btn-danger">
               {isLoggedIn ? "Logout" : "Login"}
             </button>

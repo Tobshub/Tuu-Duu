@@ -12,7 +12,9 @@ import {
   deleteTask,
   editProject,
   editTask,
+  getCurrentUser,
   getProject,
+  getProjects,
   markTodo,
   restoreTask,
   setFavorite,
@@ -27,8 +29,8 @@ import React, { useContext, useEffect, useState } from "react";
 import "../task-routes/tasks.css";
 import ActionNotifcation from "../app-notifications/action-notifcation";
 import TaskCard from "../task-routes/task-card";
-import { UserCredentails } from "../../main";
 import { UserCreds } from "../../types/user-context";
+import { UserCredentails } from "../root";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
@@ -104,10 +106,6 @@ const Project = () => {
       clearTimeout(removeNotification);
     };
   }, [recent_delete, deletedTasks]);
-
-  useEffect(() => {
-    console.log(user_credentials);
-  }, [user_credentials]);
 
   async function restoreLastDeletedTask(task: Task, index: number) {
     project.tasks.splice(index, 0, task);

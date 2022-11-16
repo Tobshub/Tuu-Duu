@@ -69,7 +69,8 @@ exports.addNewUser = async (req, res) => {
 
 // sync user projects
 exports.syncUserProjects = async (req, res) => {
-  const { user_projects, user_id } = await req.body;
+  const { user_projects, user_id, config } = await req.body;
+
   Users.findById(user_id, (err, doc) => {
     if (err) {
       res.send({
@@ -78,22 +79,26 @@ exports.syncUserProjects = async (req, res) => {
       })
       return console.error(err);
     }
-    const { projects } = doc;
-    user_projects.forEach((local_project) => {
-      const db_index = projects.findIndex(db_project => db_project.id === local_project.id);
-      if (db_index === -1) {
-        projects.push(local_project);
-      } else {
-        const db_project = projects[db_index];
-        if (local_project.last_save > db_project.last_save) {
-          projects[db_index] = local_project
+    if (config === "overwrite") {
+      doc.projects = user_projects;
+    } else {
+      user_projects.forEach((local_project) => {
+        const db_index = doc.projects.findIndex(db_project => db_project.id === local_project.id);
+        if (db_index === -1) {
+          doc.projects.push(local_project);
+        } else {
+          const db_project = doc.projects[db_index];
+          if (!db_project.last_save || local_project.last_save > db_project.last_save) {
+            doc.projects[db_index] = local_project
+          }
         }
-      }
-    })
+      })
+    }
+
     res.status(200).send({
       success: true,
       message: "projects successfully synced",
-      projects: projects,
+      projects: user_projects,
     })
     doc.save();
   })
