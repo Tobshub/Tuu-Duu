@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "magic.css/dist/magic.css";
 import ReactDOM from "react-dom/client";
@@ -32,6 +32,8 @@ import "./routes/login-routes/login.css";
 import RootErrorElement from "./routes/root-error";
 import ProjectErrorElement from "./routes/project-routes/project-error";
 import SettingsPage from "./routes/user-settings";
+import { AppUser } from "./types/server-response";
+import { UserCreds } from "./types/user-context";
 
 const router = createBrowserRouter([
   {
@@ -97,8 +99,28 @@ const router = createBrowserRouter([
   },
 ]);
 
+export const UserCredentails = React.createContext(null);
+
+const Main = () => {
+  const [user_credentials, setUserCredentials] = useState<UserCreds>({
+    user_details: {
+      _id: "",
+      username: "",
+      email: "",
+      projects: [],
+    },
+    setUserDetails: (new_details) => setUserCredentials(new_details),
+  });
+
+  return (
+    <UserCredentails.Provider value={user_credentials}>
+      <RouterProvider router={router} />
+    </UserCredentails.Provider>
+  );
+};
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Main />
   </React.StrictMode>
 );

@@ -23,10 +23,12 @@ import DeleteSVG from "../../images/Delete.svg";
 import FavSVG from "../../images/Star_filled.svg";
 import UnFavSVG from "../../images/Star_blank.svg";
 import AddSVG from "../../images/Add.svg";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../task-routes/tasks.css";
 import ActionNotifcation from "../app-notifications/action-notifcation";
 import TaskCard from "../task-routes/task-card";
+import { UserCredentails } from "../../main";
+import { UserCreds } from "../../types/user-context";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
@@ -87,6 +89,7 @@ const Project = () => {
   const [deletedTasks, setDeletedTasks] = useState<
     { removed_task: Task; key: number }[]
   >([]);
+  const user_credentials = useContext<UserCreds>(UserCredentails);
 
   useEffect(() => {
     if (recent_delete.removed_task && recent_delete.key) {
@@ -101,6 +104,10 @@ const Project = () => {
       clearTimeout(removeNotification);
     };
   }, [recent_delete, deletedTasks]);
+
+  useEffect(() => {
+    console.log(user_credentials);
+  }, [user_credentials]);
 
   async function restoreLastDeletedTask(task: Task, index: number) {
     project.tasks.splice(index, 0, task);

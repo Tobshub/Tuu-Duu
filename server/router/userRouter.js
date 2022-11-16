@@ -9,6 +9,7 @@ router
   })
   .post('/', controller.getUserByEmail)
   .post('/new', controller.addNewUser)
+  .put('/sync_projects', controller.syncUserProjects)
 
 
 module.exports = router;

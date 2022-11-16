@@ -13,7 +13,7 @@ exports.getUserByEmail = async (req, res) => {
         res.status(200).send({
           success: true,
           message: "user found",
-          user: doc,
+          user: doc[0],
         })
       } else {
         res.status(500).send({

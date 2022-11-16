@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Form,
   Params,
@@ -6,7 +6,9 @@ import {
   useActionData,
   useNavigate,
 } from "react-router-dom";
+import { UserCredentails } from "../../main";
 import { AppUser, LoginServerResponse } from "../../types/server-response";
+import { UserCreds } from "../../types/user-context";
 
 export async function action({
   params,
@@ -71,6 +73,7 @@ const Login = () => {
   const submitBtn = useRef<HTMLButtonElement | null>(null);
   const is_valid_user = useActionData();
   const navigate = useNavigate();
+  const user_credentials = useContext<UserCreds>(UserCredentails);
 
   useEffect(() => {
     submitBtn.current ? (submitBtn.current.disabled = false) : null;
@@ -78,7 +81,7 @@ const Login = () => {
 
   useEffect(() => {
     if (is_valid_user) {
-      console.log(isLogin ? "logged in" : "signed up");
+      user_credentials.setUserDetails(is_valid_user);
       navigate("/");
     }
   }, [is_valid_user]);

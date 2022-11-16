@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./root.css";
 import {
   Outlet,
@@ -16,6 +16,8 @@ import DeleteSVG from "../images/Delete.svg";
 import InlineMenuSVG from "../images/inline-menu.svg";
 import { Nav } from "react-bootstrap";
 import "react-notifications/lib/notifications.css";
+import { UserCredentails } from "../main";
+import { UserCreds } from "../types/user-context";
 
 export async function loader() {
   const projects = await getProjects();
@@ -37,7 +39,16 @@ export async function action({ request }: { request: Request }) {
 
 const Root = () => {
   const { projects }: { projects: Projects[] } = useLoaderData();
-  const [isLogin, setLogin] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState(false);
+
+  const user_credentials = useContext<UserCreds>(UserCredentails);
+
+  useEffect(() => {
+    if (user_credentials.user_details && user_credentials.user_details.email) {
+      setLoggedIn(true);
+      console.log("logged in");
+    }
+  }, [user_credentials]);
 
   return (
     <div className="root-div">
@@ -75,7 +86,7 @@ const Root = () => {
           </Form>
           <Form action="/login">
             <button className="btn btn-danger">
-              {isLogin ? "Logout" : "Login"}
+              {isLoggedIn ? "Logout" : "Login"}
             </button>
           </Form>
         </div>
