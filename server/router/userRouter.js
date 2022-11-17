@@ -10,6 +10,7 @@ router
   .post('/', controller.getUserByEmail)
   .post('/new', controller.addNewUser)
   .put('/sync_projects', controller.syncUserProjects)
-
+// delete user
+// update user-details
 
 module.exports = router;

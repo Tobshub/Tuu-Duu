@@ -43,8 +43,8 @@ export async function action({
     }
     const user_api_url =
       formData.action === "Login"
-        ? "http://localhost:2005/api/login"
-        : "http://localhost:2005/api/login/new";
+        ? "https://tuu-duu-api.onrender.com/api/login"
+        : "https://tuu-duu-api.onrender.com/api/login/new";
     const user_api_data = await fetch(user_api_url, {
       method: "POST",
       body: JSON.stringify(request_body),

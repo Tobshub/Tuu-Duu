@@ -187,7 +187,7 @@ export const syncProjects = async (config? : string) => {
       user_id: user._id,
       config,
   };
-  const sync_results: SyncServerResponse = await fetch("http://localhost:2005/api/login/sync_projects", {
+  const sync_results: SyncServerResponse = await fetch("https://tuu-duu-api.onrender.com/api/login/sync_projects", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json"
