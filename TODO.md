@@ -1,6 +1,7 @@
 ## Features (incoming) :
 
-- Log out function
+- Make Responsive
+- Encrypting passwords
 - Settings page + settings
 - tasks should show pending if all the todos have note been completed
 - user notification when deadlines are approaching

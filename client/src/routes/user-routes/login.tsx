@@ -47,6 +47,7 @@ export async function action({
         : "https://tuu-duu-api.onrender.com/api/login/new";
     const user_api_data = await fetch(user_api_url, {
       method: "POST",
+      mode: "cors",
       body: JSON.stringify(request_body),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -75,6 +76,7 @@ const LoginPage = () => {
   const is_valid_user = useActionData();
   const navigate = useNavigate();
   const user_credentials = useContext<UserCreds>(UserCredentails);
+  const [loginError, showLoginError] = useState(false);
 
   useEffect(() => {
     submitBtn.current ? (submitBtn.current.disabled = false) : null;
@@ -82,12 +84,20 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (is_valid_user) {
-      user_credentials.setUserDetails(is_valid_user);
-      syncProjects().then((res) => {
-        navigate("/");
-      });
+      user_credentials
+        .setUserDetails(is_valid_user)
+        .then(async () => await syncProjects())
+        .finally(() => navigate("/"));
+    } else if (is_valid_user === false) {
+      showLoginError(true);
     }
   }, [is_valid_user]);
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    setUser((state) => ({ ...state, [name]: value }));
+    showLoginError(false);
+  }
 
   return (
     <div className="login-form-container">
@@ -101,13 +111,14 @@ const LoginPage = () => {
               name="username"
               className="form-control"
               value={user.username}
-              onChange={(e) =>
-                setUser((state) => {
-                  return { ...state, username: e.target.value };
-                })
-              }
+              onChange={handleChange}
             />
           </label>
+        )}
+        {loginError && (
+          <span style={{ color: "red" }}>
+            Username or Password is incorrect
+          </span>
         )}
         <label>
           Email:
@@ -117,11 +128,7 @@ const LoginPage = () => {
             name="email"
             className="form-control"
             value={user.email}
-            onChange={(e) =>
-              setUser((state) => {
-                return { ...state, email: e.target.value };
-              })
-            }
+            onChange={handleChange}
           />
         </label>
         <label>
@@ -132,11 +139,7 @@ const LoginPage = () => {
             name="password"
             className="form-control"
             value={user.password}
-            onChange={(e) =>
-              setUser((state) => {
-                return { ...state, password: e.target.value };
-              })
-            }
+            onChange={handleChange}
           />
         </label>
         <button
@@ -169,7 +172,7 @@ const LoginPage = () => {
               setIsLogin(!isLogin);
             }}
           >
-            {isLogin ? "Sign in" : "Login"}
+            {isLogin ? "Sign up" : "Login"}
           </button>
         </label>
       </Form>

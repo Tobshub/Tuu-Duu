@@ -189,6 +189,7 @@ export const syncProjects = async (config? : string) => {
   };
   const sync_results: SyncServerResponse = await fetch("https://tuu-duu-api.onrender.com/api/login/sync_projects", {
     method: "PUT",
+    mode: "cors",
     headers: {
       "Content-Type": "application/json"
     },
@@ -196,7 +197,7 @@ export const syncProjects = async (config? : string) => {
   })
   .then(data => data.json())
   .then(res => res);
-  // console.log(sync_results)
+  console.log(sync_results)
   sessionStorage.setItem("projects", JSON.stringify(sync_results.projects))
   return sync_results;
 }

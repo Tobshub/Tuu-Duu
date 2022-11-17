@@ -115,9 +115,10 @@ const Main = () => {
       username: "",
       email: "",
     },
-    setUserDetails: (new_details: SavedUser) => {
+    setUserDetails: async (new_details: SavedUser) => {
       setUserCredentials((state) => ({ ...state, user_details: new_details }));
-      setUser(new_details);
+      await setUser(new_details);
+      return;
     },
   });
 
