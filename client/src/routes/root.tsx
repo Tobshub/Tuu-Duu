@@ -9,7 +9,7 @@ import {
   redirect,
   useLoaderData,
 } from "react-router-dom";
-import { getProjects, deleteProject, getProject, setUser } from "../dummyDB";
+import { getProjects, deleteProject, getProject, setUser } from "../localDB";
 import { Projects } from "../types/project";
 import AddSVG from "../images/Add.svg";
 import DeleteSVG from "../images/Delete.svg";

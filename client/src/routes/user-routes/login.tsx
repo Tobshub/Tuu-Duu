@@ -6,10 +6,11 @@ import {
   useActionData,
   useNavigate,
 } from "react-router-dom";
-import { syncProjects } from "../../dummyDB";
+import { syncProjects } from "../../localDB";
 import { AppUser, LoginServerResponse } from "../../types/server-response";
 import { UserCreds } from "../../types/user-context";
 import { UserCredentails } from "../root";
+import password_encrypt from "./password";
 
 export async function action({
   params,
@@ -19,7 +20,13 @@ export async function action({
   request: Request;
 }) {
   const res = await request.formData();
-  const { username, email, password, ...formData } = Object.fromEntries(res);
+  const {
+    username,
+    email,
+    password: raw_password,
+    ...formData
+  } = Object.fromEntries(res);
+  const password = password_encrypt(raw_password.toString());
   if (formData.action) {
     let request_body;
     switch (formData.action) {

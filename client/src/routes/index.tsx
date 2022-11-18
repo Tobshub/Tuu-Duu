@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Form, useLoaderData, Link } from "react-router-dom";
-import { getProjects } from "../dummyDB";
+import { getProjects } from "../localDB";
 import { Projects } from "../types/project";
 
 export const loader = async () => {

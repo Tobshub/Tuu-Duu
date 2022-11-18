@@ -34,7 +34,7 @@ import RootErrorElement from "./routes/root-error";
 import ProjectErrorElement from "./routes/project-routes/project-error";
 import SettingsPage from "./routes/user-settings";
 import { SavedUser, UserCreds } from "./types/user-context";
-import { getCurrentUser, setUser } from "./dummyDB";
+import { getCurrentUser, setUser } from "./localDB";
 import LogoutPage, {
   action as logoutAction,
 } from "./routes/user-routes/logout";

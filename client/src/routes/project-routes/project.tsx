@@ -18,7 +18,7 @@ import {
   markTodo,
   restoreTask,
   setFavorite,
-} from "../../dummyDB";
+} from "../../localDB";
 import { Projects, Task } from "../../types/project";
 import EditSVG from "../../images/Edit.svg";
 import DeleteSVG from "../../images/Delete.svg";

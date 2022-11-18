@@ -9,7 +9,12 @@ const db_connect = require("./config/database");
 
 db_connect();
 
-app.use(cors(), express.json())
+app.use(cors({
+  origin: [
+    "https://tuu-duu.netlify.app/",
+    "http://localhost:5173" //for development
+  ]
+}), express.json())
 
 
 app.use("/api/login", user_router, (req, res) => {

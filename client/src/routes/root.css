@@ -10,11 +10,12 @@
 .root-div > header {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: flex-start;
   padding: 0.25em 0.5em;
   background-color: #080400;
   width: max(20%, 120px);
+  position: relative;
 }
 
 .root-div h1 {
@@ -71,7 +72,7 @@
 .nav-bar > ul {
   width: 100%;
   min-height: 60vh;
-  max-height: 80%;
+  max-height: calc(100% - 50px);
   overflow-x: hidden;
   overflow-y: auto;
   display: flow-root;
@@ -85,6 +86,7 @@
   border-top: 1px solid #fff;
   position: relative;
   word-wrap: break-word;
+  font-size: 15px;
 }
 
 .nav-bar ul li .dropdown-toggle {
@@ -95,6 +97,12 @@
   background: transparent;
   border: 0;
   outline: 0;
+}
+
+@media (max-width: 750px) {
+  .nav-bar ul li .dropdown-toggle {
+    display: none;
+  }
 }
 
 .nav-bar ul a {
@@ -133,26 +141,35 @@
 
 .user-actions {
   display: flex;
+  align-items: flex-end;
   gap: 0.25em;
-  position: absolute;
+  position: relative;
   bottom: 2%;
-}
-/* 
-.user-actions > button {
-  outline: none;
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 0.25em 0.5em;
-  font-size: 18px;
-  color: #000;
-  background-color: #fff;
-  transition: background-color 200ms linear;
+  width: 100%;
+  height: fit-content;
 }
 
-.user-actions > button:hover,
-.user-actions > button:focus {
-  background-color: #0003;
-} */
+.user-actions > form {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+.user-actions button {
+  width: 100%;
+}
+
+@media (max-width: 1000px) {
+  .user-actions {
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .user-actions > form {
+    width: 100%;
+  }
+}
 
 .root-div > main {
   width: 100%;

@@ -1,13 +1,21 @@
 .project-tasks {
   max-width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(305px, 1fr));
+  gap: 1em 0.25em;
+}
 
-  /* display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start; */
-  gap: 1em 0;
+@media (max-width: 800px) {
+  .project-tasks {
+    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .project-tasks {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .task-card {
@@ -20,6 +28,18 @@
   /* margin-bottom: 1rem; */
   background-color: #b6b6b61a;
   transition: box-shadow 350ms;
+}
+
+@media (max-width: 800px) {
+  .task-card {
+    width: 250px;
+  }
+}
+
+@media (max-width: 600px) {
+  .task-card {
+    width: 100%;
+  }
 }
 
 .task-card:hover {

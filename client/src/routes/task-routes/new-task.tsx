@@ -1,6 +1,6 @@
 import React, { FormEvent, useRef, useState } from "react";
 import { Form, Params, redirect, useNavigate } from "react-router-dom";
-import { addTask, getProject } from "../../dummyDB";
+import { addTask, getProject } from "../../localDB";
 import { Task, TaskStatus } from "../../types/project";
 
 export async function action({
@@ -71,7 +71,7 @@ const NewTask = () => {
             }
             setMagicStyle("magictime holeOut");
             setTimeout(() => {
-              addBtnRef.current.disabled = true;
+              addBtnRef.current ? (addBtnRef.current.disabled = true) : null;
             }, 50);
           }}
         >

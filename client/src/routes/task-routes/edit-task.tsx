@@ -6,7 +6,7 @@ import {
   useLoaderData,
   useNavigate,
 } from "react-router-dom";
-import { addTodo, editTask, getTask } from "../../dummyDB";
+import { addTodo, editTask, getTask } from "../../localDB";
 import { Task, Todo, TodoStatus } from "../../types/project";
 import AddSVG from "../../images/Add_black.svg";
 import { validDate } from "./new-task";

@@ -1,4 +1,3 @@
-import { validateHeaderName } from "http";
 import React from "react";
 import { useRouteError } from "react-router";
 
@@ -19,8 +18,7 @@ const RootErrorElement = () => {
       <h1>Oops...</h1>
       <p>An error has occured.</p>
       <div>
-        <span>{error.status ? error.status : error.message}: </span>
-        <span>{error.statusText}</span>
+        <span>{!!error && JSON.stringify(error)}</span>
       </div>
     </div>
   );

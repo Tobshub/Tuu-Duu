@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Form, Params, redirect, useNavigate } from "react-router-dom";
-import { removeUser } from "../../dummyDB";
+import { removeUser } from "../../localDB";
 import { UserCreds } from "../../types/user-context";
 import { UserCredentails } from "../root";
 

@@ -197,7 +197,7 @@ export const syncProjects = async (config? : string) => {
   })
   .then(data => data.json())
   .then(res => res);
-  console.log(sync_results)
+  // console.log(sync_results)
   sessionStorage.setItem("projects", JSON.stringify(sync_results.projects))
   return sync_results;
 }

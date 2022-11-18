@@ -1,6 +1,6 @@
 import { Form, Params, redirect, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { addProject } from "../../dummyDB";
+import { addProject } from "../../localDB";
 import { Projects } from "../../types/project";
 
 export const action = async ({
