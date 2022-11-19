@@ -9,7 +9,7 @@ db_connect();
 
 app.use(cors({
   origin: [
-    "https://tuu-duu.netlify.app/",
+    "https://tuu-duu.netlify.app",
     "http://localhost:5173" //for development
   ]
 }), express.json())
