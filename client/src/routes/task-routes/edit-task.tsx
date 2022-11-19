@@ -67,7 +67,7 @@ const EditTask = () => {
           name="name"
           value={name}
           autoComplete="off"
-          onChange={(e) => setName(e.target.value)}
+          onChange={({ target }) => setName(target.value)}
         />
         <label htmlFor="deadline">Deadline:</label>
         <input
@@ -75,8 +75,8 @@ const EditTask = () => {
           id="deadline"
           name="deadline"
           value={deadline?.toISOString().slice(0, -5)}
-          onChange={(e) => {
-            const { value } = e.target;
+          onChange={({ target }) => {
+            const { value } = target;
             setDeadline(new Date(value));
             setInvalidDate(false);
           }}
@@ -98,9 +98,8 @@ const EditTask = () => {
             id="new-todo"
             className="form-control"
             placeholder="New todo"
-            onChange={(e) => {
-              const { value } = e.target;
-              setTodo(value);
+            onChange={({ target }) => {
+              setTodo(target.value);
             }}
           />
           <div className="input-group-btn">

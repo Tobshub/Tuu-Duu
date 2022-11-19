@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Form } from "react-router-dom";
 import { Task, Todo, TodoStatus } from "../../types/project";
 import EditSVG from "../../images/Edit.svg";
@@ -9,12 +9,15 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const [gridRow, setGridRow] = useState("");
   const [hasCompletedTodos, setHasCompletedTodos] = useState(false);
+  const cardRef = useRef(null);
   // change the span of task cards depending on their length
   useEffect(() => {
-    const this_card = document.querySelectorAll(".task-card")[index];
-    const height = parseInt(getComputedStyle(this_card).height);
-    const span_ratio = parseInt((height / 100).toString());
-    setGridRow(`span ${span_ratio > 2 ? span_ratio - 1 : span_ratio}`);
+    if (cardRef.current) {
+      const this_card = cardRef.current;
+      const height = parseInt(getComputedStyle(this_card).height);
+      const span_ratio = parseInt((height / 100).toString());
+      setGridRow(`span ${span_ratio > 2 ? span_ratio - 1 : span_ratio}`);
+    }
   }, [task, index]);
 
   useEffect(() => {
@@ -29,6 +32,7 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
   return (
     <div
       className={`task-card ${magicStyle}`}
+      ref={cardRef}
       key={index}
       style={{
         gridRow: gridRow,

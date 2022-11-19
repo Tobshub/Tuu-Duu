@@ -124,7 +124,7 @@ form:has(.new-task-btn) {
 .new-task > form,
 .edit-task > form {
   background-color: #fff;
-  width: 325px;
+  width: min(325px, 100%);
   padding: 1em 0.75em;
   border-radius: 10px;
   display: flex;
@@ -141,7 +141,7 @@ form:has(.new-task-btn) {
 }
 
 .edit-task > form {
-  width: 500px;
+  width: min(500px, 100%);
 }
 
 .invalid-date {

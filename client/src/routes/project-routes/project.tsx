@@ -170,7 +170,7 @@ const Project = () => {
         <ActionNotifcation
           content={{ message: "Task Deleted" }}
           action={{
-            name: "Undo delete",
+            name: "Undo",
             target: "Task",
             execute: () => {
               const { removed_task, key } = deletedTasks.splice(-1)[0];

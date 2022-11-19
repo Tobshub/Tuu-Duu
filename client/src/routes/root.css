@@ -8,7 +8,7 @@
 }
 
 .toggle-sidebar {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0.4em;
   z-index: 200;
@@ -20,7 +20,7 @@
   flex-direction: column;
   justify-content: space-around;
   align-items: flex-start;
-  padding: 0.25em 0.5em;
+  padding: 0.75em 0.5em;
   background-color: #080400;
   width: max(20%, 120px);
   position: relative;
@@ -191,6 +191,7 @@
 .root-div > main {
   width: 100%;
   height: 100%;
+  padding: 0.25em;
   overflow-x: hidden;
   overflow-y: scroll;
   display: flex;

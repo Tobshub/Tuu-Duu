@@ -91,7 +91,7 @@ const Root = () => {
             if (sideBar.current) {
               sideBar.current.style.display =
                 getComputedStyle(sideBar.current).display === "none"
-                  ? "block"
+                  ? "flex"
                   : "none";
             }
           }}
