@@ -6,11 +6,19 @@ import {
   useActionData,
   useNavigate,
 } from "react-router-dom";
-import { syncProjects } from "../../localDB";
+import { getCurrentUser, syncProjects } from "../../localDB";
 import { AppUser, LoginServerResponse } from "../../types/server-response";
 import { UserCreds } from "../../types/user-context";
 import { UserCredentails } from "../root";
 import password_encrypt from "./password";
+
+export async function loader({ params }: { params: Params<string> }) {
+  getCurrentUser().then((user) => {
+    if (user && user._id) {
+      return redirect("/");
+    }
+  });
+}
 
 export async function action({
   params,
@@ -65,6 +73,7 @@ export async function action({
         if (data.success) {
           return data.user;
         }
+        console.log("invalid");
         return false;
       })
       .catch((e) => console.error(e.message));
@@ -80,14 +89,22 @@ const LoginPage = () => {
   });
   const [isLogin, setIsLogin] = useState(true);
   const submitBtn = useRef<HTMLButtonElement | null>(null);
+  const passwordInput = useRef<HTMLInputElement | null>(null);
   const is_valid_user = useActionData();
   const navigate = useNavigate();
   const user_credentials = useContext<UserCreds>(UserCredentails);
   const [loginError, showLoginError] = useState(false);
+  const [inputError, showInputError] = useState(false);
+  const [showPassword, toggleShowPassword] = useState(false);
 
   useEffect(() => {
-    submitBtn.current ? (submitBtn.current.disabled = false) : null;
-  }, [submitBtn.current?.disabled]);
+    toggleShowPassword(false);
+    setUser({
+      email: "",
+      password: "",
+      username: "",
+    });
+  }, [isLogin]);
 
   useEffect(() => {
     if (is_valid_user) {
@@ -103,11 +120,23 @@ const LoginPage = () => {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setUser((state) => ({ ...state, [name]: value }));
+    submitBtn.current ? (submitBtn.current.disabled = false) : null;
     showLoginError(false);
+    showInputError(false);
   }
 
   return (
     <div className="login-form-container">
+      <div className="login-form-back">
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          Back to home
+        </button>
+      </div>
       <Form method="post">
         {!isLogin && (
           <label>
@@ -123,9 +152,7 @@ const LoginPage = () => {
           </label>
         )}
         {loginError && (
-          <span style={{ color: "red" }}>
-            Username or Password is incorrect
-          </span>
+          <span style={{ color: "red" }}>Email or Password is incorrect</span>
         )}
         <label>
           Email:
@@ -140,14 +167,36 @@ const LoginPage = () => {
         </label>
         <label>
           Password:
-          <input
-            type="password"
-            placeholder="joe is awesome 123"
-            name="password"
-            className="form-control"
-            value={user.password}
-            onChange={handleChange}
-          />
+          <div className="input-group">
+            <input
+              type={showPassword ? "text" : "password"}
+              ref={passwordInput}
+              placeholder="joe is awesome 123"
+              name="password"
+              className="form-control"
+              value={user.password}
+              onChange={handleChange}
+            />
+            <span className="input-group-btn" style={{ padding: "0" }}>
+              <button
+                type="button"
+                style={{
+                  padding: ".5em .75em",
+                  fontSize: "14px",
+                  height: "100%",
+                  borderRadius: "0 5px 5px 0",
+                }}
+                className="btn btn-danger"
+                onClick={() => {
+                  toggleShowPassword((state) => !state);
+                  passwordInput.current ? passwordInput.current.focus() : null;
+                }}
+              >
+                Show Password
+              </button>
+            </span>
+          </div>
+          {inputError && <span>Password is too short</span>}
         </label>
         <button
           type="submit"
@@ -156,6 +205,10 @@ const LoginPage = () => {
           className="btn btn-primary"
           ref={submitBtn}
           onClick={(e) => {
+            if (user.password.length < 8) {
+              e.preventDefault();
+              showInputError(true);
+            }
             let valid = isLogin
               ? checkFilled(user.email, user.password)
               : checkFilled(user.username, user.email, user.password);
@@ -170,18 +223,19 @@ const LoginPage = () => {
         >
           {isLogin ? "Login" : "Sign Up"}
         </button>
-        <label>
-          {isLogin ? "New user" : "Already have an account"}?
+        <div>
+          <label>{isLogin ? "New user" : "Already have an account"}?</label>
           <button
             type="button"
             className="btn btn-link btn-sm"
             onClick={() => {
               setIsLogin(!isLogin);
             }}
+            style={{ fontSize: "18px" }}
           >
             {isLogin ? "Sign up" : "Login"}
           </button>
-        </label>
+        </div>
       </Form>
     </div>
   );
@@ -190,5 +244,7 @@ const LoginPage = () => {
 export default LoginPage;
 
 function checkFilled(...args: string[]) {
-  return args.every((value) => value.length > 0);
+  return args.every((value) => {
+    value.length > 0;
+  });
 }

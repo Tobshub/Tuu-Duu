@@ -15,7 +15,7 @@ export async function action({
   const formData = Object.fromEntries(res);
   switch (formData.action) {
     case "Logout":
-      removeUser();
+      await removeUser();
       return redirect("/");
   }
 }

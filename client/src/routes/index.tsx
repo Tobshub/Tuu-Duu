@@ -4,7 +4,7 @@ import { getProjects } from "../localDB";
 import { Projects } from "../types/project";
 
 export const loader = async () => {
-  const projects = await getProjects();
+  const projects = getProjects();
   return { projects };
 };
 

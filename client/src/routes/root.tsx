@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, MouseEvent } from "react";
 import "./root.css";
 import {
   Outlet,
@@ -9,7 +9,13 @@ import {
   redirect,
   useLoaderData,
 } from "react-router-dom";
-import { getProjects, deleteProject, getProject, setUser } from "../localDB";
+import {
+  getProjects,
+  deleteProject,
+  getProject,
+  setUser,
+  removeUser,
+} from "../localDB";
 import { Projects } from "../types/project";
 import AddSVG from "../images/Add.svg";
 import DeleteSVG from "../images/Delete.svg";
@@ -26,13 +32,14 @@ export async function loader() {
 }
 
 export async function action({ request }: { request: Request }) {
-  const formData = await request.formData();
-  const res = Object.fromEntries(formData);
-  if (!res) return;
-  if (res.new) {
+  const res = await request.formData();
+  const formData = Object.fromEntries(res);
+  if (!formData) return;
+  if (formData.new) {
     return redirect("/projects/new");
-  } else if (res.delete) {
-    const id = res.delete ? res.delete.toString() : undefined;
+  } else if (formData.delete) {
+    const id = formData.delete.toString();
+    console.log("delete", id);
     await deleteProject(id);
     return redirect("/");
   }
@@ -50,13 +57,11 @@ const Root = () => {
   );
 
   useEffect(() => {
-    if (user_credentials.user_details && user_credentials.user_details.email) {
-      setLoggedIn(true);
-      setUser(user_credentials.user_details);
-    } else {
-      setLoggedIn(false);
-      setUser({ _id: "", email: "", username: "" });
-    }
+    setLoggedIn(
+      user_credentials.user_details && user_credentials.user_details.email
+        ? true
+        : false
+    );
   }, [user_credentials.user_details]);
 
   return (
@@ -121,7 +126,7 @@ const NavItem = ({ project, index }: { project: Projects; index: number }) => {
       >
         {project.name}
       </NavLink>
-      <button
+      {/* <button
         onClick={() => setShowMenu(!showMenu)}
         onBlur={() => {
           setTimeout(() => setShowMenu(false), 100);
@@ -130,9 +135,11 @@ const NavItem = ({ project, index }: { project: Projects; index: number }) => {
         data-toggle="dropdown"
       >
         <img src={InlineMenuSVG} alt="inline menu" />
-      </button>
+      </button> */}
 
-      {showMenu && <Menu project={project} setMagicStyle={setMagicStyle} />}
+      {showMenu && (
+        <Menu project={project} setMagicStyle={setMagicStyle} key={index} />
+      )}
     </li>
   );
 };
@@ -144,19 +151,30 @@ const Menu = ({
   project: Projects;
   setMagicStyle: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+  const navigate = useNavigate();
   return (
     <div className="nav-dropdown dropdown magictime swashIn">
-      <Form action={`projects/${project.id}/edit`}>
-        <button className="btn btn-warning btn-sm" type="submit">
+      <Form>
+        <button
+          className="btn btn-warning btn-sm"
+          type="button"
+          onClick={(e: MouseEvent) => {
+            e.preventDefault();
+            console.log("edit from menu");
+            return navigate(`projects/${project.id}/edit`);
+          }}
+        >
           Edit
         </button>
       </Form>
       <Form method="post">
         <button
+          type="submit"
           className="btn btn-danger btn-sm"
           name="delete"
           value={project.id}
           onClick={() => {
+            console.log("delete from menu");
             setMagicStyle("magictime holeOut");
             setTimeout(() => {
               setMagicStyle("magictime");

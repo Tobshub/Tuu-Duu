@@ -181,9 +181,9 @@ export const markTodo = async (id: string, task_index: number, todo_index: numbe
 export const syncProjects = async (config? : string) => {
   const user = await getCurrentUser()
   
-  if (!user._id) return;
+  if (user && !user._id) return;
   const sync_resources = {
-      user_projects: await getProjects(),
+      user_projects: getProjects(),
       user_id: user._id,
       config,
   };
