@@ -158,6 +158,7 @@ const LoginPage = () => {
           Email:
           <input
             type="email"
+            required
             placeholder="joe@example.com"
             name="email"
             className="form-control"
@@ -170,6 +171,7 @@ const LoginPage = () => {
           <div className="input-group">
             <input
               type={showPassword ? "text" : "password"}
+              required
               ref={passwordInput}
               placeholder="joe is awesome 123"
               name="password"
@@ -196,7 +198,9 @@ const LoginPage = () => {
               </button>
             </span>
           </div>
-          {inputError && <span>Password is too short</span>}
+          {inputError && (
+            <span style={{ color: "red" }}>Password is too short</span>
+          )}
         </label>
         <button
           type="submit"
@@ -206,19 +210,13 @@ const LoginPage = () => {
           ref={submitBtn}
           onClick={(e) => {
             if (user.password.length < 8) {
+              console.log("short password");
               e.preventDefault();
               showInputError(true);
             }
-            let valid = isLogin
-              ? checkFilled(user.email, user.password)
-              : checkFilled(user.username, user.email, user.password);
-            if (!valid) {
-              e.preventDefault();
-              return;
-            }
             setTimeout(() => {
               submitBtn.current ? (submitBtn.current.disabled = true) : null;
-            }, 100);
+            }, 50);
           }}
         >
           {isLogin ? "Login" : "Sign Up"}
@@ -242,9 +240,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-function checkFilled(...args: string[]) {
-  return args.every((value) => {
-    value.length > 0;
-  });
-}
