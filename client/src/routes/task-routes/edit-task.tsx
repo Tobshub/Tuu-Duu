@@ -37,7 +37,7 @@ export async function action({
       deadline: deadline ? new Date(deadline.toString()) : undefined,
     };
     await editTask(id, parseInt(index), task);
-    return;
+    return redirect(`/projects/${id}`);
   }
   if (formData.addTodo && newTodo) {
     const todo: Todo = {
@@ -113,7 +113,7 @@ const EditTask = () => {
                 setTimeout(() => setTodo(""), 100);
               }}
             >
-              <img src={AddSVG} />
+              <img src={AddSVG} alt="Add todo" />
             </button>
           </div>
         </div>
@@ -129,9 +129,9 @@ const EditTask = () => {
               return;
             }
             setMagicStyle("magictime holeOut");
-            setTimeout(() => {
-              navigate(-1);
-            }, 200);
+            // setTimeout(() => {
+            //   navigate(-1);
+            // }, 200);
           }}
         >
           Save

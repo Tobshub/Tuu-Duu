@@ -81,7 +81,7 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
           value={index}
           className="edit-task-btn"
         >
-          <img src={EditSVG} />
+          <img src={EditSVG} alt="Edit task" />
         </button>
         <button
           type="submit"
@@ -95,7 +95,7 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
             }, 200);
           }}
         >
-          <img src={DeleteSVG} />
+          <img src={DeleteSVG} alt="Delete task" />
         </button>
       </Form>
     </div>
@@ -126,7 +126,7 @@ const TodoComponent = ({
               value={[parent.toString(), index.toString()]}
               className="mark-todo-done-btn"
             >
-              <img src={DoneSVG} />
+              <img src={DoneSVG} alt="Mark todo as done" />
             </button>
           </Form>
         ) : null}

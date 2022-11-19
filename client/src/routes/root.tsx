@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useContext, MouseEvent } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  MouseEvent,
+  Context,
+  useRef,
+} from "react";
 import "./root.css";
 import {
   Outlet,
@@ -20,11 +27,12 @@ import { Projects } from "../types/project";
 import AddSVG from "../images/Add.svg";
 import DeleteSVG from "../images/Delete.svg";
 import InlineMenuSVG from "../images/inline-menu.svg";
-import { Nav } from "react-bootstrap";
+import BurgerMenuSVG from "../images/BurgerMenu.svg";
+import CloseSVG from "../images/Close.svg";
 import "react-notifications/lib/notifications.css";
 import { UserCreds } from "../types/user-context";
 
-export const UserCredentails = React.createContext(null);
+export const UserCredentails: Context<UserCreds> = React.createContext(null);
 
 export async function loader() {
   const projects = getProjects();
@@ -49,7 +57,7 @@ const Root = () => {
   const projects: Projects[] = useLoaderData();
 
   const user_credentials = useContext<UserCreds>(UserCredentails);
-
+  const sideBar = useRef<HTMLElement>();
   const [isLoggedIn, setLoggedIn] = useState<boolean>(
     user_credentials.user_details && user_credentials.user_details.email
       ? true
@@ -64,11 +72,40 @@ const Root = () => {
     );
   }, [user_credentials.user_details]);
 
+  const handleRedirectClick = () => {
+    if (window.innerWidth > 500) return;
+    setTimeout(() => {
+      sideBar.current ? (sideBar.current.style.display = "none") : null;
+    }, 100);
+  };
+
   return (
     <div className="root-div">
-      <header>
+      <div className="toggle-sidebar">
+        <button
+          className="new-project-btn"
+          style={{
+            width: "30px",
+          }}
+          onClick={() => {
+            if (sideBar.current) {
+              sideBar.current.style.display =
+                getComputedStyle(sideBar.current).display === "none"
+                  ? "block"
+                  : "none";
+            }
+          }}
+        >
+          {!!sideBar.current && (
+            <img src={BurgerMenuSVG} alt="Toggle sidebar" />
+          )}
+        </button>
+      </div>
+      <header ref={sideBar}>
         <h1>
-          <Link to={`/`}>Tuu-Duu</Link>
+          <Link to={`/`} onClick={handleRedirectClick}>
+            Tuu-Duu
+          </Link>
         </h1>
         <nav className="nav-bar navbar navbar-default">
           <div className="nav-title">
@@ -79,15 +116,21 @@ const Root = () => {
                 className="new-project-btn"
                 name="new"
                 value={1}
+                onClick={handleRedirectClick}
               >
-                <img src={AddSVG} />
+                <img src={AddSVG} alt="New project" />
               </button>
             </Form>
           </div>
           <ul className="nav navbar-nav nav-bar">
             {projects && projects.length ? (
               projects.map((project: Projects, key: number) => (
-                <NavItem project={project} index={key} key={key} />
+                <NavItem
+                  project={project}
+                  index={key}
+                  key={key}
+                  closeMenu={handleRedirectClick}
+                />
               ))
             ) : (
               <em>No projects yet.</em>
@@ -114,7 +157,15 @@ const Root = () => {
 
 export default Root;
 
-const NavItem = ({ project, index }: { project: Projects; index: number }) => {
+const NavItem = ({
+  project,
+  index,
+  closeMenu,
+}: {
+  project: Projects;
+  index: number;
+  closeMenu: () => void;
+}) => {
   const [magicStyle, setMagicStyle] = useState("");
   const [showMenu, setShowMenu] = useState(false);
 
@@ -123,6 +174,7 @@ const NavItem = ({ project, index }: { project: Projects; index: number }) => {
       <NavLink
         to={`projects/${project.id}`}
         className={({ isActive }) => (isActive ? "btn btn-primary" : "btn")}
+        onClick={closeMenu}
       >
         {project.name}
       </NavLink>

@@ -49,7 +49,7 @@ const EditProject = () => {
   const navigate = useNavigate();
 
   return (
-    <Form className="new-project" method="post">
+    <Form className="edit-project" method="post">
       <input
         type="text"
         name="name"
