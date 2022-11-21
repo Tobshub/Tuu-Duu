@@ -6,10 +6,8 @@ import {
   useActionData,
   useNavigate,
 } from "react-router-dom";
-import { getCurrentUser, syncProjects } from "../../localDB";
+import { getCurrentUser, setUser } from "../../localDB";
 import { AppUser, LoginServerResponse } from "../../types/server-response";
-import { UserCreds } from "../../types/user-context";
-import { UserCredentails } from "../root";
 
 export async function loader({ params }: { params: Params<string> }) {
   getCurrentUser().then((user) => {
@@ -71,13 +69,16 @@ export async function action({
         }
         return false;
       })
-      .catch((e) => console.error(e.message));
+      .catch((e) => {
+        console.error(e.message);
+        return false;
+      });
     return user_api_data;
   }
 }
 
 const LoginPage = () => {
-  const [user, setUser] = useState({
+  const [user, setUserCreds] = useState({
     email: "",
     password: "",
     username: "",
@@ -85,16 +86,15 @@ const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const submitBtn = useRef<HTMLButtonElement | null>(null);
   const passwordInput = useRef<HTMLInputElement | null>(null);
-  const is_valid_user = useActionData();
+  const is_valid_user: AppUser | false = useActionData();
   const navigate = useNavigate();
-  const user_credentials = useContext<UserCreds>(UserCredentails);
   const [loginError, showLoginError] = useState(false);
   const [inputError, showInputError] = useState(false);
   const [showPassword, toggleShowPassword] = useState(false);
 
   useEffect(() => {
     toggleShowPassword(false);
-    setUser({
+    setUserCreds({
       email: "",
       password: "",
       username: "",
@@ -103,10 +103,8 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (is_valid_user) {
-      user_credentials
-        .setUserDetails(is_valid_user)
-        .then(async () => await syncProjects())
-        .finally(() => navigate("/"));
+      const { _id, username, email } = is_valid_user;
+      setUser({ _id, username, email }).finally(() => navigate("/"));
     } else if (is_valid_user === false) {
       showLoginError(true);
     }
@@ -114,7 +112,7 @@ const LoginPage = () => {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
-    setUser((state) => ({ ...state, [name]: value }));
+    setUserCreds((state) => ({ ...state, [name]: value }));
     submitBtn.current ? (submitBtn.current.disabled = false) : null;
     showLoginError(false);
     showInputError(false);

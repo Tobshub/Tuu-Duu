@@ -7,7 +7,7 @@ export interface LoginServerResponse {
 }
 
 export interface AppUser {
-  _id: string,
+  readonly _id: string,
   username: string,
   email: string,
   projects: Projects[],

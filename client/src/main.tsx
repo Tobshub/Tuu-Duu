@@ -5,7 +5,6 @@ import ReactDOM from "react-dom/client";
 import Root, {
   loader as rootLoader,
   action as rootAction,
-  UserCredentails,
 } from "./routes/root";
 import "./main.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -33,8 +32,6 @@ import "./routes/user-routes/login.css";
 import RootErrorElement from "./routes/root-error";
 import ProjectErrorElement from "./routes/project-routes/project-error";
 import SettingsPage from "./routes/user-settings";
-import { SavedUser, UserCreds } from "./types/user-context";
-import { getCurrentUser, setUser, syncProjects } from "./localDB";
 import LogoutPage, {
   action as logoutAction,
 } from "./routes/user-routes/logout";
@@ -108,49 +105,8 @@ const router = createBrowserRouter([
   },
 ]);
 
-const Main = () => {
-  const [user_credentials, setUserCredentials] = useState<UserCreds>({
-    user_details: {
-      _id: "",
-      username: "",
-      email: "",
-    },
-    setUserDetails: async (new_details: SavedUser) => {
-      setUserCredentials((state) => ({ ...state, user_details: new_details }));
-      await setUser(new_details);
-      return;
-    },
-  });
-
-  useEffect(() => {
-    getCurrentUser()
-      .then(async (user) => {
-        if (!user) {
-          setUserCredentials((state) => ({
-            ...state,
-            user_details: {
-              _id: "",
-              username: "",
-              email: "",
-            },
-          }));
-        } else {
-          await user_credentials.setUserDetails(user);
-        }
-      })
-      .catch((e) => console.error(e.message));
-  }, []);
-
-  return (
-    <React.StrictMode>
-      <UserCredentails.Provider value={user_credentials}>
-        <RouterProvider router={router} />
-      </UserCredentails.Provider>
-    </React.StrictMode>
-  );
-};
-
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
 );
-root.render(<Main />);

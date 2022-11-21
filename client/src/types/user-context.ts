@@ -6,7 +6,7 @@ export interface UserCreds {
 }
 
 export interface SavedUser {
-  _id: string,
+  readonly _id: string,
   email: string,
   username: string,
 }

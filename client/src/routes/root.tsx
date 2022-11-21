@@ -32,20 +32,22 @@ import InlineMenuSVG from "../images/inline-menu.svg";
 import BurgerMenuSVG from "../images/BurgerMenu.svg";
 import CloseSVG from "../images/Close.svg";
 import "react-notifications/lib/notifications.css";
-import { UserCreds } from "../types/user-context";
+import { SavedUser, UserCreds } from "../types/user-context";
 
 export const UserCredentails: Context<UserCreds> = React.createContext(null);
 
 export async function loader() {
   const projects = await getCurrentUser()
     .then(async (user) => {
-      if (!user) return null;
+      if (!user) {
+        return getProjects();
+      }
       // promise.race in case the server is experiencing downtime
       const db_synced = await Promise.race([
         syncProjects(),
         (async () => {
           let local_projects: Projects[];
-          setTimeout(() => (local_projects = getProjects()), 2500);
+          setTimeout(() => (local_projects = getProjects()), 3000);
           return local_projects;
         })(),
       ]);
@@ -73,8 +75,35 @@ export async function action({ request }: { request: Request }) {
 
 const Root = () => {
   const projects: Projects[] = useLoaderData();
+  const [user_credentials, setUserCredentials] = useState<UserCreds>({
+    user_details: {
+      _id: "",
+      username: "",
+      email: "",
+    },
+    setUserDetails: async (new_details: SavedUser) => {
+      setUserCredentials((state) => ({ ...state, user_details: new_details }));
+      await setUser(new_details);
+      return;
+    },
+  });
 
-  const user_credentials = useContext<UserCreds>(UserCredentails);
+  useEffect(() => {
+    getCurrentUser()
+      .then(async (user) => {
+        if (!user) {
+          user_credentials.setUserDetails({
+            _id: "",
+            username: "",
+            email: "",
+          });
+        } else {
+          await user_credentials.setUserDetails(user);
+        }
+      })
+      .catch((e) => console.error(e.message));
+  }, []);
+
   const sideBar = useRef<HTMLElement>();
   const [isLoggedIn, setLoggedIn] = useState<boolean>(
     user_credentials.user_details && user_credentials.user_details.email
@@ -84,7 +113,7 @@ const Root = () => {
 
   useEffect(() => {
     setLoggedIn(
-      user_credentials.user_details && user_credentials.user_details.email
+      user_credentials.user_details && user_credentials.user_details._id
         ? true
         : false
     );
@@ -167,7 +196,9 @@ const Root = () => {
         </div>
       </header>
       <main>
-        <Outlet />
+        <UserCredentails.Provider value={user_credentials}>
+          <Outlet />
+        </UserCredentails.Provider>
       </main>
     </div>
   );

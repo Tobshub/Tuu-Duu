@@ -22,7 +22,6 @@ export async function action({
 
 const LogoutPage = () => {
   const navigate = useNavigate();
-  const user_credentials = useContext<UserCreds>(UserCredentails);
 
   return (
     <div className="login-form-container">
@@ -33,13 +32,6 @@ const LogoutPage = () => {
           name="action"
           value={"Logout"}
           className="btn btn-warning"
-          onClick={() => {
-            user_credentials.setUserDetails({
-              _id: "",
-              username: "",
-              email: "",
-            });
-          }}
         >
           Logout
         </button>
