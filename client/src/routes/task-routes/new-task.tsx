@@ -99,7 +99,7 @@ const NewTask = () => {
 export default NewTask;
 
 export function validDate(date: Date) {
-  if (date.getTime() < new Date().getTime()) {
+  if (new Date(date).getTime() < new Date().getTime()) {
     return false;
   } else {
     return true;

@@ -142,11 +142,11 @@ const Main = () => {
   }, []);
 
   return (
-    <UserCredentails.Provider value={user_credentials}>
-      <React.StrictMode>
+    <React.StrictMode>
+      <UserCredentails.Provider value={user_credentials}>
         <RouterProvider router={router} />
-      </React.StrictMode>
-    </UserCredentails.Provider>
+      </UserCredentails.Provider>
+    </React.StrictMode>
   );
 };
 

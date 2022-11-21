@@ -96,9 +96,7 @@ const Root = () => {
             }
           }}
         >
-          {!!sideBar.current && (
-            <img src={BurgerMenuSVG} alt="Toggle sidebar" />
-          )}
+          <img src={BurgerMenuSVG} alt="Toggle sidebar" />
         </button>
       </div>
       <header ref={sideBar}>

@@ -77,11 +77,13 @@ const EditTask = () => {
           value={!!deadline && new Date(deadline).toISOString().slice(0, -5)}
           onChange={({ target }) => {
             const { value } = target;
-            setDeadline(new Date(value));
+            setDeadline(value ? new Date(value) : undefined);
             setInvalidDate(false);
           }}
         />
-        {invalidDate && <span className="invalid-date">Invalid Date</span>}
+        {invalidDate && (
+          <span className="invalid-date">Deadline has passed</span>
+        )}
         <div className="display-todos">
           {task.todos && task.todos.length ? (
             task.todos.map((todo, key) => (
