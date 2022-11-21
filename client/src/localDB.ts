@@ -55,7 +55,6 @@ export const getProjects = (): Projects[] | null => {
   } catch (error) {
     return null;
   }
-  
 }
 
 const getProjectIndex = async (id: string, db?: (Projects[] | null)): Promise<number | null> => {
@@ -183,7 +182,7 @@ export const syncProjects = async (config? : string) => {
       user_id: user._id,
       config,
   };
-  const sync_results: SyncServerResponse = await fetch("https://tuu-duu-api.onrender.com/api/login/sync_projects", {
+  const sync_results: SyncServerResponse = await fetch("https://tuu-duu-api.onrender.com/api/user/sync_projects", {
     method: "PUT",
     mode: "cors",
     headers: {

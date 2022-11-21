@@ -135,9 +135,7 @@ const Main = () => {
             },
           }));
         } else {
-          await user_credentials.setUserDetails(user).then(async () => {
-            await syncProjects();
-          });
+          await user_credentials.setUserDetails(user);
         }
       })
       .catch((e) => console.error(e.message));

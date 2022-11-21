@@ -50,7 +50,7 @@ const NewTask = () => {
           name="deadline"
           value={deadline}
           onChange={(e) => {
-            setDeadline(e.target.value);
+            setDeadline(e.target.value ?? "");
             setInvalidDate(false);
           }}
           className="form-control"

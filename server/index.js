@@ -15,7 +15,7 @@ app.use(cors({
 }), express.json())
 
 
-app.use("/api/login", user_router, (req, res) => {
+app.use("/api/user", user_router, (req, res) => {
   res.send({
     message: "Hello frontend!"
   })

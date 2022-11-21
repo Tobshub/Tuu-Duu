@@ -7,8 +7,8 @@ router
       message: "sent a get request."
     })
   })
-  .post('/', controller.getUserByEmail)
-  .post('/new', controller.addNewUser)
+  .post('/login', controller.getUserByEmail)
+  .post('/sign_up', controller.addNewUser)
   .put('/sync_projects', controller.syncUserProjects)
 // delete user
 // update user-details

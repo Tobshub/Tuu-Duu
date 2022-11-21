@@ -22,6 +22,8 @@ import {
   getProject,
   setUser,
   removeUser,
+  syncProjects,
+  getCurrentUser,
 } from "../localDB";
 import { Projects } from "../types/project";
 import AddSVG from "../images/Add.svg";
@@ -35,7 +37,23 @@ import { UserCreds } from "../types/user-context";
 export const UserCredentails: Context<UserCreds> = React.createContext(null);
 
 export async function loader() {
-  const projects = getProjects();
+  const projects = await getCurrentUser()
+    .then(async (user) => {
+      if (!user) return null;
+      // promise.race in case the server is experiencing downtime
+      const db_synced = await Promise.race([
+        syncProjects(),
+        (async () => {
+          let local_projects: Projects[];
+          setTimeout(() => (local_projects = getProjects()), 2500);
+          return local_projects;
+        })(),
+      ]);
+      return db_synced;
+    })
+    .then((res) => ("projects" in res ? res.projects : res))
+    .catch((e) => getProjects());
+
   return projects;
 }
 
