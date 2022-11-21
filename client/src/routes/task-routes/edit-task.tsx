@@ -74,7 +74,7 @@ const EditTask = () => {
           type="datetime-local"
           id="deadline"
           name="deadline"
-          value={deadline?.toISOString().slice(0, -5)}
+          value={!!deadline && new Date(deadline).toISOString().slice(0, -5)}
           onChange={({ target }) => {
             const { value } = target;
             setDeadline(new Date(value));

@@ -39,8 +39,10 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
         animationDuration: "350ms",
       }}
     >
-      <h2>{task.name}</h2>
-      <div>{task.deadline?.toLocaleString()}</div>
+      <h3>{task.name}</h3>
+      <h6>
+        {!!task.deadline ? new Date(task.deadline).toLocaleString() : null}
+      </h6>
       <ul className="todos">
         {task.todos && task.todos.length ? (
           task.todos.map((todo, key) => {

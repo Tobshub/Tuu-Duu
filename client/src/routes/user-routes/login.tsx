@@ -10,7 +10,6 @@ import { getCurrentUser, syncProjects } from "../../localDB";
 import { AppUser, LoginServerResponse } from "../../types/server-response";
 import { UserCreds } from "../../types/user-context";
 import { UserCredentails } from "../root";
-import password_encrypt from "./password";
 
 export async function loader({ params }: { params: Params<string> }) {
   getCurrentUser().then((user) => {
@@ -28,13 +27,8 @@ export async function action({
   request: Request;
 }) {
   const res = await request.formData();
-  const {
-    username,
-    email,
-    password: raw_password,
-    ...formData
-  } = Object.fromEntries(res);
-  const password = password_encrypt(raw_password.toString());
+  const { username, email, password, ...formData } = Object.fromEntries(res);
+
   if (formData.action) {
     let request_body;
     switch (formData.action) {
@@ -66,6 +60,8 @@ export async function action({
       body: JSON.stringify(request_body),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
+        "Access-Control-Allow-Origin": "https://tuu-duu-api.onrender.com",
+        Vary: "Origin",
       },
     })
       .then((data) => data.json())
@@ -73,7 +69,6 @@ export async function action({
         if (data.success) {
           return data.user;
         }
-        console.log("invalid");
         return false;
       })
       .catch((e) => console.error(e.message));
@@ -210,7 +205,6 @@ const LoginPage = () => {
           ref={submitBtn}
           onClick={(e) => {
             if (user.password.length < 8) {
-              console.log("short password");
               e.preventDefault();
               showInputError(true);
             }

@@ -17,7 +17,6 @@ export const setUser = async ({_id, username, email}: SavedUser) => {
 
 export const removeUser = async () => {
   const res = await localforage.removeItem("user_details", (err) => {
-    console.log("logged out")
     if (err) {
       console.error(err);
       return false;
@@ -105,10 +104,8 @@ export const deleteProject = async (id: (string | undefined)) => {
   const projects = getProjects();
   if(!projects || !projects.length) return null;
   const index = await getProjectIndex(id, projects);
-  if(index === null) {
-    console.log('project does not exists in database')
-    return null};
-  const removed = (projects && index !== null)? projects.splice(index, 1) : null;
+  if(index === null) return null;
+  projects.splice(index, 1);
   
   sessionStorage.setItem('projects', JSON.stringify(projects));
   syncProjects("overwrite")

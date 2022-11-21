@@ -18,11 +18,12 @@
 .root-div > header {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: flex-start;
-  padding: 0.75em 0.5em;
+  padding: 0.75em 0.5em 0;
   background-color: #080400;
-  width: max(20%, 120px);
+  width: max(20%, 200px);
+  height: 100%;
   position: relative;
 }
 
@@ -253,6 +254,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
+  text-transform: capitalize;
 }
 
 .project-title > form {
@@ -300,7 +302,7 @@
 }
 
 .project-description {
-  max-width: 75%;
+  width: 100%;
 }
 
 .task-container {
