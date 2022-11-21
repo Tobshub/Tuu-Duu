@@ -7,7 +7,13 @@ exports.getUserByEmail = async (req, res) => {
     const { user_details } = await req.body;
 
     const user = Users.find({ email: user_details.email }, (err, doc) => {
-      if (err) return console.error(err);
+      if (err) {
+        res.status(500).send({
+          success: false,
+          message: "email or password is wrong"
+        })
+        return console.error(err)
+      };
       const res_user = doc[0];
 
       const valid = bcrypt.compareSync(user_details.password, res_user.password);
