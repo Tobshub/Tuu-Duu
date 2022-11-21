@@ -1,19 +1,22 @@
 const Users = require("../model/userModel");
-
+const bcrypt = require("bcrypt");
 
 // get user by email
 exports.getUserByEmail = async (req, res) => {
   try {
     const { user_details } = await req.body;
 
-    const user = Users.find({ email: user_details.email, password: user_details.password }, (err, doc) => {
+    const user = Users.find({ email: user_details.email }, (err, doc) => {
       if (err) return console.error(err);
+      const res_user = doc[0];
 
-      if (doc.length) {
+      const valid = bcrypt.compareSync(user_details.password, res_user.password);
+
+      if (doc.length && valid) {
         res.status(200).send({
           success: true,
-          message: "user found",
-          user: doc[0],
+          message: "user found & password is valid",
+          user: res_user,
         })
       } else {
         res.status(500).send({
@@ -41,12 +44,13 @@ exports.addNewUser = async (req, res) => {
   try {
     const { user_details } = await req.body;
 
+    user_details.password = bcrypt.hashSync(user_details.password, 10);
     const new_user = new Users(user_details);
     new_user.save((err, doc) => {
       if (err) {
         res.status(500).send({
           success: false,
-          message: "an error occured",
+          message: "email is already in use",
           error: err.message,
         })
         return console.error(err)

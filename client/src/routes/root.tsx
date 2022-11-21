@@ -72,8 +72,10 @@ const Root = () => {
     );
   }, [user_credentials.user_details]);
 
+  // close the sidebar:
   const handleRedirectClick = () => {
-    if (window.innerWidth > 500) return;
+    // when the screen-width is smaller 600px
+    if (window.innerWidth > 600) return;
     setTimeout(() => {
       sideBar.current ? (sideBar.current.style.display = "none") : null;
     }, 100);

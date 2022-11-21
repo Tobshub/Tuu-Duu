@@ -105,6 +105,7 @@ form:has(.new-task-btn) {
   background-color: transparent;
   display: grid;
   place-items: center;
+  padding: 0 1em;
   animation-name: load-bg;
   animation-duration: 200ms;
   animation-timing-function: ease-in;

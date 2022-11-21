@@ -1,6 +1,5 @@
 ## Features (incoming) :
 
-- Make Responsive
 - Encrypting passwords
 - Settings page + settings
 - tasks should show pending if all the todos have note been completed

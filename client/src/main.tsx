@@ -34,7 +34,7 @@ import RootErrorElement from "./routes/root-error";
 import ProjectErrorElement from "./routes/project-routes/project-error";
 import SettingsPage from "./routes/user-settings";
 import { SavedUser, UserCreds } from "./types/user-context";
-import { getCurrentUser, setUser } from "./localDB";
+import { getCurrentUser, setUser, syncProjects } from "./localDB";
 import LogoutPage, {
   action as logoutAction,
 } from "./routes/user-routes/logout";
@@ -124,7 +124,7 @@ const Main = () => {
 
   useEffect(() => {
     getCurrentUser()
-      .then((user) => {
+      .then(async (user) => {
         if (!user) {
           setUserCredentials((state) => ({
             ...state,
@@ -135,7 +135,9 @@ const Main = () => {
             },
           }));
         } else {
-          setUserCredentials((state) => ({ ...state, user_details: user }));
+          await user_credentials.setUserDetails(user).then(async () => {
+            await syncProjects();
+          });
         }
       })
       .catch((e) => console.error(e.message));
@@ -150,6 +152,7 @@ const Main = () => {
   );
 };
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <Main />
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
 );
+root.render(<Main />);
