@@ -74,7 +74,7 @@ export async function action({ request }: { request: Request }) {
 }
 
 const Root = () => {
-  const projects: Projects[] = useLoaderData();
+  const projects = useLoaderData();
   const [user_credentials, setUserCredentials] = useState<UserCreds>({
     user_details: {
       _id: "",
@@ -104,7 +104,7 @@ const Root = () => {
       .catch((e) => console.error(e.message));
   }, []);
 
-  const sideBar = useRef<HTMLElement>();
+  const sideBar = useRef<HTMLElement>(null);
   const [isLoggedIn, setLoggedIn] = useState<boolean>(
     user_credentials.user_details && user_credentials.user_details.email
       ? true
@@ -128,6 +128,9 @@ const Root = () => {
     }, 100);
   };
 
+  // trigger re-render when projects are added/deleted
+  useEffect(() => {}, [projects]);
+
   return (
     <div className="root-div">
       <div className="toggle-sidebar">
@@ -145,7 +148,7 @@ const Root = () => {
             }
           }}
         >
-          <img src={BurgerMenuSVG} alt="Toggle sidebar" />
+          <img src={BurgerMenuSVG} alt="Toggle sidebar" loading="lazy" />
         </button>
       </div>
       <header ref={sideBar}>

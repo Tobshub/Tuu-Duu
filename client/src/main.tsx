@@ -51,7 +51,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/projects",
-        errorElement: <>Could not display that now.</>,
+        errorElement: <ProjectErrorElement />,
         children: [
           {
             path: "/projects/new",
@@ -63,14 +63,12 @@ const router = createBrowserRouter([
             element: <EditProject />,
             loader: editProjectLoader,
             action: editProjectAction,
-            errorElement: <ProjectErrorElement />,
           },
           {
             path: "/projects/:projectId",
             element: <Project />,
             loader: projectLoader,
             action: projectAction,
-            errorElement: <ProjectErrorElement />,
             children: [
               {
                 path: "/projects/:projectId/tasks/new",

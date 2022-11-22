@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Form, useLoaderData, Link } from "react-router-dom";
 import { getProjects } from "../localDB";
 import { Projects } from "../types/project";
+import { SavedUser } from "../types/user-context";
+import { UserCredentails } from "./root";
 
 export const loader = async () => {
   const projects = getProjects();
@@ -15,10 +17,16 @@ const Index = () => {
       ? projects.filter((project: Projects) => project.favorite)
       : null;
 
+  const { user_details } = useContext(UserCredentails);
   return (
     <div className="index">
+      {!!user_details && !!user_details._id ? (
+        <LoggedInDisplay user_details={user_details} />
+      ) : (
+        <LoggedOutDisplay />
+      )}
       {projects && projects.length ? (
-        <em>Projects are on the left</em>
+        <em>Navigate to an existing Project from the sidebar</em>
       ) : (
         <em>You have no projects or Todos</em>
       )}
@@ -45,3 +53,45 @@ const Index = () => {
 };
 
 export default Index;
+
+function LoggedInDisplay({ user_details }: { user_details: SavedUser }) {
+  const projects: Projects[] = useLoaderData();
+  const [dateTime, setDateTime] = useState(Date.now());
+  // greeting the user with their username
+  // show date and time
+  useEffect(() => {
+    const dateTime_interval = setTimeout(() => {
+      setDateTime(Date.now());
+    }, 100);
+    return () => clearInterval(dateTime_interval);
+  }, []);
+  // show tasks that are about to reach their deadline
+  return (
+    <div>
+      <h1>Welcome back, {user_details.username}</h1>
+      <h3>
+        {new Date(dateTime).toLocaleTimeString(undefined, {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
+      </h3>
+    </div>
+  );
+}
+
+function LoggedOutDisplay() {
+  // login to experience full features,
+  // explain what Tuu-duu is
+  return (
+    <div style={{ textAlign: "center" }}>
+      <h2>Login/Sign-up to experience Tuu-Duu's full features</h2>
+      <p>
+        Tuu-Duu is a project planner application, tailored to help you plan to
+        the smallest details.
+        {<br />}
+        Whether for your large scale money maker, your start up baby, or for
+        personal use, Tuu-Duu is right for everyone.
+      </p>
+    </div>
+  );
+}

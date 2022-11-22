@@ -116,7 +116,7 @@ const EditTask = () => {
                 setTimeout(() => setTodo(""), 100);
               }}
             >
-              <img src={AddSVG} alt="Add todo" />
+              <img src={AddSVG} alt="Add todo" loading="lazy" />
             </button>
           </div>
         </div>

@@ -132,7 +132,11 @@ const Project = () => {
               setFav(!isFav);
             }}
           >
-            <img src={isFav ? FavSVG : UnFavSVG} alt="Toggle Favorite" />
+            <img
+              src={isFav ? FavSVG : UnFavSVG}
+              alt="Toggle Favorite"
+              loading="lazy"
+            />
           </button>
           <button
             type="submit"
@@ -141,7 +145,7 @@ const Project = () => {
             title="Change title or description"
             className="project-edit"
           >
-            <img src={EditSVG} alt="Edit project" />
+            <img src={EditSVG} alt="Edit project" loading="lazy" />
           </button>
           <button
             type="submit"
@@ -150,7 +154,7 @@ const Project = () => {
             title="Delete this project"
             className="project-delete"
           >
-            <img src={DeleteSVG} alt="Delete project" />
+            <img src={DeleteSVG} alt="Delete project" loading="lazy" />
           </button>
         </Form>
       </div>
@@ -196,7 +200,7 @@ const Tasks = ({ tasks }: { tasks: Task[] | undefined }) => {
           className="new-task-btn"
           title="Add a task"
         >
-          <img src={AddSVG} alt="New task" />
+          <img src={AddSVG} alt="New task" loading="lazy" />
         </button>
       </Form>
       <div className="project-tasks">
