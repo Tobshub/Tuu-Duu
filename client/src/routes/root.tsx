@@ -49,7 +49,6 @@ export async function action({ request }: { request: Request }) {
     return redirect("/projects/new");
   } else if (formData.delete) {
     const id = formData.delete.toString();
-    console.log("delete", id);
     await deleteProject(id);
     return redirect("/");
   }
@@ -222,16 +221,16 @@ const NavItem = ({
       >
         {project.name}
       </NavLink>
-      {/* <button
+      <button
         onClick={() => setShowMenu(!showMenu)}
         onBlur={() => {
-          setTimeout(() => setShowMenu(false), 100);
+          setTimeout(() => setShowMenu(false), 200);
         }}
         className="dropdown-toggle"
         data-toggle="dropdown"
       >
         <img src={InlineMenuSVG} alt="inline menu" />
-      </button> */}
+      </button>
 
       {showMenu && (
         <Menu project={project} setMagicStyle={setMagicStyle} key={index} />
@@ -247,19 +246,15 @@ const Menu = ({
   project: Projects;
   setMagicStyle: React.Dispatch<React.SetStateAction<string>>;
 }) => {
-  const navigate = useNavigate();
   return (
-    <div className="nav-dropdown dropdown magictime swashIn">
-      <Form>
-        <button
-          className="btn btn-warning btn-sm"
-          type="button"
-          onClick={(e: MouseEvent) => {
-            e.preventDefault();
-            console.log("edit from menu");
-            return navigate(`projects/${project.id}/edit`);
-          }}
-        >
+    <div
+      className="nav-dropdown dropdown magictime swashIn"
+      style={{
+        animationDuration: "200ms",
+      }}
+    >
+      <Form action={`projects/${project.id}/edit`}>
+        <button className="btn btn-warning btn-sm" type="submit">
           Edit
         </button>
       </Form>
@@ -267,6 +262,7 @@ const Menu = ({
         <button
           type="submit"
           className="btn btn-danger btn-sm"
+          title="delete project"
           name="delete"
           value={project.id}
           onClick={() => {
