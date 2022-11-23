@@ -105,7 +105,6 @@ export const deleteProject = async (id: (string | undefined)) => {
   const index = await getProjectIndex(id, projects);
   if(index === null) return null;
   projects.splice(index, 1);
-  
   sessionStorage.setItem('projects', JSON.stringify(projects));
 }
 

@@ -15,6 +15,7 @@ import {
   useNavigate,
   redirect,
   useLoaderData,
+  Params,
 } from "react-router-dom";
 import {
   getProjects,
@@ -33,6 +34,7 @@ import BurgerMenuSVG from "../images/BurgerMenu.svg";
 import CloseSVG from "../images/Close.svg";
 import "react-notifications/lib/notifications.css";
 import { SavedUser, UserCreds } from "../types/user-context";
+import { useLocation } from "react-router";
 
 export const UserCredentails: Context<UserCreds> = React.createContext(null);
 
@@ -50,12 +52,13 @@ export async function action({ request }: { request: Request }) {
   } else if (formData.delete) {
     const id = formData.delete.toString();
     await deleteProject(id);
-    return redirect("/");
+    return redirect("/?sync_config=overwrite");
   }
 }
 
 const Root = () => {
   const [projects, setProjects] = useState<Projects[]>(useLoaderData());
+  const navigate = useNavigate();
   const [sideBarDisplay, setSideBarDisplay] = useState(true);
   const [user_credentials, setUserCredentials] = useState<UserCreds>({
     user_details: {
@@ -112,14 +115,19 @@ const Root = () => {
     }, 100);
   };
 
-  // trigger re-render when projects are added/deleted
+  // trigger re-render and sync when projects are added/deleted
+  const { search } = useLocation();
+
   useEffect(() => {
-    syncProjects().then((res) =>
+    const sync_config = new URLSearchParams(search).get("sync_config");
+
+    syncProjects(sync_config ?? "").then((res) =>
       res && JSON.stringify(res) !== JSON.stringify(projects)
         ? setProjects(res)
         : null
     );
-  }, [projects, useLoaderData()]);
+    if (sync_config === "overwrite") navigate("/");
+  }, [projects, useLoaderData()[0]]);
 
   return (
     <div className="root-div">

@@ -60,7 +60,7 @@ export const action = async ({
         return redirect(`/projects/${id}/edit`);
       case "delete project":
         await deleteProject(id);
-        return redirect("/");
+        return redirect("/?sync_config=overwrite");
       case "new task":
         return redirect(`/projects/${id}/tasks/new`);
       default:
