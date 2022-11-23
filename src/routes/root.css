@@ -1,0 +1,313 @@
+.root-div {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  position: relative;
+}
+
+.toggle-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0.4em;
+  z-index: 200;
+  width: inherit;
+}
+
+.root-div > header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  padding: 0.75em 0.5em 0;
+  background-color: #080400;
+  width: max(20%, 200px);
+  height: 100%;
+  position: relative;
+}
+
+@media (max-width: 500px) {
+  .root-div > header {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+  }
+}
+
+.root-div h1 {
+  margin: 0.5em 0;
+}
+
+.root-div h1 > * {
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-bar {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flow-root;
+}
+
+.nav-title {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-title > h2 {
+  font-size: larger;
+}
+
+.nav-bar > form {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.new-project-btn,
+.new-todo-btn {
+  width: 28px;
+  font-weight: 100;
+  aspect-ratio: 1/1;
+  background-color: transparent;
+  border: 0;
+  line-height: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.new-todo-btn {
+  width: 24px;
+}
+
+.nav-bar > ul {
+  width: 100%;
+  min-height: 60vh;
+  max-height: calc(100% - 50px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flow-root;
+}
+
+.nav-bar ul li {
+  display: flex;
+  align-items: center;
+  padding: 0.1em 0.4em;
+  border: 0;
+  border-top: 1px solid #fff;
+  position: relative;
+  word-wrap: break-word;
+  font-size: 15px;
+}
+
+.nav-bar ul li .dropdown-toggle {
+  width: 20px;
+  position: absolute;
+  right: 10px;
+  z-index: 100;
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
+@media (max-width: 750px) {
+  .nav-bar ul li .dropdown-toggle {
+    display: none;
+  }
+}
+
+.nav-bar ul a {
+  text-decoration: none;
+  width: 100%;
+  text-align: left;
+  font-style: italic;
+  font-weight: 600;
+  color: #fff;
+}
+
+.nav-bar ul li:last-of-type {
+  border-bottom: 1px solid #fff;
+}
+/* 
+.nav-bar li:has(.nav-active) {
+  background-color: rgb(71, 71, 243);
+  color: white;
+} */
+
+.nav-dropdown {
+  position: absolute;
+  right: 0;
+  top: 80%;
+  z-index: 200;
+  background-color: #080400aa;
+  width: fit-content;
+  padding: 0.5rem;
+  border-radius: 5px;
+  /* color: #000; */
+  font-size: 15px;
+  display: flex;
+  /* flex-direction: column; */
+  gap: 0.5em;
+}
+
+.user-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.25em;
+  position: relative;
+  bottom: 2%;
+  width: 100%;
+  height: fit-content;
+}
+
+.user-actions > form {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+.user-actions button {
+  width: 100%;
+}
+
+@media (max-width: 1000px) {
+  .user-actions {
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .user-actions > form {
+    width: 100%;
+  }
+}
+
+.root-div > main {
+  width: 100%;
+  height: 100%;
+  padding: 0.25em;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.index {
+  width: 100%;
+  height: 100%;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.new-project,
+.edit-project {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, fit-content);
+  gap: 1rem;
+  padding: 0.25em 0.5em;
+}
+
+.np-name {
+  font-size: 1.8em;
+  outline: none;
+  border: 0;
+  border-radius: 10px;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #fff;
+  padding: 0.2em 0.4em;
+}
+
+.np-desc {
+  width: min(400px, 100%);
+  max-height: 200px;
+  resize: none;
+}
+
+.new-project > button,
+.edit-project > button {
+  padding: 0.25rem 0.5rem;
+}
+
+.project {
+  width: 100%;
+  height: 100%;
+  padding: 2rem 1rem;
+  position: relative;
+}
+
+.project-title {
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  text-transform: capitalize;
+}
+
+.project-title > form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.project-delete,
+.project-edit,
+.set-fav-btn {
+  width: 25px;
+}
+
+.nav .project-delete {
+  width: 16px;
+  background-color: transparent;
+}
+
+.project-delete,
+.project-edit,
+.set-fav-btn {
+  background-color: transparent;
+  border-radius: 50%;
+  border: 0;
+  margin: 0;
+  aspect-ratio: 1/1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  transition: scale 250ms;
+}
+
+.project-delete:hover,
+.project-edit:hover,
+.set-fav-btn:hover {
+  scale: 1.25;
+}
+
+.set-fav-btn:active,
+.project-delete:active,
+.project-edit:active {
+  scale: 0.9;
+}
+
+.project-description {
+  width: 100%;
+}
+
+.task-container {
+  height: 100%;
+  width: 100%;
+}
