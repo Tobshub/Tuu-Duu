@@ -89,7 +89,7 @@ function LoggedOutDisplay() {
         Tuu-Duu is a project planner application, tailored to help you plan to
         the smallest details.
         {<br />}
-        Whether for your large scale money maker, your start up baby, or for
+        Whether its your large scale money maker, your start up baby, or for
         personal use, Tuu-Duu is right for everyone.
       </p>
     </div>

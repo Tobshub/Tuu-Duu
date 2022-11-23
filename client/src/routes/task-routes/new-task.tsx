@@ -34,7 +34,13 @@ const NewTask = () => {
   const addBtnRef = useRef<HTMLButtonElement>();
   return (
     <div className="new-task">
-      <Form method="post" className={magicStyle}>
+      <Form
+        method="post"
+        className={magicStyle}
+        style={{
+          animationDuration: "300ms",
+        }}
+      >
         <label htmlFor="name">Task Name:</label>
         <input
           name="name"

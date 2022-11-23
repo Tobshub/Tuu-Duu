@@ -59,7 +59,13 @@ const EditTask = () => {
 
   return (
     <div className="edit-task">
-      <Form method="post" className={magicStyle}>
+      <Form
+        method="post"
+        className={magicStyle}
+        style={{
+          animationDuration: "300ms",
+        }}
+      >
         <label htmlFor="name">Name</label>
         <input
           type="text"
@@ -132,9 +138,6 @@ const EditTask = () => {
               return;
             }
             setMagicStyle("magictime holeOut");
-            // setTimeout(() => {
-            //   navigate(-1);
-            // }, 200);
           }}
         >
           Save

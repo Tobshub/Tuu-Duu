@@ -19,13 +19,11 @@
 }
 
 .task-card {
-  /* display: inline; */
   border: 1px solid #fff;
   border-radius: 10px;
   width: 300px;
   height: fit-content;
   padding: 0.5rem 1rem;
-  /* margin-bottom: 1rem; */
   background-color: #b6b6b61a;
   transition: box-shadow 350ms;
 }
@@ -42,9 +40,10 @@
   }
 }
 
-.task-card:hover {
+/* implemented in react */
+/* .task-card:hover {
   box-shadow: 0 0.1em 0.2em #fff;
-}
+} */
 
 .task-actions {
   display: flex;

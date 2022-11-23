@@ -9,8 +9,11 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const [gridRow, setGridRow] = useState("");
   const [hasCompletedTodos, setHasCompletedTodos] = useState(false);
-  const cardRef = useRef(null);
+  const [hasAwaitingTodos, setHasAwaitingTodos] = useState(false);
+  const [showShadow, toggleShowShadow] = useState(false);
+  const [shadowColor, setShadowColor] = useState("white");
   // change the span of task cards depending on their length
+  const cardRef = useRef(null);
   useEffect(() => {
     if (cardRef.current) {
       const this_card = cardRef.current;
@@ -24,10 +27,28 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
     let completed_todos = task.todos.filter(
       (todo) => todo.status === TodoStatus.DONE
     );
+    let awaiting_todos = task.todos.filter(
+      (todo) => todo.status === TodoStatus.AWAITING
+    );
     completed_todos.length
       ? setHasCompletedTodos(true)
       : setHasCompletedTodos(false);
+    awaiting_todos.length
+      ? setHasAwaitingTodos(true)
+      : setHasAwaitingTodos(false);
   }, [task.todos]);
+
+  useEffect(() => {
+    setShadowColor(() => {
+      return hasCompletedTodos && hasAwaitingTodos
+        ? "yellow" // yellow means some todos have been done
+        : hasCompletedTodos
+        ? "green" // gree means all todos have been finished
+        : task.todos.length
+        ? "red" // red means no todo has been done
+        : "white"; // white means no todos
+    });
+  }, [hasAwaitingTodos, hasCompletedTodos]);
 
   return (
     <div
@@ -37,14 +58,17 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
       style={{
         gridRow: gridRow,
         animationDuration: "350ms",
+        boxShadow: showShadow ? `0 0.1em 0.5em ${shadowColor}` : "",
       }}
+      onMouseEnter={() => toggleShowShadow(true)}
+      onMouseLeave={() => toggleShowShadow(false)}
     >
       <h3>{task.name}</h3>
       <h6>
         {!!task.deadline ? new Date(task.deadline).toLocaleString() : null}
       </h6>
       <ul className="todos">
-        {task.todos && task.todos.length ? (
+        {!!task.todos && !!task.todos.length ? (
           task.todos.map((todo, key) => {
             if (todo.status === TodoStatus.AWAITING) {
               return (
@@ -58,11 +82,12 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
             }
           })
         ) : (
-          <em>No awaiting Todos.</em>
+          <em>Click the edit icon to add a Todo</em>
         )}
 
         {hasCompletedTodos && <h5>Completed Todos: </h5>}
-        {task.todos && task.todos.length ? (
+        {!!task.todos &&
+          !!task.todos.length &&
           task.todos.map((todo, key) => {
             if (todo.status === TodoStatus.DONE) {
               return (
@@ -75,10 +100,7 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
               );
             }
             return null;
-          })
-        ) : (
-          <></>
-        )}
+          })}
       </ul>
       <Form method="post" className="task-actions">
         <button

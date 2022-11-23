@@ -38,7 +38,6 @@ export const UserCredentails: Context<UserCreds> = React.createContext(null);
 
 export async function loader() {
   const projects = getProjects();
-  // console.log("triggered loader");
   return projects;
 }
 
