@@ -1,5 +1,5 @@
 import { Form, Params, redirect, useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { addProject } from "../../localDB";
 import { Projects } from "../../types/project";
 
@@ -30,6 +30,7 @@ const NewProject = () => {
   const [title, setTitle] = useState("");
   const [description, setDesc] = useState("");
   const navigate = useNavigate();
+  const createBtnRef = useRef(null);
 
   return (
     <Form className="new-project" method="post">
@@ -50,7 +51,18 @@ const NewProject = () => {
         value={description}
         onChange={(e) => setDesc(e.target.value)}
       />
-      <button type="submit" className="btn btn-primary">
+      <button
+        type="submit"
+        ref={createBtnRef}
+        className="btn btn-primary"
+        onClick={() => {
+          setTimeout(() => {
+            createBtnRef.current
+              ? (createBtnRef.current.disabled = true)
+              : null;
+          }, 50);
+        }}
+      >
         Create
       </button>
       <button

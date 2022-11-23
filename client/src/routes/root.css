@@ -204,10 +204,11 @@
 .index {
   width: 100%;
   height: 100%;
+  padding: 1em;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .new-project,

@@ -1,10 +1,13 @@
 import localforage from "localforage";
-import { resourceUsage } from "process";
+import axios from "axios";
 import { Projects, Task, Todo, TodoStatus } from "./types/project";
 import { AppUser, LoginServerResponse, SyncServerResponse } from "./types/server-response";
 import { SavedUser } from "./types/user-context";
 
+
 export const setUser = async ({_id, username, email}: SavedUser) => {
+  if (!_id || !username || !email) return;
+
   const res = await localforage.setItem("user_details", {_id, username, email}, (err, value) => {
     if (err) {
       console.error(err);
@@ -28,7 +31,7 @@ export const removeUser = async () => {
 
 export const getCurrentUser = async () => {
   const user_details = await localforage.getItem("user_details", (err, value: SavedUser) => {
-    if (err || !value._id) {
+    if (err || !value || (value && !value._id)) {
       err ? console.error(err) : null;
       return false;
     }
@@ -44,14 +47,13 @@ export const addProject = async (project: Projects) => {
   projects ? projects.push(project) : projects = [project];
 
   sessionStorage.setItem('projects', JSON.stringify(projects));
-  syncProjects();
 }
 
 
 export const getProjects = (): Projects[] | null => {
   try {
     const projects: (Projects[] | null) = JSON.parse(sessionStorage.getItem("projects"));
-    return projects;  
+    return (projects && projects.length)? projects : [];  
   } catch (error) {
     return null;
   }
@@ -83,7 +85,6 @@ export const editProject = async (data: Projects, id: string) => {
   data.last_save = new Date().getTime();
   (projects && index !== null)? projects[index] = data : null;
   sessionStorage.setItem('projects', JSON.stringify(projects));
-  syncProjects();
 }
 
 export const setFavorite = async (id: string) => {
@@ -94,7 +95,6 @@ export const setFavorite = async (id: string) => {
   (projects[index].favorite)? projects[index].favorite = false : projects[index].favorite = true;
   projects[index].last_save = new Date().getTime();
   sessionStorage.setItem('projects', JSON.stringify(projects))
-  syncProjects()
   return projects[index].favorite;
 }
 
@@ -107,7 +107,6 @@ export const deleteProject = async (id: (string | undefined)) => {
   projects.splice(index, 1);
   
   sessionStorage.setItem('projects', JSON.stringify(projects));
-  syncProjects("overwrite")
 }
 
 export const addTask = async (id: string, task: Task) => {
@@ -176,23 +175,28 @@ export const markTodo = async (id: string, task_index: number, todo_index: numbe
 
 export const syncProjects = async (config? : string) => {
   const user = await getCurrentUser();
-  if (!user && !user._id) return;
+  if (!user || !user._id) return getProjects();
   const sync_resources = {
       user_projects: getProjects(),
       user_id: user._id,
       config,
   };
-  const sync_results: SyncServerResponse = await fetch("https://tuu-duu-api.onrender.com/api/user/sync_projects", {
-    method: "PUT",
-    mode: "cors",
+  
+  const sync_url = "https://tuu-duu-api.onrender.com/api/user/sync_projects";
+
+  const sync_results = await axios.put(sync_url, sync_resources, {
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json; encoding=utf-8",
+      "Access-Control-Allow-Origin": "*"
     },
-    body: JSON.stringify(sync_resources)
-  })
-  .then(data => data.json())
-  .then(res => res);
-  // console.log(sync_results)
-  sessionStorage.setItem("projects", JSON.stringify(sync_results.projects))
-  return sync_results;
+    method: "cors",
+    timeout: 1500, // use timeout config incase the server is spun down
+  }).then(data => data.data).then((res: SyncServerResponse) => res).catch((e) => console.error(e));
+  
+  // console.log({sync_results}) 
+
+  if (!sync_results) return sync_resources.user_projects;
+
+  sessionStorage.setItem("projects", JSON.stringify(sync_results.projects));
+  return sync_results.projects;
 }

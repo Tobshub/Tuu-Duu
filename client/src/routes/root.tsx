@@ -37,25 +37,8 @@ import { SavedUser, UserCreds } from "../types/user-context";
 export const UserCredentails: Context<UserCreds> = React.createContext(null);
 
 export async function loader() {
-  const projects = await getCurrentUser()
-    .then(async (user) => {
-      if (!user) {
-        return getProjects();
-      }
-      // promise.race in case the server is experiencing downtime
-      const db_synced = await Promise.race([
-        syncProjects(),
-        (async () => {
-          let local_projects: Projects[];
-          setTimeout(() => (local_projects = getProjects()), 3000);
-          return local_projects;
-        })(),
-      ]);
-      return db_synced;
-    })
-    .then((res) => ("projects" in res ? res.projects : res))
-    .catch((e) => getProjects());
-
+  const projects = getProjects();
+  // console.log("triggered loader");
   return projects;
 }
 
@@ -74,7 +57,8 @@ export async function action({ request }: { request: Request }) {
 }
 
 const Root = () => {
-  const projects = useLoaderData();
+  const [projects, setProjects] = useState<Projects[]>(useLoaderData());
+  const [sideBarDisplay, setSideBarDisplay] = useState(true);
   const [user_credentials, setUserCredentials] = useState<UserCreds>({
     user_details: {
       _id: "",
@@ -92,11 +76,14 @@ const Root = () => {
     getCurrentUser()
       .then(async (user) => {
         if (!user) {
-          user_credentials.setUserDetails({
-            _id: "",
-            username: "",
-            email: "",
-          });
+          setUserCredentials((state) => ({
+            ...state,
+            user_details: {
+              _id: "",
+              username: "",
+              email: "",
+            },
+          }));
         } else {
           await user_credentials.setUserDetails(user);
         }
@@ -104,7 +91,6 @@ const Root = () => {
       .catch((e) => console.error(e.message));
   }, []);
 
-  const sideBar = useRef<HTMLElement>(null);
   const [isLoggedIn, setLoggedIn] = useState<boolean>(
     user_credentials.user_details && user_credentials.user_details.email
       ? true
@@ -124,12 +110,18 @@ const Root = () => {
     // when the screen-width is smaller 600px
     if (window.innerWidth > 600) return;
     setTimeout(() => {
-      sideBar.current ? (sideBar.current.style.display = "none") : null;
+      setSideBarDisplay(false);
     }, 100);
   };
 
   // trigger re-render when projects are added/deleted
-  useEffect(() => {}, [projects]);
+  useEffect(() => {
+    syncProjects().then((res) =>
+      res && JSON.stringify(res) !== JSON.stringify(projects)
+        ? setProjects(res)
+        : null
+    );
+  }, [projects, useLoaderData()]);
 
   return (
     <div className="root-div">
@@ -139,19 +131,20 @@ const Root = () => {
           style={{
             width: "30px",
           }}
-          onClick={() => {
-            if (sideBar.current) {
-              sideBar.current.style.display =
-                getComputedStyle(sideBar.current).display === "none"
-                  ? "flex"
-                  : "none";
-            }
-          }}
+          onClick={() => setSideBarDisplay((state) => !state)}
         >
-          <img src={BurgerMenuSVG} alt="Toggle sidebar" loading="lazy" />
+          <img
+            src={!sideBarDisplay ? BurgerMenuSVG : CloseSVG}
+            alt="Toggle sidebar"
+            loading="lazy"
+          />
         </button>
       </div>
-      <header ref={sideBar}>
+      <header
+        style={{
+          display: sideBarDisplay ? "flex" : "none",
+        }}
+      >
         <h1>
           <Link to={`/`} onClick={handleRedirectClick}>
             Tuu-Duu

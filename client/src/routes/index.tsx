@@ -83,7 +83,7 @@ function LoggedOutDisplay() {
   // login to experience full features,
   // explain what Tuu-duu is
   return (
-    <div style={{ textAlign: "center" }}>
+    <div>
       <h2>Login/Sign-up to experience Tuu-Duu's full features</h2>
       <p>
         Tuu-Duu is a project planner application, tailored to help you plan to
