@@ -22,7 +22,7 @@
   align-items: flex-start;
   padding: 0.75em 0.5em 0;
   background-color: #080400;
-  width: max(25%, 200px);
+  width: max(20%, 200px);
   height: 100%;
   position: relative;
 }
