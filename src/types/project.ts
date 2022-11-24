@@ -3,6 +3,7 @@ export interface Projects {
   description: string,
   id: string,
   tasks: Task[],
+  deleted_task?: {task: Task, original_index: number}[],
   favorite?: boolean,
   last_save?: number,
 }

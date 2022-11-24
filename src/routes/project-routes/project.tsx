@@ -53,16 +53,19 @@ export const action = async ({
   if (!id) return;
   if (formData.action) {
     switch (formData.action) {
-      case "toggle favorite":
+      case "toggle_favorite":
         await setFavorite(id);
         break;
-      case "edit project":
+      case "edit_project":
         return redirect(`/projects/${id}/edit`);
-      case "delete project":
+      case "delete_project":
         await deleteProject(id);
         return redirect("/?sync_config=overwrite");
-      case "new task":
+      case "new_task":
         return redirect(`/projects/${id}/tasks/new`);
+      case "revert_action":
+        await restoreTask(id);
+        return;
       default:
         console.log("no action set for that");
         break;
@@ -72,8 +75,7 @@ export const action = async ({
     return redirect(`/projects/${id}/tasks/${key}/edit`);
   } else if (formData.deleteTask) {
     const key = parseInt(formData.deleteTask.toString());
-    const removed_task = await deleteTask(id, key);
-    return { removed_task, key };
+    await deleteTask(id, key);
   } else if (formData.markTodo) {
     const todoLocation = formData.markTodo.toString().split(",");
     await markTodo(id, parseInt(todoLocation[0]), parseInt(todoLocation[1]));
@@ -84,38 +86,17 @@ const Project = () => {
   const { project }: { project: Projects } = useLoaderData();
   const [isFav, setFav] = useState(project.favorite ? true : false);
   const [showNotification, setShowNotification] = useState(false);
-  const recent_delete: {
-    removed_task: Task | undefined;
-    key: number | undefined;
-  } = useActionData() ?? {};
-  const [deletedTasks, setDeletedTasks] = useState<
-    { removed_task: Task; key: number }[]
-  >([]);
   const user_credentials = useContext<UserCreds>(UserCredentails);
 
   useEffect(() => {
-    if (recent_delete.removed_task) {
-      deletedTasks.push(recent_delete);
-      setShowNotification(true);
-    }
-    const removeNotification = setTimeout(() => {
-      setShowNotification(false);
-    }, 5000);
+    const removeNotification = setTimeout(
+      () => setShowNotification(false),
+      5000
+    );
     return () => {
-      setShowNotification(false);
       clearTimeout(removeNotification);
     };
-  }, [recent_delete, deletedTasks]);
-
-  async function restoreLastDeletedTask(task: Task, index: number) {
-    project.tasks.splice(index, 0, task);
-    await editTask(project.id, index, task);
-    setDeletedTasks((state) => {
-      state.pop();
-      return state;
-    });
-    setShowNotification(false);
-  }
+  }, [project.deleted_task]);
 
   return (
     <div className="project">
@@ -126,7 +107,7 @@ const Project = () => {
             type="submit"
             title="mark as favorite"
             name="action"
-            value="toggle favorite"
+            value="toggle_favorite"
             className="set-fav-btn"
             onClick={() => {
               setFav(!isFav);
@@ -141,7 +122,7 @@ const Project = () => {
           <button
             type="submit"
             name="action"
-            value="edit project"
+            value="edit_project"
             title="Change title or description"
             className="project-edit"
           >
@@ -150,7 +131,7 @@ const Project = () => {
           <button
             type="submit"
             name="action"
-            value="delete project"
+            value="delete_project"
             title="Delete this project"
             className="project-delete"
           >
@@ -167,7 +148,10 @@ const Project = () => {
         )}
       </p>
       <div>
-        <Tasks tasks={project.tasks} />
+        <Tasks
+          tasks={project.tasks}
+          delete_action={() => setShowNotification(true)}
+        />
       </div>
       <Outlet />
       {showNotification && (
@@ -177,8 +161,7 @@ const Project = () => {
             name: "Undo",
             target: "Task",
             execute: () => {
-              const { removed_task, key } = deletedTasks.splice(-1)[0];
-              restoreLastDeletedTask(removed_task, key);
+              setShowNotification(false);
             },
           }}
         />
@@ -189,14 +172,20 @@ const Project = () => {
 
 export default Project;
 
-const Tasks = ({ tasks }: { tasks: Task[] | undefined }) => {
+const Tasks = ({
+  tasks,
+  delete_action,
+}: {
+  tasks: Task[] | undefined;
+  delete_action: () => void;
+}) => {
   return (
     <div className="task-container">
       <Form method="post">
         <button
           type="submit"
           name="action"
-          value="new task"
+          value="new_task"
           className="new-task-btn"
           title="Add a task"
         >
@@ -206,7 +195,12 @@ const Tasks = ({ tasks }: { tasks: Task[] | undefined }) => {
       <div className="project-tasks">
         {tasks && tasks.length ? (
           tasks.map((task, key) => (
-            <TaskCard task={task} key={key} index={key} />
+            <TaskCard
+              task={task}
+              key={key}
+              index={key}
+              delete_action={delete_action}
+            />
           ))
         ) : (
           <em>No tasks for this project.</em>

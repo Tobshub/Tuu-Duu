@@ -85,6 +85,7 @@ export const editProject = async (data: Projects, id: string) => {
   data.last_save = new Date().getTime();
   (projects && index !== null)? projects[index] = data : null;
   sessionStorage.setItem('projects', JSON.stringify(projects));
+  return projects[index];
 }
 
 export const setFavorite = async (id: string) => {
@@ -122,6 +123,13 @@ export const getTask = async (id: string, index: number) => {
   return task;
 }
 
+export const getDeletedTask = async (id: string) => {
+  const project = await getProject(id);
+  const tasks = project?.deleted_task
+  if (!tasks) return;
+  return tasks[tasks.length -1];
+}
+
 export const editTask = async (id: string, index: number, data: Task) => {
   const project = await getProject(id);
   if (!project) return;
@@ -140,18 +148,26 @@ export const deleteTask = async (id: string, index: number) => {
   if (!project) return;
   const taskList = project.tasks;
   if (!taskList) return;
-  const task = taskList.splice(index, 1);
+  const [task] = taskList.splice(index, 1);
   project.tasks = taskList;
   await editProject(project, id);
-  return task[0];
+  await addToDeletedTasks(id, task, index);
+  return task;
 }
 
-export const restoreTask = async (id: string, index: number, task: Task) => {
-  const project = await getProject(id)
+export const addToDeletedTasks = async (id: string, task: Task, original_index: number) => {
+  const project = await getProject(id);
   if (!project) return;
-  const taskList = project.tasks ?? [];
-  taskList.splice(taskList.length >= index? index : taskList.length - 1, 0, task)
-  project.tasks = taskList;
+  project.deleted_task? project.deleted_task.push({task, original_index}) : project.deleted_task = [{task, original_index}]
+  editProject(project, id);
+}
+
+
+export const restoreTask = async (id: string) => {
+  const project = await getProject(id)
+  const [last_deleted] = project.deleted_task? project.deleted_task.splice(-1) : null;
+  if (!last_deleted) return;
+  project?.tasks?.splice(last_deleted.original_index, 0, last_deleted.task);
   await editProject(project, id);
 }
 

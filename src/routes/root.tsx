@@ -127,7 +127,7 @@ const Root = () => {
         : null
     );
     if (sync_config === "overwrite") navigate("/");
-  }, [projects, useLoaderData()[0]]);
+  }, [projects, useLoaderData()]);
 
   return (
     <div className="root-div">

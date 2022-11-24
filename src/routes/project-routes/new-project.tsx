@@ -20,6 +20,7 @@ export const action = async ({
     id,
     favorite: false,
     tasks: [],
+    deleted_task: [],
   };
 
   await addProject(data);
