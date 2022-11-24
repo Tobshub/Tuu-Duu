@@ -129,6 +129,8 @@ const Root = () => {
     if (sync_config === "overwrite") navigate("/");
   }, [projects, useLoaderData()]);
 
+  const [search_project, setSearchQuery] = useState("");
+
   return (
     <div className="root-div">
       <div className="toggle-sidebar">
@@ -171,16 +173,34 @@ const Root = () => {
               </button>
             </Form>
           </div>
+          <div className="input-group">
+            <input
+              placeholder="Search"
+              type="search"
+              name="search_project"
+              className="form-control search-project"
+              value={search_project}
+              onChange={({ target }) => setSearchQuery(target.value)}
+            />
+          </div>
           <ul className="nav navbar-nav nav-bar">
             {projects && projects.length ? (
-              projects.map((project: Projects, key: number) => (
-                <NavItem
-                  project={project}
-                  index={key}
-                  key={key}
-                  closeMenu={handleRedirectClick}
-                />
-              ))
+              projects.map((project: Projects, key: number) => {
+                if (
+                  project.name
+                    .toLowerCase()
+                    .includes(search_project.toLowerCase())
+                ) {
+                  return (
+                    <NavItem
+                      project={project}
+                      index={key}
+                      key={key}
+                      closeMenu={handleRedirectClick}
+                    />
+                  );
+                }
+              })
             ) : (
               <em>No projects yet.</em>
             )}

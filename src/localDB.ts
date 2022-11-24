@@ -1,6 +1,6 @@
 import localforage from "localforage";
 import axios from "axios";
-import { Projects, Task, Todo, TodoStatus } from "./types/project";
+import { DeletedTask, Projects, Task, Todo, TodoStatus } from "./types/project";
 import { AppUser, LoginServerResponse, SyncServerResponse } from "./types/server-response";
 import { SavedUser } from "./types/user-context";
 
@@ -123,11 +123,14 @@ export const getTask = async (id: string, index: number) => {
   return task;
 }
 
-export const getDeletedTask = async (id: string) => {
-  const project = await getProject(id);
-  const tasks = project?.deleted_task
-  if (!tasks) return;
-  return tasks[tasks.length -1];
+export const getDeletedTasks = async () : Promise<DeletedTask[]> => {
+  const task_store = sessionStorage.getItem("deleted_tasks");
+  if (!task_store) return;
+  return JSON.parse(task_store);
+}
+
+export const setDeletedTasks = async (deleted_tasks: DeletedTask[]) => {
+  sessionStorage.setItem("deleted_tasks", JSON.stringify(deleted_tasks))
 }
 
 export const editTask = async (id: string, index: number, data: Task) => {
@@ -156,19 +159,24 @@ export const deleteTask = async (id: string, index: number) => {
 }
 
 export const addToDeletedTasks = async (id: string, task: Task, original_index: number) => {
-  const project = await getProject(id);
-  if (!project) return;
-  project.deleted_task? project.deleted_task.push({task, original_index}) : project.deleted_task = [{task, original_index}]
-  editProject(project, id);
+  const deleted_task: DeletedTask = {project_id: id, task_content: task, original_index};
+  const deleted_tasks = await getDeletedTasks() ?? [];
+  
+  deleted_tasks.push(deleted_task);
+  setDeletedTasks(deleted_tasks)
+  
+  return;
 }
 
 
-export const restoreTask = async (id: string) => {
-  const project = await getProject(id)
-  const [last_deleted] = project.deleted_task? project.deleted_task.splice(-1) : null;
-  if (!last_deleted) return;
-  project?.tasks?.splice(last_deleted.original_index, 0, last_deleted.task);
-  await editProject(project, id);
+export const restoreLastTask = async () => {
+  const deleted_tasks = await getDeletedTasks();
+  const [last_deleted] = deleted_tasks.splice(-1);
+  const project = await getProject(last_deleted.project_id);
+  if (!project) return;
+  project.tasks.splice(last_deleted.original_index, 0, last_deleted.task_content);
+  editProject(project, last_deleted.project_id)
+  setDeletedTasks(deleted_tasks)
 }
 
 export const addTodo = async (id: string, index: number, todo: Todo) => {

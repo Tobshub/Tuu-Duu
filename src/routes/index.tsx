@@ -17,7 +17,7 @@ const Index = () => {
       ? projects.filter((project: Projects) => project.favorite)
       : null;
 
-  const { user_details } = useContext(UserCredentails);
+  const { user_details } = useContext(UserCredentails) ?? {};
   return (
     <div className="index">
       {!!user_details && !!user_details._id ? (

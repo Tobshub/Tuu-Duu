@@ -16,7 +16,7 @@ import {
   getProject,
   getProjects,
   markTodo,
-  restoreTask,
+  restoreLastTask,
   setFavorite,
 } from "../../localDB";
 import { Projects, Task } from "../../types/project";
@@ -64,7 +64,7 @@ export const action = async ({
       case "new_task":
         return redirect(`/projects/${id}/tasks/new`);
       case "revert_action":
-        await restoreTask(id);
+        await restoreLastTask();
         return;
       default:
         console.log("no action set for that");
@@ -77,8 +77,8 @@ export const action = async ({
     const key = parseInt(formData.deleteTask.toString());
     await deleteTask(id, key);
   } else if (formData.markTodo) {
-    const todoLocation = formData.markTodo.toString().split(",");
-    await markTodo(id, parseInt(todoLocation[0]), parseInt(todoLocation[1]));
+    const [task_index, todo_index] = formData.markTodo.toString().split(",");
+    await markTodo(id, parseInt(task_index), parseInt(todo_index));
   }
 };
 
@@ -96,7 +96,7 @@ const Project = () => {
     return () => {
       clearTimeout(removeNotification);
     };
-  }, [project.deleted_task]);
+  }, [project]);
 
   return (
     <div className="project">

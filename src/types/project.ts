@@ -3,7 +3,6 @@ export interface Projects {
   description: string,
   id: string,
   tasks: Task[],
-  deleted_task?: {task: Task, original_index: number}[],
   favorite?: boolean,
   last_save?: number,
 }
@@ -30,4 +29,10 @@ export interface Todo {
 export enum TodoStatus {
   AWAITING = "awaiting",
   DONE = "completed"
+}
+
+export interface DeletedTask {
+  project_id: string,
+  task_content: Task,
+  original_index: number
 }
