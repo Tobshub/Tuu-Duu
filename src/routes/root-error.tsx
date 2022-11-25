@@ -18,7 +18,7 @@ const RootErrorElement = () => {
       <h1>Oops...</h1>
       <p>An error has occured.</p>
       <div>
-        <span>{!!error && JSON.stringify(error)}</span>
+        <span>{!!error && error.status}</span>
       </div>
     </div>
   );
