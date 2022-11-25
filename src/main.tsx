@@ -38,6 +38,7 @@ const ProjectErrorElement = lazy(
 const SettingsPage = lazy(() => import("./routes/user-settings"));
 const LogoutPage = lazy(() => import("./routes/user-routes/logout"));
 import { action as logoutAction } from "./routes/user-routes/logout";
+import SuspensePage from "./suspense-page";
 
 const router = createBrowserRouter([
   {
@@ -108,13 +109,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <Suspense
-      fallback={
-        <div style={{ display: "grid", placeItems: "center", height: "100vh" }}>
-          <h1>loading...</h1>
-        </div>
-      }
-    >
+    <Suspense fallback={<SuspensePage />}>
       <RouterProvider router={router} />
     </Suspense>
   </React.StrictMode>
