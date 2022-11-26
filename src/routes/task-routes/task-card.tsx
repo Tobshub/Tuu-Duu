@@ -66,7 +66,7 @@ const TaskCard = ({
       style={{
         gridRow: gridRow,
         animationDuration: "350ms",
-        boxShadow: showShadow ? `0 0.1em 0.5em ${shadowColor}` : "",
+        boxShadow: showShadow ? `0 0 0.6em 0.1em ${shadowColor}` : "",
       }}
       onMouseEnter={() => toggleShowShadow(true)}
       onMouseLeave={() => toggleShowShadow(false)}
