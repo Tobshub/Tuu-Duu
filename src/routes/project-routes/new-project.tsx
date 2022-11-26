@@ -16,9 +16,7 @@ export const action = async ({
 
   const data: Project = new Project(
     name ? name.toString() : "Untitled",
-    description.toString(),
-    [],
-    false
+    description.toString()
   );
 
   await addProject(data);

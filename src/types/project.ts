@@ -8,11 +8,11 @@ export default class Project {
   favorite: boolean;
   last_save: number;
 
-  constructor(name: string, description: string, tasks: Task[], favorite: boolean) {
+  constructor(name: string, description: string, id?: string, tasks?: Task[], favorite?: boolean) {
     this.name = name;
     this.description = description;
-    this.id = generateId();
-    this.favorite = favorite;
+    this.id = id ?? generateId();
+    this.favorite = favorite ?? false;
     this.tasks = tasks ?? [];
     this.last_save = new Date().getTime();
   }
