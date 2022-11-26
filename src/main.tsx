@@ -12,7 +12,7 @@ import Index, { loader as indexLoader } from "./routes";
 import NewProject, {
   action as newProjectAction,
 } from "./routes/project-routes/new-project";
-const Project = lazy(() => import("./routes/project-routes/project"));
+const ProjectPage = lazy(() => import("./routes/project-routes/project"));
 import {
   loader as projectLoader,
   action as projectAction,
@@ -39,6 +39,13 @@ const SettingsPage = lazy(() => import("./routes/user-settings"));
 const LogoutPage = lazy(() => import("./routes/user-routes/logout"));
 import { action as logoutAction } from "./routes/user-routes/logout";
 import SuspensePage from "./suspense-page";
+const OrgsRoot = lazy(() => import("./routes/org-routes/orgs-page"));
+import {
+  loader as orgsLoader,
+  action as orgsAction,
+  OrgsIndexPage,
+} from "./routes/org-routes/orgs-page";
+import NewOrg, { action as newOrgAction } from "./routes/org-routes/new-org";
 
 const router = createBrowserRouter([
   {
@@ -70,7 +77,7 @@ const router = createBrowserRouter([
           },
           {
             path: "/projects/:projectId",
-            element: <Project />,
+            element: <ProjectPage />,
             loader: projectLoader,
             action: projectAction,
             children: [
@@ -92,6 +99,23 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "/orgs",
+    element: <OrgsRoot />,
+    loader: orgsLoader,
+    action: orgsAction,
+    children: [
+      {
+        index: true,
+        element: <OrgsIndexPage />,
+      },
+      {
+        path: "/orgs/new",
+        element: <NewOrg />,
+        action: newOrgAction,
+      },
+    ],
+  },
+  {
     path: "/login",
     element: <LoginPage />,
     action: loginAction,
@@ -107,6 +131,7 @@ const router = createBrowserRouter([
   },
 ]);
 
+// suspense shows while lazy loading components are loading
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Suspense fallback={<SuspensePage />}>

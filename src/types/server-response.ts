@@ -1,4 +1,4 @@
-import { Projects } from "./project"
+import { Project } from "./project"
 
 export interface LoginServerResponse {
   success: boolean,
@@ -10,11 +10,11 @@ export interface AppUser {
   readonly _id: string,
   username: string,
   email: string,
-  projects: Projects[],
+  projects: Project[],
 }
 
 export interface SyncServerResponse {
   success: boolean,
   message: string,
-  projects: Projects[],
+  projects: Project[],
 }

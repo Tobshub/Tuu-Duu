@@ -19,7 +19,7 @@ import {
   restoreLastTask,
   setFavorite,
 } from "../../localDB";
-import { Projects, Task } from "../../types/project";
+import Project, { Task } from "../../types/project";
 import EditSVG from "../../images/Edit.svg";
 import DeleteSVG from "../../images/Delete.svg";
 import FavSVG from "../../images/Star_filled.svg";
@@ -82,8 +82,8 @@ export const action = async ({
   }
 };
 
-const Project = () => {
-  const { project }: { project: Projects } = useLoaderData();
+const ProjectPage = () => {
+  const { project }: { project: Project } = useLoaderData();
   const [isFav, setFav] = useState(project.favorite ? true : false);
   const [showNotification, setShowNotification] = useState(false);
   const user_credentials = useContext<UserCreds>(UserCredentails);
@@ -170,7 +170,7 @@ const Project = () => {
   );
 };
 
-export default Project;
+export default ProjectPage;
 
 const Tasks = ({
   tasks,

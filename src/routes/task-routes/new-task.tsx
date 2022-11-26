@@ -1,4 +1,4 @@
-import React, { FormEvent, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Form, Params, redirect, useNavigate } from "react-router-dom";
 import { addTask, getProject } from "../../localDB";
 import { Task, TaskStatus } from "../../types/project";

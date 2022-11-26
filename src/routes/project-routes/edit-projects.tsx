@@ -8,7 +8,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { editProject, getProject } from "../../localDB";
-import { Projects } from "../../types/project";
+import Project from "../../types/project";
 
 export async function loader({ params }: { params: Params<string> }) {
   const id = params.projectId;
@@ -31,13 +31,16 @@ export async function action({
   if (!id) return;
   const project = await getProject(id);
   if (!project) return;
-  const projectData: Projects = {
-    ...project,
-    name: name.toString(),
-    description: description.toString(),
-  };
+
+  const data = new Project(
+    name.toString(),
+    description.toString(),
+    project.id,
+    project.tasks,
+    project.favorite
+  );
   if (formData.edit) {
-    await editProject(projectData, id);
+    await editProject(data, id);
     return redirect(`/projects/${id}`);
   }
 }

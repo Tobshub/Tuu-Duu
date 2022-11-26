@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Form, useLoaderData, Link } from "react-router-dom";
 import { getProjects } from "../localDB";
-import { Projects } from "../types/project";
+import { Project } from "../types/project";
 import { SavedUser } from "../types/user-context";
 import { UserCredentails } from "./root";
 
@@ -11,10 +11,10 @@ export const loader = async () => {
 };
 
 const Index = () => {
-  const { projects }: { projects: Projects[] } = useLoaderData();
+  const { projects }: { projects: Project[] } = useLoaderData();
   const fav_projects =
     projects && projects.length
-      ? projects.filter((project: Projects) => project.favorite)
+      ? projects.filter((project: Project) => project.favorite)
       : null;
 
   const { user_details } = useContext(UserCredentails) ?? {};
@@ -36,6 +36,11 @@ const Index = () => {
           New Project
         </button>
       </Form>
+      <Form action="/orgs">
+        <button type="submit" className="btn btn-sm btn-primary">
+          Organizations
+        </button>
+      </Form>
       <div>
         <h4>{fav_projects && fav_projects.length ? "Favorites:" : null}</h4>
         <ul>
@@ -55,7 +60,7 @@ const Index = () => {
 export default Index;
 
 function LoggedInDisplay({ user_details }: { user_details: SavedUser }) {
-  const projects: Projects[] = useLoaderData();
+  const projects: Project[] = useLoaderData();
   const [dateTime, setDateTime] = useState(Date.now());
   // greeting the user with their username
   // show date and time

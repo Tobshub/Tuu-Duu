@@ -26,7 +26,7 @@ import {
   syncProjects,
   getCurrentUser,
 } from "../localDB";
-import { Projects } from "../types/project";
+import Project from "../types/project";
 import AddSVG from "../images/Add.svg";
 import DeleteSVG from "../images/Delete.svg";
 import InlineMenuSVG from "../images/inline-menu.svg";
@@ -35,6 +35,8 @@ import CloseSVG from "../images/Close.svg";
 import "react-notifications/lib/notifications.css";
 import { SavedUser, UserCreds } from "../types/user-context";
 import { useLocation } from "react-router";
+import { SideBarProjectsListProps, SideBarProps } from "../types/sidebar";
+import SideBar from "./components/sidebar";
 
 export const UserCredentails: Context<UserCreds> = React.createContext(null);
 
@@ -57,7 +59,7 @@ export async function action({ request }: { request: Request }) {
 }
 
 const Root = () => {
-  const [projects, setProjects] = useState<Projects[]>(useLoaderData());
+  const [projects, setProjects] = useState<Project[]>(useLoaderData());
   const navigate = useNavigate();
   const [sideBarDisplay, setSideBarDisplay] = useState(true);
   const [user_credentials, setUserCredentials] = useState<UserCreds>({
@@ -129,13 +131,12 @@ const Root = () => {
     if (sync_config === "overwrite") navigate("/");
   }, [projects, useLoaderData()]);
 
-  const [search_project, setSearchQuery] = useState("");
-
   return (
     <div className="root-div">
       <div className="toggle-sidebar">
         <button
           className="new-project-btn"
+          title="New Project"
           style={{
             width: "30px",
           }}
@@ -148,75 +149,17 @@ const Root = () => {
           />
         </button>
       </div>
-      <header
-        style={{
-          display: sideBarDisplay ? "flex" : "none",
-        }}
-      >
-        <h1>
-          <Link to={`/`} onClick={handleRedirectClick}>
-            Tuu-Duu
-          </Link>
-        </h1>
-        <nav className="nav-bar navbar navbar-default">
-          <div className="nav-title">
-            <h2>My Projects</h2>
-            <Form method="post">
-              <button
-                type="submit"
-                className="new-project-btn"
-                name="new"
-                value={1}
-                onClick={handleRedirectClick}
-              >
-                <img src={AddSVG} alt="New project" />
-              </button>
-            </Form>
-          </div>
-          <div className="input-group">
-            <input
-              placeholder="Search"
-              type="search"
-              name="search_project"
-              className="form-control search-project"
-              value={search_project}
-              onChange={({ target }) => setSearchQuery(target.value)}
-            />
-          </div>
-          <ul className="nav navbar-nav nav-bar">
-            {projects && projects.length ? (
-              projects.map((project: Projects, key: number) => {
-                if (
-                  project.name
-                    .toLowerCase()
-                    .includes(search_project.toLowerCase())
-                ) {
-                  return (
-                    <NavItem
-                      project={project}
-                      index={key}
-                      key={key}
-                      closeMenu={handleRedirectClick}
-                    />
-                  );
-                }
-              })
-            ) : (
-              <em>No projects yet.</em>
-            )}
-          </ul>
-        </nav>
-        <div className="user-actions">
-          <Form action="/settings">
-            <button className="btn btn-primary">Settings</button>
-          </Form>
-          <Form action={isLoggedIn ? "/logout" : "/login"}>
-            <button className="btn btn-danger">
-              {isLoggedIn ? "Logout" : "Login"}
-            </button>
-          </Form>
-        </div>
-      </header>
+      <SideBar
+        isLoggedIn={isLoggedIn}
+        sideBarDisplay={sideBarDisplay}
+        handleRedirectClick={handleRedirectClick}
+        itemListElement={
+          <SideBarProjectsList
+            handleRedirectClick={handleRedirectClick}
+            projects={projects}
+          />
+        }
+      />
       <main>
         <UserCredentails.Provider value={user_credentials}>
           <Outlet />
@@ -228,12 +171,67 @@ const Root = () => {
 
 export default Root;
 
+const SideBarProjectsList = ({
+  handleRedirectClick,
+  projects,
+}: SideBarProjectsListProps) => {
+  const [search_query, setSearchQuery] = useState("");
+  return (
+    <nav className="nav-bar navbar navbar-default">
+      <div className="nav-title">
+        <h2>My Projects</h2>
+        <Form method="post">
+          <button
+            type="submit"
+            className="new-project-btn"
+            name="new"
+            value={1}
+            onClick={handleRedirectClick}
+          >
+            <img src={AddSVG} alt="New project" />
+          </button>
+        </Form>
+      </div>
+      <div className="input-group">
+        <input
+          placeholder="Search"
+          type="search"
+          name="search_project"
+          className="form-control search-project"
+          value={search_query}
+          onChange={({ target }) => setSearchQuery(target.value)}
+        />
+      </div>
+      <ul className="nav navbar-nav nav-bar">
+        {projects && projects.length ? (
+          projects.map((project: Project, key: number) => {
+            if (
+              project.name.toLowerCase().includes(search_query.toLowerCase())
+            ) {
+              return (
+                <NavItem
+                  project={project}
+                  index={key}
+                  key={key}
+                  closeMenu={handleRedirectClick}
+                />
+              );
+            }
+          })
+        ) : (
+          <em>No projects yet.</em>
+        )}
+      </ul>
+    </nav>
+  );
+};
+
 const NavItem = ({
   project,
   index,
   closeMenu,
 }: {
-  project: Projects;
+  project: Project;
   index: number;
   closeMenu: () => void;
 }) => {
@@ -271,7 +269,7 @@ const Menu = ({
   project,
   setMagicStyle,
 }: {
-  project: Projects;
+  project: Project;
   setMagicStyle: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (

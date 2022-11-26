@@ -1,4 +1,5 @@
 const SuspensePage = () => {
+  //  Implement: beautify the suspense page a bit (minimal as it should load fast)
   return (
     <div
       style={{

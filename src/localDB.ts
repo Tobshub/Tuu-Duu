@@ -1,6 +1,6 @@
 import localforage from "localforage";
 import axios from "axios";
-import { DeletedTask, Projects, Task, Todo, TodoStatus } from "./types/project";
+import Project, { DeletedTask, Task, Todo, TodoStatus } from "./types/project";
 import { AppUser, LoginServerResponse, SyncServerResponse } from "./types/server-response";
 import { SavedUser } from "./types/user-context";
 
@@ -40,26 +40,27 @@ export const getCurrentUser = async () => {
   return user_details; 
 }
 
+export const generateId = () => {
+  return (Math.random() + 1).toString(36).substring(2);
+}
 
-export const addProject = async (project: Projects) => {
-  let projects: Projects[] = JSON.parse(sessionStorage.getItem('projects'));
-  project.last_save = new Date().getTime();
+export const addProject = async (project: Project) => {
+  let projects: Project[] = JSON.parse(sessionStorage.getItem('projects'));
   projects ? projects.push(project) : projects = [project];
-
   sessionStorage.setItem('projects', JSON.stringify(projects));
 }
 
 
-export const getProjects = (): Projects[] | null => {
+export const getProjects = (): Project[] | null => {
   try {
-    const projects: (Projects[] | null) = JSON.parse(sessionStorage.getItem("projects"));
+    const projects: (Project[] | null) = JSON.parse(sessionStorage.getItem("projects"));
     return (projects && projects.length)? projects : [];  
   } catch (error) {
     return null;
   }
 }
 
-const getProjectIndex = async (id: string, db?: (Projects[] | null)): Promise<number | null> => {
+const getProjectIndex = async (id: string, db?: (Project[] | null)): Promise<number | null> => {
   const projects = (db)? db : getProjects();
   if ( projects && projects.length) {
     for(let i = 0; i < projects.length; i++) {
@@ -71,7 +72,7 @@ const getProjectIndex = async (id: string, db?: (Projects[] | null)): Promise<nu
   return null;
 }
 
-export const getProject = async (id: (string | undefined)): Promise<Projects | null> => {
+export const getProject = async (id: (string | undefined)): Promise<Project | null> => {
   if (!id) return null;
   const projects = getProjects();
   const index = await getProjectIndex(id, projects);
@@ -79,7 +80,7 @@ export const getProject = async (id: (string | undefined)): Promise<Projects | n
   return project;
 }
 
-export const editProject = async (data: Projects, id: string) => {
+export const editProject = async (data: Project, id: string) => {
   const projects = getProjects();
   const index = await getProjectIndex(id, projects);
   data.last_save = new Date().getTime();
