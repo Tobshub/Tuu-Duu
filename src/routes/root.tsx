@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  MouseEvent,
-  Context,
-  useRef,
-} from "react";
+import React, { useState, useEffect, useContext, Context, useRef } from "react";
 import "./root.css";
 import {
   Outlet,
@@ -20,12 +13,8 @@ import {
 import {
   getProjects,
   deleteProject,
-  getProject,
-  setUser,
-  removeUser,
   syncProjects,
-  getCurrentUser,
-} from "../localDB";
+} from "../operations/projects";
 import Project from "../types/project";
 import AddSVG from "../images/Add.svg";
 import DeleteSVG from "../images/Delete.svg";
@@ -37,6 +26,7 @@ import { SavedUser, UserCreds } from "../types/user-context";
 import { useLocation } from "react-router";
 import { SideBarProjectsListProps, SideBarProps } from "../types/sidebar";
 import SideBar from "./components/sidebar";
+import { getCurrentUser, setUser } from "../operations/user";
 
 export const UserCredentails: Context<UserCreds> = React.createContext(null);
 

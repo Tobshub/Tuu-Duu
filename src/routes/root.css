@@ -219,6 +219,18 @@
   text-align: right;
 }
 
+.index > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.index p {
+  max-width: 500px;
+  margin: 0;
+  padding: 0;
+}
+
 .new-project,
 .edit-project {
   display: flex;

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Form, Params, redirect, useNavigate } from "react-router-dom";
-import { addTask, getProject } from "../../localDB";
+import { addTask } from "../../operations/tasks";
 import { Task, TaskStatus } from "../../types/project";
 
 export async function action({

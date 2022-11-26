@@ -1,5 +1,5 @@
 import { Params } from "react-router-dom";
-import { getCurrentUser } from "../../localDB";
+import { getCurrentUser } from "../../operations/user";
 import Org from "../../types/orgs";
 import NewForm from "../components/new-form";
 

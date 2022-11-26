@@ -15,7 +15,7 @@ import { SideBarOrgsListProps } from "../../types/sidebar";
 import { Form } from "react-router-dom";
 import Org, { OrgProject } from "../../types/orgs";
 import SideBar from "../components/sidebar";
-import { getCurrentUser } from "../../localDB";
+import { getCurrentUser } from "../../operations/user";
 
 export async function loader() {
   const user = await getCurrentUser();

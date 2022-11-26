@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Form } from "react-router-dom";
-import { NotificationArgs } from "./notification";
+import { NotificationArgs } from "../../types/notification";
 import "./notification.css";
 
 const ActionNotifcation = ({ content, action }: NotificationArgs) => {

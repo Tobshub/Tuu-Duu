@@ -1,6 +1,6 @@
 import { Form, Params, redirect, useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
-import { addProject, generateId } from "../../localDB";
+import { addProject } from "../../operations/projects";
 import Project from "../../types/project";
 import NewForm from "../components/new-form";
 

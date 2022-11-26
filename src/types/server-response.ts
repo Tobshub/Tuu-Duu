@@ -1,4 +1,5 @@
-import { Project } from "./project"
+import  Org, { OrgRef } from "./orgs"
+import Project from "./project"
 
 export interface LoginServerResponse {
   success: boolean,
@@ -11,10 +12,16 @@ export interface AppUser {
   username: string,
   email: string,
   projects: Project[],
+  orgs: OrgRef[]
 }
 
 export interface SyncServerResponse {
   success: boolean,
   message: string,
   projects: Project[],
+  orgs: OrgRef[]
+}
+
+export interface CreateOrgResponse extends Org {
+  readonly _id: string,
 }

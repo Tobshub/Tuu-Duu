@@ -9,16 +9,10 @@ import {
 } from "react-router-dom";
 import {
   deleteProject,
-  deleteTask,
-  editProject,
-  editTask,
-  getCurrentUser,
   getProject,
-  getProjects,
-  markTodo,
-  restoreLastTask,
   setFavorite,
-} from "../../localDB";
+} from "../../operations/projects";
+import { deleteTask, markTodo, restoreLastTask } from "../../operations/tasks";
 import Project, { Task } from "../../types/project";
 import EditSVG from "../../images/Edit.svg";
 import DeleteSVG from "../../images/Delete.svg";

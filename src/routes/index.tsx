@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Form, useLoaderData, Link } from "react-router-dom";
-import { getProjects } from "../localDB";
+import { getProjects } from "../operations/user";
 import Project from "../types/project";
 import { SavedUser } from "../types/user-context";
 import { UserCredentails } from "./root";
@@ -65,9 +65,9 @@ function LoggedInDisplay({ user_details }: { user_details: SavedUser }) {
   // greeting the user with their username
   // show date and time
   useEffect(() => {
-    const dateTime_interval = setTimeout(() => {
+    const dateTime_interval = setInterval(() => {
       setDateTime(Date.now());
-    }, 100);
+    }, 500);
     return () => clearInterval(dateTime_interval);
   }, []);
   // show tasks that are about to reach their deadline

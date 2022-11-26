@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getCurrentUser } from "../localDB";
+import { getCurrentUser } from "../operations/user";
 
 const SettingsPage = () => {
   const [user_settings, setUserSettings] = useState({

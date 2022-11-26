@@ -6,7 +6,7 @@ import {
   useActionData,
   useNavigate,
 } from "react-router-dom";
-import { getCurrentUser, setUser } from "../../localDB";
+import { getCurrentUser, setUser } from "../../operations/user";
 import { AppUser, LoginServerResponse } from "../../types/server-response";
 
 export async function loader({ params }: { params: Params<string> }) {
@@ -49,9 +49,7 @@ export async function action({
         break;
     }
     const user_api_url =
-      formData.action === "Login"
-        ? "https://tuu-duu-api.onrender.com/api/user/login"
-        : "https://tuu-duu-api.onrender.com/api/user/sign_up";
+      formData.action === "Login" ? "/api/user/login" : "/api/user/sign_up";
     const user_api_data = await fetch(user_api_url, {
       method: "POST",
       mode: "cors",

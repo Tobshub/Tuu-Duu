@@ -1,4 +1,4 @@
-import { generateId } from "../localDB";
+import { generateId } from "../operations/user";
 import Project from "./project";
 import { SavedUser } from "./user-context";
 
@@ -25,4 +25,9 @@ export default class Org {
 
 export interface OrgProject extends Project {
   visibile_to: SavedUser[],
+}
+
+export interface OrgRef {
+  _id: string,
+  name: string,
 }

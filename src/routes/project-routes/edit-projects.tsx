@@ -7,7 +7,7 @@ import {
   useLoaderData,
   useNavigate,
 } from "react-router-dom";
-import { editProject, getProject } from "../../localDB";
+import { editProject, getProject } from "../../operations/projects";
 import Project from "../../types/project";
 
 export async function loader({ params }: { params: Params<string> }) {
