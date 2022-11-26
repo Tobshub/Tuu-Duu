@@ -1,8 +1,5 @@
-import { useContext } from "react";
 import { Form, Params, redirect, useNavigate } from "react-router-dom";
 import { removeUser } from "../../operations/user";
-import { UserCreds } from "../../types/user-context";
-import { UserCredentails } from "../root";
 
 export async function action({
   params,

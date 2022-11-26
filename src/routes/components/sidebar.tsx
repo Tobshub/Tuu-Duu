@@ -24,7 +24,7 @@ const SideBar = ({
           <button className="btn btn-primary">Settings</button>
         </Form>
         <Form action={isLoggedIn ? "/logout" : "/login"}>
-          <button className="btn btn-danger">
+          <button className="btn btn-danger" type="submit">
             {isLoggedIn ? "Logout" : "Login"}
           </button>
         </Form>

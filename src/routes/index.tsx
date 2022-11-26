@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Form, useLoaderData, Link } from "react-router-dom";
-import { getProjects } from "../operations/user";
+import { getProjects } from "../operations/projects";
 import Project from "../types/project";
 import { SavedUser } from "../types/user-context";
 import { UserCredentails } from "./root";

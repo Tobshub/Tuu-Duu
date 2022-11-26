@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useContext, Context, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  Context,
+  useRef,
+  useMemo,
+} from "react";
 import "./root.css";
 import {
   Outlet,
@@ -110,7 +117,7 @@ const Root = () => {
   // trigger re-render and sync when projects are added/deleted
   const { search } = useLocation();
 
-  useEffect(() => {
+  useMemo(() => {
     const sync_config = new URLSearchParams(search).get("sync_config");
 
     syncProjects(sync_config ?? "").then((res) =>
@@ -119,7 +126,7 @@ const Root = () => {
         : null
     );
     if (sync_config === "overwrite") navigate("/");
-  }, [projects, useLoaderData()]);
+  }, [useLoaderData()]);
 
   return (
     <div className="root-div">

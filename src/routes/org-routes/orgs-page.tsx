@@ -167,5 +167,10 @@ const NavItem = ({
 };
 
 export const OrgsIndexPage = () => {
-  return <h1>Organizations</h1>;
+  return (
+    <>
+      <h1>Organizations</h1>
+      <em>Coming soon...</em>
+    </>
+  );
 };
