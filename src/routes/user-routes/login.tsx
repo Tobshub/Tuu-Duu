@@ -49,7 +49,9 @@ export async function action({
         break;
     }
     const user_api_url =
-      formData.action === "Login" ? "/api/user/login" : "/api/user/sign_up";
+      formData.action === "Login"
+        ? "https://tuu-duu-api.onrender.com/api/user/login"
+        : "https://tuu-duu-api.onrender.com/api/user/sign_up";
     const user_api_data = await fetch(user_api_url, {
       method: "POST",
       mode: "cors",

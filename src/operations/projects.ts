@@ -12,7 +12,7 @@ export const syncProjects = async (config? : string) => {
       config,
   };
   
-  const sync_url = "/api/user/sync_projects";
+  const sync_url = "https://tuu-duu-api.onrender.com/api/user/sync_projects";
 
   const sync_results = await axios.put(sync_url, sync_resources, {
     headers: {
