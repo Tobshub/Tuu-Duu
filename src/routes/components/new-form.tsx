@@ -1,20 +1,38 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Form, useNavigate } from "react-router-dom";
 import { NewFormProps } from "../../types/new-form";
 
-const NewForm = ({ form_type, nextAction, backAction }: NewFormProps) => {
-  const [title, setTitle] = useState("");
-  const [description, setDesc] = useState("");
+const NewForm = ({
+  form_type,
+  required,
+  nextAction,
+  backAction,
+}: NewFormProps) => {
+  const [formValues, setFormValues] = useState({
+    name: "",
+    description: "",
+  });
   const navigate = useNavigate();
   const createBtnRef = useRef(null);
+
+  function handleChange({
+    target,
+  }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    setFormValues((state) => ({
+      ...state,
+      [target.name]: target.value,
+    }));
+    createBtnRef.current ? (createBtnRef.current.disabled = false) : null;
+  }
 
   return (
     <Form className="new-project" method="post">
       <input
         type="text"
         name="name"
-        value={title}
-        onChange={({ target }) => setTitle(target.value)}
+        required={required.name ? true : false}
+        value={formValues.name}
+        onChange={handleChange}
         placeholder={`${form_type} Title`}
         id="usr"
         className="form-control np-name"
@@ -22,10 +40,11 @@ const NewForm = ({ form_type, nextAction, backAction }: NewFormProps) => {
       <textarea
         name="description"
         placeholder={`${form_type} Description`}
+        required={required.description ? true : false}
         id="comment"
         className="form-control np-desc"
-        value={description}
-        onChange={({ target }) => setDesc(target.value)}
+        value={formValues.description}
+        onChange={handleChange}
       />
       <button
         name="action"

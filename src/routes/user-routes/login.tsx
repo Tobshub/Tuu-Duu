@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import env from "../../../env.json";
 import {
   Form,
   Params,
@@ -50,15 +51,15 @@ export async function action({
     }
     const user_api_url =
       formData.action === "Login"
-        ? "https://tuu-duu-api.onrender.com/api/user/login"
-        : "https://tuu-duu-api.onrender.com/api/user/sign_up";
+        ? `${env.REACT_APP_TUU_DUU_API}/user/login`
+        : `${env.REACT_APP_TUU_DUU_API}/user/sign_up`;
     const user_api_data = await fetch(user_api_url, {
       method: "POST",
       mode: "cors",
       body: JSON.stringify(request_body),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
-        "Access-Control-Allow-Origin": "https://tuu-duu-api.onrender.com",
+        "Access-Control-Allow-Origin": `${env.REACT_APP_TUU_DUU_API}`,
         Vary: "Origin",
       },
     })

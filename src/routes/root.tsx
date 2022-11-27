@@ -76,14 +76,11 @@ const Root = () => {
     getCurrentUser()
       .then(async (user) => {
         if (!user) {
-          setUserCredentials((state) => ({
-            ...state,
-            user_details: {
-              _id: "",
-              username: "",
-              email: "",
-            },
-          }));
+          user_credentials.setUserDetails({
+            _id: "",
+            username: "",
+            email: "",
+          });
         } else {
           await user_credentials.setUserDetails(user);
         }

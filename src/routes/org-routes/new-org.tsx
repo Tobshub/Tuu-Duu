@@ -1,4 +1,5 @@
 import { Params } from "react-router-dom";
+import { createOrg } from "../../operations/orgs";
 import { getCurrentUser } from "../../operations/user";
 import Org from "../../types/orgs";
 import NewForm from "../components/new-form";
@@ -18,6 +19,7 @@ export async function action({
         await getCurrentUser(),
       ]);
       console.log(new_org);
+      await createOrg(new_org);
       break;
     default:
       console.log("no action set for that");
@@ -25,7 +27,9 @@ export async function action({
 }
 
 const NewOrg = () => {
-  return <NewForm form_type="Org" />;
+  return (
+    <NewForm form_type="Org" required={{ name: true, description: false }} />
+  );
 };
 
 export default NewOrg;

@@ -132,10 +132,18 @@ const router = createBrowserRouter([
 ]);
 
 // suspense shows while lazy loading components are loading
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <Suspense fallback={<SuspensePage />}>
-      <RouterProvider router={router} />
-    </Suspense>
-  </React.StrictMode>
+const app_root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
 );
+
+try {
+  app_root.render(
+    <React.StrictMode>
+      <Suspense fallback={<SuspensePage />}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </React.StrictMode>
+  );
+} catch (error) {
+  console.error(error);
+}

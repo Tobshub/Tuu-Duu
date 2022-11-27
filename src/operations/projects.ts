@@ -1,4 +1,5 @@
 import axios from "axios";
+import env from "../../env.json"
 import { getCurrentUser } from "./user";
 import Project from "../types/project";
 import { SyncServerResponse } from "../types/server-response";
@@ -12,7 +13,7 @@ export const syncProjects = async (config? : string) => {
       config,
   };
   
-  const sync_url = "https://tuu-duu-api.onrender.com/api/user/sync_projects";
+  const sync_url = `${env.REACT_APP_TUU_DUU_API}/user/sync_projects`;
 
   const sync_results = await axios.put(sync_url, sync_resources, {
     headers: {
@@ -20,7 +21,7 @@ export const syncProjects = async (config? : string) => {
       "Access-Control-Allow-Origin": "*"
     },
     method: "cors",
-    timeout: 1500, // use timeout config incase the server is spun down
+    timeout: 2000, // use timeout config incase the server is spun down
   }).then(data => data.data).then((res: SyncServerResponse) => res).catch((e) => console.error(e));
   
   // console.log({sync_results}) 

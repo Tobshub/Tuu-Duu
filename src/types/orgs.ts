@@ -29,5 +29,4 @@ export interface OrgProject extends Project {
 
 export interface OrgRef {
   _id: string,
-  name: string,
 }

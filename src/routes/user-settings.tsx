@@ -15,7 +15,6 @@ const SettingsPage = () => {
       if (user && user._id) {
         const { email, username } = user;
         setUserSettings((state) => ({ ...state, email, username }));
-        console.log("set user");
       }
     });
   }, []);
