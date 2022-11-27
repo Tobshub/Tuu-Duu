@@ -16,10 +16,11 @@ export const createOrg = async (org: Org): Promise<OrgRef> => {
     method: "cors",
     timeout: 2000
   }).then(value => value.data).then((res: OrgRef) => res).catch(e => console.error(e))
-  return req_result? (await addToUserOrg(req_result)) : null;
+  return req_result? (await addOrgToUser(req_result)) : null;
 }
 
 
-export const addToUserOrg = async (org: OrgRef): Promise<OrgRef> => {
+export const addOrgToUser = async (org: OrgRef): Promise<OrgRef> => {
+  
   return null;
 }

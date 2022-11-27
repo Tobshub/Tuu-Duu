@@ -15,10 +15,11 @@ export async function action({
   const { name, description, ...formData } = Object.fromEntries(res);
   switch (formData.action) {
     case "new":
-      const new_org = new Org(name.toString(), description.toString(), [
-        await getCurrentUser(),
-      ]);
-      console.log(new_org);
+      const new_org = new Org({
+        name: name.toString(),
+        description: description.toString(),
+        admins: [await getCurrentUser()],
+      });
       await createOrg(new_org);
       break;
     default:
