@@ -17,6 +17,7 @@
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.2.0",
     "bootstrap": "^5.2.2",
+    "dotenv": "^16.0.3",
     "history": "^5.3.0",
     "localforage": "^1.10.0",
     "magic.css": "^1.4.8",

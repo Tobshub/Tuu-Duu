@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Form, useLoaderData, Link } from "react-router-dom";
-import { getProjects } from "../localDB";
-import { Projects } from "../types/project";
+import { getProjects } from "../operations/projects";
+import Project from "../types/project";
 import { SavedUser } from "../types/user-context";
 import { UserCredentails } from "./root";
 
@@ -11,13 +11,13 @@ export const loader = async () => {
 };
 
 const Index = () => {
-  const { projects }: { projects: Projects[] } = useLoaderData();
+  const { projects }: { projects: Project[] } = useLoaderData();
   const fav_projects =
     projects && projects.length
-      ? projects.filter((project: Projects) => project.favorite)
+      ? projects.filter((project: Project) => project.favorite)
       : null;
 
-  const { user_details } = useContext(UserCredentails);
+  const { user_details } = useContext(UserCredentails) ?? {};
   return (
     <div className="index">
       {!!user_details && !!user_details._id ? (
@@ -34,6 +34,11 @@ const Index = () => {
       <Form action="/projects/new">
         <button type="submit" className="btn btn-success btn-sm">
           New Project
+        </button>
+      </Form>
+      <Form action="/orgs">
+        <button type="submit" className="btn btn-sm btn-primary">
+          Organizations
         </button>
       </Form>
       <div>
@@ -55,14 +60,14 @@ const Index = () => {
 export default Index;
 
 function LoggedInDisplay({ user_details }: { user_details: SavedUser }) {
-  const projects: Projects[] = useLoaderData();
+  const projects: Project[] = useLoaderData();
   const [dateTime, setDateTime] = useState(Date.now());
   // greeting the user with their username
   // show date and time
   useEffect(() => {
-    const dateTime_interval = setTimeout(() => {
+    const dateTime_interval = setInterval(() => {
       setDateTime(Date.now());
-    }, 100);
+    }, 500);
     return () => clearInterval(dateTime_interval);
   }, []);
   // show tasks that are about to reach their deadline

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Form } from "react-router-dom";
-import { NotificationArgs } from "./notification";
+import { NotificationArgs } from "../../types/notification";
 import "./notification.css";
 
 const ActionNotifcation = ({ content, action }: NotificationArgs) => {
-  const [waiting, setWaiting] = useState(false);
+  const [loading, setLoading] = useState(false);
   return (
     <div
       className="notification-container magictime spaceInRight"
@@ -18,14 +18,16 @@ const ActionNotifcation = ({ content, action }: NotificationArgs) => {
         <Form method="post">
           <button
             type="submit"
-            disabled={waiting}
-            title={action.name + " " + action.target}
+            disabled={loading}
+            title={`${action.name} ${action.target}`}
             onClick={() => {
-              action.execute();
-              setWaiting(true);
+              setTimeout(() => {
+                setLoading(true);
+                action.execute();
+              }, 100);
             }}
             name="action"
-            value="reverted action"
+            value="revert_action"
           >
             {action.name}
           </button>

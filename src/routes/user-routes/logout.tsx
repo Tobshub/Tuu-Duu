@@ -1,8 +1,5 @@
-import { useContext } from "react";
 import { Form, Params, redirect, useNavigate } from "react-router-dom";
-import { removeUser } from "../../localDB";
-import { UserCreds } from "../../types/user-context";
-import { UserCredentails } from "../root";
+import { removeUser } from "../../operations/user";
 
 export async function action({
   params,

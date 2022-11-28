@@ -1,4 +1,4 @@
-import { AppUser } from "./server-response";
+import Org, { OrgRef } from "./orgs";
 
 export interface UserCreds {
   user_details: SavedUser,
@@ -9,4 +9,5 @@ export interface SavedUser {
   readonly _id: string,
   email: string,
   username: string,
+  org_refs?: OrgRef[],
 }

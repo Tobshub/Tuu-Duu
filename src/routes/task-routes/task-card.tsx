@@ -5,7 +5,15 @@ import EditSVG from "../../images/Edit.svg";
 import DoneSVG from "../../images/Checkmark.svg";
 import DeleteSVG from "../../images/Delete.svg";
 
-const TaskCard = ({ task, index }: { task: Task; index: number }) => {
+const TaskCard = ({
+  task,
+  index,
+  delete_action,
+}: {
+  task: Task;
+  index: number;
+  delete_action: () => void;
+}) => {
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const [gridRow, setGridRow] = useState("");
   const [hasCompletedTodos, setHasCompletedTodos] = useState(false);
@@ -58,7 +66,7 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
       style={{
         gridRow: gridRow,
         animationDuration: "350ms",
-        boxShadow: showShadow ? `0 0.1em 0.5em ${shadowColor}` : "",
+        boxShadow: showShadow ? `0 0 0.6em 0.1em ${shadowColor}` : "",
       }}
       onMouseEnter={() => toggleShowShadow(true)}
       onMouseLeave={() => toggleShowShadow(false)}
@@ -121,6 +129,7 @@ const TaskCard = ({ task, index }: { task: Task; index: number }) => {
             setTimeout(() => {
               setMagicStyle("magictime");
             }, 200);
+            delete_action();
           }}
         >
           <img src={DeleteSVG} alt="Delete task" loading="lazy" />
