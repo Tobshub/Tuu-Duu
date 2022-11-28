@@ -30,3 +30,7 @@ export const getOrgs = async (org_ref: OrgRef[]): Promise<Org[]> => {
   // bulk get orgs from api
   return null;
 }
+
+export const getOrg = async (org_ref: OrgRef): Org => {
+  // use session storage to store and retrieve orgs locally
+}
