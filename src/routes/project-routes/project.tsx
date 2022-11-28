@@ -31,7 +31,7 @@ export const loader = async ({ params }: { params: Params<string> }) => {
   const project = await getProject(id);
   if (!project)
     throw new Error("Invalid project-ID or problem while retrieving Project");
-  return { project };
+  return project;
 };
 
 export const action = async ({
@@ -77,8 +77,14 @@ export const action = async ({
 };
 
 const ProjectPage = () => {
-  const { project }: { project: Project } = useLoaderData();
-  const [isFav, setFav] = useState(project.favorite ? true : false);
+  const project = useLoaderData();
+  const [isFav, setFav] = useState(
+    typeof project === "object" && "favorite" in project
+      ? project.favorite
+        ? true
+        : false
+      : false
+  );
   const [showNotification, setShowNotification] = useState(false);
   const user_credentials = useContext<UserCreds>(UserCredentails);
 
@@ -95,7 +101,11 @@ const ProjectPage = () => {
   return (
     <div className="project">
       <div className="project-title">
-        <h2>{project.name}</h2>
+        <h2>
+          {typeof project === "object" && "name" in project
+            ? project.name.toString()
+            : ""}
+        </h2>
         <Form method="post">
           <button
             type="submit"
@@ -134,18 +144,24 @@ const ProjectPage = () => {
         </Form>
       </div>
       <p className="project-description">
-        {project.description && (
-          <>
-            Description: <br />
-            {project.description}
-          </>
-        )}
+        {typeof project === "object" &&
+          "description" in project &&
+          project.description && (
+            <>
+              Description: <br />
+              {project.description.toString()}
+            </>
+          )}
       </p>
       <div>
-        <Tasks
-          tasks={project.tasks}
-          delete_action={() => setShowNotification(true)}
-        />
+        {typeof project === "object" &&
+          "tasks" in project &&
+          Array.isArray(project.tasks) && (
+            <Tasks
+              tasks={project.tasks}
+              delete_action={() => setShowNotification(true)}
+            />
+          )}
       </div>
       <Outlet />
       {showNotification && (

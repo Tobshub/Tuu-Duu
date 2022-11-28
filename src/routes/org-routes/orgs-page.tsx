@@ -40,7 +40,7 @@ export async function action({
 }
 
 const OrgsRoot = () => {
-  const [orgs, setOrgs] = useState<Org[]>(useLoaderData());
+  const [orgs, setOrgs] = useState(useLoaderData());
   const [sideBarDisplay, setSideBarDisplay] = useState(true);
 
   const handleRedirectClick = () => {
@@ -74,7 +74,7 @@ const OrgsRoot = () => {
         handleRedirectClick={handleRedirectClick}
         itemListElement={
           <SideBarOrgsList
-            orgs={orgs}
+            orgs={typeof orgs === "object" && Array.isArray(orgs) ? orgs : null}
             handleRedirectClick={handleRedirectClick}
           />
         }

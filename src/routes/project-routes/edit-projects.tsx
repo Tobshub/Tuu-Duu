@@ -46,9 +46,17 @@ export async function action({
 }
 
 const EditProject = () => {
-  const { name, description: desc } = useLoaderData();
-  const [title, setTitle] = useState(name);
-  const [description, setDesc] = useState(desc);
+  const project = useLoaderData();
+  const [title, setTitle] = useState(
+    typeof project === "object" && "name" in project
+      ? project.name.toString()
+      : ""
+  );
+  const [description, setDesc] = useState(
+    typeof project === "object" && "desc" in project
+      ? project.desc.toString()
+      : ""
+  );
   const navigate = useNavigate();
 
   return (

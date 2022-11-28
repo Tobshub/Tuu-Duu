@@ -7,13 +7,13 @@ import { UserCredentails } from "./root";
 
 export const loader = async () => {
   const projects = getProjects();
-  return { projects };
+  return projects;
 };
 
 const Index = () => {
-  const { projects }: { projects: Project[] } = useLoaderData();
+  const projects = useLoaderData();
   const fav_projects =
-    projects && projects.length
+    projects && Array.isArray(projects) && projects.length
       ? projects.filter((project: Project) => project.favorite)
       : null;
 
@@ -25,7 +25,7 @@ const Index = () => {
       ) : (
         <LoggedOutDisplay />
       )}
-      {projects && projects.length ? (
+      {projects && Array.isArray(projects) && projects.length ? (
         <em>Navigate to an existing Project from the sidebar</em>
       ) : (
         <em>You have no projects or Todos</em>
@@ -45,7 +45,7 @@ const Index = () => {
         <h4>{fav_projects && fav_projects.length ? "Favorites:" : null}</h4>
         <ul>
           {fav_projects && fav_projects.length
-            ? fav_projects.map((project, key) => (
+            ? fav_projects.map((project: Project, key: number) => (
                 <li key={key}>
                   <Link to={`/projects/${project.id}`}>{project.name}</Link>
                 </li>
@@ -60,7 +60,6 @@ const Index = () => {
 export default Index;
 
 function LoggedInDisplay({ user_details }: { user_details: SavedUser }) {
-  const projects: Project[] = useLoaderData();
   const [dateTime, setDateTime] = useState(Date.now());
   // greeting the user with their username
   // show date and time

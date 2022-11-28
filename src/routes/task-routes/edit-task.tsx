@@ -17,7 +17,7 @@ export async function loader({ params }: { params: Params<string> }) {
 
   const task = await getTask(id, parseInt(index));
   if (!task) return redirect(`/projects/${id}/`);
-  return { task };
+  return task;
 }
 
 export async function action({
@@ -49,9 +49,16 @@ export async function action({
 }
 
 const EditTask = () => {
-  const { task }: { task: Task } = useLoaderData();
-  const [name, setName] = useState(task.name);
-  const [deadline, setDeadline] = useState(task.deadline || null);
+  const task = useLoaderData();
+  // if (typeof task === "object" && "name" in task && "deadline" in task)
+  const [name, setName] = useState(
+    typeof task === "object" && "name" in task ? task.name.toString() : ""
+  );
+  const [deadline, setDeadline] = useState(
+    typeof task === "object" && "deadline" in task
+      ? new Date(task.deadline.toString())
+      : undefined
+  );
   const [invalidDate, setInvalidDate] = useState(false);
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const navigate = useNavigate();
@@ -93,7 +100,11 @@ const EditTask = () => {
           <span className="invalid-date">Deadline has passed</span>
         )}
         <div className="display-todos">
-          {task.todos && task.todos.length ? (
+          {typeof task === "object" &&
+          "todos" in task &&
+          task.todos &&
+          Array.isArray(task.todos) &&
+          task.todos.length ? (
             task.todos.map((todo, key) => (
               <input value={todo.content} key={key} disabled />
             ))
