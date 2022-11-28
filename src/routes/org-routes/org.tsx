@@ -1,6 +1,10 @@
+import { Params, useLoaderData } from "react-router";
+import { getOrg } from "../../operations/orgs";
+import { OrgRef } from "../../types/orgs";
+
 export async function loader({ params }: { params: Params<string> }) {
-  const { org_id } = await params;
-  const org = getOrg(orgId);
+  const orgId = await params.orgId;
+  const org = getOrg({ _id: orgId });
   return org;
 }
 
@@ -9,9 +13,9 @@ export async function action({
   request,
 }: {
   params: Params<string>;
-  requset: Request;
+  request: Request;
 }) {
-  const { org_id } = await params;
+  const { orgId } = await params;
   // open project
   // make project
   // etc
