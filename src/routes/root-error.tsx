@@ -18,7 +18,11 @@ const RootErrorElement = () => {
       <h1>Oops...</h1>
       <p>An error has occured.</p>
       <div>
-        <span>{!!error && error.status}</span>
+        {error && typeof error === "object" && "status" in error ? (
+          <span>{error.status.toString()}</span>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

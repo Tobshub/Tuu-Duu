@@ -3,7 +3,7 @@ import { useRouteError } from "react-router";
 
 const ProjectErrorElement = () => {
   const error = useRouteError();
-  console.log(error);
+  console.error(error);
   return (
     <div
       style={{
@@ -18,13 +18,12 @@ const ProjectErrorElement = () => {
       <h1>Oops...</h1>
       <p>An error has occured.</p>
       <div>
-        {error.status ? (
+        {typeof error === "object" && "status" in error && error.status ? (
           <>
-            <span>{error.status}: </span>
-            <span>{error.statusText}</span>
+            <span>{typeof error.status === "string" && error.status}</span>
           </>
         ) : (
-          <span>{error.message}</span>
+          <span>{JSON.stringify(error)}</span>
         )}
       </div>
     </div>

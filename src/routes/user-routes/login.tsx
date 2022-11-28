@@ -87,7 +87,7 @@ const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const submitBtn = useRef<HTMLButtonElement | null>(null);
   const passwordInput = useRef<HTMLInputElement | null>(null);
-  const is_valid_user: AppUser | false = useActionData();
+  const is_valid_user = useActionData();
   const navigate = useNavigate();
   const [loginError, showLoginError] = useState(false);
   const [inputError, showInputError] = useState(false);
@@ -103,9 +103,19 @@ const LoginPage = () => {
   }, [isLogin]);
 
   useEffect(() => {
-    if (is_valid_user) {
+    if (
+      is_valid_user &&
+      typeof is_valid_user === "object" &&
+      "_id" in is_valid_user &&
+      "username" in is_valid_user &&
+      "email" in is_valid_user
+    ) {
       const { _id, username, email } = is_valid_user;
-      setUser({ _id, username, email }).finally(() => navigate("/"));
+      setUser({
+        _id: _id.toString(),
+        username: username.toString(),
+        email: email.toString(),
+      }).finally(() => navigate("/"));
     } else if (is_valid_user === false) {
       showLoginError(true);
     }

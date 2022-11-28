@@ -56,7 +56,7 @@ export async function action({ request }: { request: Request }) {
 }
 
 const Root = () => {
-  const [projects, setProjects] = useState<Project[]>(useLoaderData());
+  const [projects, setProjects] = useState(useLoaderData());
   const navigate = useNavigate();
   const [sideBarDisplay, setSideBarDisplay] = useState(true);
   const [user_credentials, setUserCredentials] = useState<UserCreds>({
@@ -150,7 +150,7 @@ const Root = () => {
         itemListElement={
           <SideBarProjectsList
             handleRedirectClick={handleRedirectClick}
-            projects={projects}
+            projects={Array.isArray(projects) ? projects : null}
           />
         }
       />
