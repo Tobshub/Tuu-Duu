@@ -76,8 +76,8 @@ export const action = async ({
   }
 };
 
-const ProjectPage = () => {
-  const project = useLoaderData();
+const ProjectPage = ({load_project} : {load_project?: Project}) => {
+  const project = load_project ?? useLoaderData();
   const [isFav, setFav] = useState(
     typeof project === "object" && "favorite" in project
       ? project.favorite

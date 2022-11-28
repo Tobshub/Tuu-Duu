@@ -46,6 +46,10 @@ import {
   OrgsIndexPage,
 } from "./routes/org-routes/orgs-page";
 import NewOrg, { action as newOrgAction } from "./routes/org-routes/new-org";
+import OrgPage, {
+  loader as orgLoader,
+  action as orgAction,
+} from "./routes/org-routes/org";
 
 const router = createBrowserRouter([
   {
@@ -112,6 +116,12 @@ const router = createBrowserRouter([
         path: "/orgs/new",
         element: <NewOrg />,
         action: newOrgAction,
+      },
+      {
+        path: "/orgs/:orgId",
+        element: <OrgPage />,
+        loader: orgLoader,
+        action: orgAction,
       },
     ],
   },

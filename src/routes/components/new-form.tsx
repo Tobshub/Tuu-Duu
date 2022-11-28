@@ -30,7 +30,7 @@ const NewForm = ({
       <input
         type="text"
         name="name"
-        required={required.name ? true : false}
+        required={required?.name ? true : false}
         value={formValues.name}
         onChange={handleChange}
         placeholder={`${form_type} Title`}
@@ -40,7 +40,7 @@ const NewForm = ({
       <textarea
         name="description"
         placeholder={`${form_type} Description`}
-        required={required.description ? true : false}
+        required={required?.description ? true : false}
         id="comment"
         className="form-control np-desc"
         value={formValues.description}
