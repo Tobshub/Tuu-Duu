@@ -2,8 +2,8 @@ import  Org, { OrgRef } from "./orgs"
 import Project from "./project"
 
 export interface LoginServerResponse {
-  success: boolean,
-  message: string,
+  readonly success: boolean,
+  readonly message: string,
   user: AppUser
 }
 
@@ -16,12 +16,19 @@ export interface AppUser {
 }
 
 export interface SyncServerResponse {
-  success: boolean,
-  message: string,
+  readonly success: boolean,
+  readonly message: string,
   projects: Project[],
-  orgs: OrgRef[]
 }
 
 export interface CreateOrgResponse extends Org {
-  readonly _id: string,
+  success: boolean,
+  message: string,
+}
+
+export interface AddOrgToUserResponse {
+  success: boolean,
+  message: string,
+  orgs: OrgRef[],
+  _id: string,
 }
