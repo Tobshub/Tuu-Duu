@@ -25,6 +25,7 @@ import ActionNotifcation from "../app-notifications/action-notifcation";
 import TaskCard from "../task-routes/task-card";
 import { UserCreds } from "../../types/user-context";
 import { UserCredentails } from "../root";
+import { OrgProject } from "../../types/orgs";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
@@ -76,7 +77,11 @@ export const action = async ({
   }
 };
 
-const ProjectPage = ({load_project} : {load_project?: Project}) => {
+const ProjectPage = ({
+  load_project,
+}: {
+  load_project?: Project | OrgProject;
+}) => {
   const project = load_project ?? useLoaderData();
   const [isFav, setFav] = useState(
     typeof project === "object" && "favorite" in project

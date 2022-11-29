@@ -2,10 +2,10 @@ import localforage from "localforage";
 import { SavedUser } from "../types/user-context";
 
 
-export const setUser = async ({_id, username, email}: SavedUser) => {
+export const setUser = async ({_id, username, email, org_refs}: SavedUser) => {
   if (!_id || !username || !email) return;
 
-  const res = await localforage.setItem("user_details", {_id, username, email}, (err, value) => {
+  const res = await localforage.setItem("user_details", {_id, username, email, org_refs}, (err, value) => {
     if (err) {
       console.error(err);
       return false;

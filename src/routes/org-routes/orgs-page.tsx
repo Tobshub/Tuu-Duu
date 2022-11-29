@@ -13,14 +13,16 @@ import BurgerMenuSVG from "../../images/BurgerMenu.svg";
 import CloseSVG from "../../images/Close.svg";
 import { SideBarOrgsListProps } from "../../types/sidebar";
 import { Form } from "react-router-dom";
-import Org, { OrgProject } from "../../types/orgs";
+import Org, { OrgDetails, OrgProject } from "../../types/orgs";
 import SideBar from "../components/sidebar";
 import { getCurrentUser } from "../../operations/user";
+import { getOrgsNames } from "../../operations/orgs";
+import { Link } from "react-router-dom";
 
 export async function loader() {
   const user = await getCurrentUser();
   if (!user) return redirect("/login");
-  const orgs: Org[] = [];
+  const orgs = await getOrgsNames();
   return orgs;
 }
 
@@ -40,7 +42,7 @@ export async function action({
 }
 
 const OrgsRoot = () => {
-  const [orgs, setOrgs] = useState(useLoaderData());
+  const orgs = useLoaderData();
   const [sideBarDisplay, setSideBarDisplay] = useState(true);
 
   const handleRedirectClick = () => {
@@ -96,7 +98,9 @@ const SideBarOrgsList = ({
   return (
     <nav className="nav-bar navbar navbar-default">
       <div className="nav-title">
-        <h2>My Orgs</h2>
+        <Link to={"/orgs"}>
+          <h2>My Orgs</h2>
+        </Link>
         <Form method="post">
           <button
             type="submit"
@@ -122,8 +126,11 @@ const SideBarOrgsList = ({
       </div>
       <ul className="nav navbar-nav nav-bar">
         {orgs && orgs.length ? (
-          orgs.map((org: Org, key: number) => {
-            if (org.name.toLowerCase().includes(search_query.toLowerCase())) {
+          orgs.map((org: OrgDetails, key: number) => {
+            if (
+              "name" in org &&
+              org.name.toLowerCase().includes(search_query.toLowerCase())
+            ) {
               return (
                 <NavItem
                   org={org}
@@ -147,7 +154,7 @@ const NavItem = ({
   index,
   closeMenu,
 }: {
-  org: Org;
+  org: OrgDetails;
   index: number;
   closeMenu: () => void;
 }) => {
@@ -156,7 +163,7 @@ const NavItem = ({
   return (
     <li key={index} className={magicStyle}>
       <NavLink
-        to={`orgs/${org.org_id}`}
+        to={`/orgs/${org.id}`}
         className={({ isActive }) => (isActive ? "btn btn-primary" : "btn")}
         onClick={closeMenu}
       >

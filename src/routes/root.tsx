@@ -28,7 +28,6 @@ import DeleteSVG from "../images/Delete.svg";
 import InlineMenuSVG from "../images/inline-menu.svg";
 import BurgerMenuSVG from "../images/BurgerMenu.svg";
 import CloseSVG from "../images/Close.svg";
-import "react-notifications/lib/notifications.css";
 import { SavedUser, UserCreds } from "../types/user-context";
 import { useLocation } from "react-router";
 import { SideBarProjectsListProps, SideBarProps } from "../types/sidebar";
@@ -64,6 +63,7 @@ const Root = () => {
       _id: "",
       username: "",
       email: "",
+      org_refs: [],
     },
     setUserDetails: async (new_details: SavedUser) => {
       setUserCredentials((state) => ({ ...state, user_details: new_details }));
@@ -80,6 +80,7 @@ const Root = () => {
             _id: "",
             username: "",
             email: "",
+            org_refs: [],
           });
         } else {
           await user_credentials.setUserDetails(user);
@@ -246,8 +247,7 @@ const NavItem = ({
         onBlur={() => {
           setTimeout(() => setShowMenu(false), 200);
         }}
-        className="dropdown-toggle"
-        data-toggle="dropdown"
+        className="dropdown-toggler"
       >
         <img src={InlineMenuSVG} alt="inline menu" />
       </button>

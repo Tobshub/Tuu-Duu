@@ -1,4 +1,4 @@
-import { Params } from "react-router-dom";
+import { Params, redirect } from "react-router-dom";
 import { createOrg } from "../../operations/orgs";
 import { getCurrentUser } from "../../operations/user";
 import Org from "../../types/orgs";
@@ -21,6 +21,7 @@ export async function action({
         admins: [await getCurrentUser()],
       });
       await createOrg(new_org);
+      return redirect("/orgs");
       break;
     default:
       console.log("no action set for that");

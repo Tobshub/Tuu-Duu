@@ -15,20 +15,29 @@ export interface AppUser {
   orgs: OrgRef[]
 }
 
-export interface SyncServerResponse {
+interface ServerResponse {
   readonly success: boolean,
   readonly message: string,
+}
+
+export interface SyncServerResponse extends ServerResponse {
   projects: Project[],
 }
 
-export interface CreateOrgResponse extends Org {
+export interface CreateOrgResponse extends ServerResponse {
   success: boolean,
   message: string,
+  _id: string,
+  org_name: string,
 }
 
-export interface AddOrgToUserResponse {
+export interface AddOrgToUserResponse extends ServerResponse {
   success: boolean,
   message: string,
   orgs: OrgRef[],
   _id: string,
+}
+
+export interface GetOrgResponse extends ServerResponse {
+  org: Org,
 }

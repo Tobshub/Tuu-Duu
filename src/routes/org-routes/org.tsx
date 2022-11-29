@@ -1,8 +1,10 @@
 import { Params, useLoaderData } from "react-router";
 import { getOrg } from "../../operations/orgs";
+import { getCurrentUser } from "../../operations/user";
 import { OrgRef } from "../../types/orgs";
 
 export async function loader({ params }: { params: Params<string> }) {
+  // TODO: make org refs now have _id and id, pass id through the url, use _id to get the required data
   const orgId = await params.orgId;
   const org = getOrg({ _id: orgId });
   return org;
