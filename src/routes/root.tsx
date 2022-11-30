@@ -140,7 +140,6 @@ const Root = () => {
           <img
             src={!sideBarDisplay ? BurgerMenuSVG : CloseSVG}
             alt="Toggle sidebar"
-            loading="lazy"
           />
         </button>
       </div>
