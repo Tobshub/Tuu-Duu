@@ -19,7 +19,7 @@ export const createOrg = async (org: Org): Promise<OrgRef> => {
     timeout: 2000
   }).then(value => value.data).then((res: CreateOrgResponse) => {
     console.log({res})
-    return "_id" in res? ({_id: res._id}) : null
+    return ("_id" in res && "org_id" in res)? ({_id: res._id, org_id: res.org_id}) : null
   }).catch(e => console.error(e))
   return req_result? (await addOrgToUser(req_result)) : null;
 }
@@ -50,9 +50,11 @@ export const getOrgsNames = async (): Promise<OrgDetails[]> => {
   return org_details? org_details : null;
 }
 
-export const getOrg = async (org_ref: OrgRef): Promise<Org> => {
+export const getOrg = async (org_id: string): Promise<Org> => {
   // all orgs data held remotely and gotten from the server each time
-  const get_url = `${env.REACT_APP_TUU_DUU_API}/${org_ref._id}`;
+  const {org_refs} = await getCurrentUser();
+  const _id = org_refs.find(ref => ref.org_id === org_id)._id;
+  const get_url = `${env.REACT_APP_TUU_DUU_API}/org?_id=${_id}`;
   const org = await axios.get(get_url, {
     headers: {
       "Access-Control-Allow-Origin": "*",
@@ -61,7 +63,8 @@ export const getOrg = async (org_ref: OrgRef): Promise<Org> => {
     method: "cors",
     timeout: 2500,
   }).then(value => value.data).then((res: GetOrgResponse) => {
-    const req_org = new Org({...res.org});
+    const {org} = res;
+    const req_org = new Org({...org});
     return req_org;
   }).catch(e => console.error(e));
   return org? org : null;

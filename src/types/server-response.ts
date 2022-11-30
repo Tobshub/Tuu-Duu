@@ -28,6 +28,7 @@ export interface CreateOrgResponse extends ServerResponse {
   success: boolean,
   message: string,
   _id: string,
+  org_id: string,
   org_name: string,
 }
 

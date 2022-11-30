@@ -163,7 +163,7 @@ const NavItem = ({
   return (
     <li key={index} className={magicStyle}>
       <NavLink
-        to={`/orgs/${org.id}`}
+        to={`/orgs/${org.org_id}`}
         className={({ isActive }) => (isActive ? "btn btn-primary" : "btn")}
         onClick={closeMenu}
       >
