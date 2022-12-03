@@ -217,21 +217,53 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-end;
-  gap: 0.25em;
-  text-align: right;
+  align-items: center;
+  gap: 0.5em;
+  text-align: left;
 }
 
 .index > div {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
 }
 
 .index p {
-  max-width: 500px;
   margin: 0;
   padding: 0;
+  text-align: center;
+}
+
+.index .favorites-display {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+  height: fit-content;
+  max-width: 800px;
+  overflow-x: auto;
+}
+
+.index .favorites-display a,
+.index .favorites-display a:hover,
+.index .favorites-display a:visited {
+  text-decoration: none;
+}
+
+.index .favorites-display .project-box {
+  border: 1px solid #fff;
+  padding: 0.5em 0.75em;
+  border-radius: 10px;
+  font-size: 20px;
+  color: #fff;
+}
+
+.index .favorites-display .project-box:hover {
+  box-shadow: 0 0 0.2em #fff inset;
+}
+
+.index .favorites-display .project-box em {
+  display: block;
+  text-align: center;
 }
 
 .new-project,
