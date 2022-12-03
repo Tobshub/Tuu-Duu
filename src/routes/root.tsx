@@ -5,6 +5,7 @@ import React, {
   Context,
   useRef,
   useMemo,
+  createContext,
 } from "react";
 import "./root.css";
 import {
@@ -51,6 +52,8 @@ export async function action({ request }: { request: Request }) {
     return redirect("/?sync_config=overwrite");
   }
 }
+
+export const UserContext = createContext(null);
 
 const Root = () => {
   const [projects, setProjects] = useState(useLoaderData());
@@ -153,7 +156,9 @@ const Root = () => {
         }
       />
       <main>
-        <Outlet />
+        <UserContext.Provider value={user_credentials.user_details}>
+          <Outlet />
+        </UserContext.Provider>
       </main>
     </div>
   );
