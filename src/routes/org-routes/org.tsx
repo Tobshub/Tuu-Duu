@@ -42,7 +42,11 @@ const OrgPage = () => {
 
   if (!org) return;
 
-  return <>{org.name}</>;
+  return (
+    <div className="org">
+      <h2>{org.name}</h2>
+    </div>
+  );
   /* 
   display projects as task cards
   click open => shows project page

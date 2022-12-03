@@ -155,5 +155,5 @@ try {
     </React.StrictMode>
   );
 } catch (error) {
-  console.error(error);
+  console.log("ha! caught the error");
 }

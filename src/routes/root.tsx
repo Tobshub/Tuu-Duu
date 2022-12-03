@@ -34,8 +34,6 @@ import { SideBarProjectsListProps, SideBarProps } from "../types/sidebar";
 import SideBar from "./components/sidebar";
 import { getCurrentUser, setUser } from "../operations/user";
 
-export const UserCredentails: Context<UserCreds> = React.createContext(null);
-
 export async function loader() {
   const projects = getProjects();
   return projects;
@@ -90,7 +88,7 @@ const Root = () => {
   }, []);
 
   const [isLoggedIn, setLoggedIn] = useState<boolean>(
-    user_credentials.user_details && user_credentials.user_details.email
+    user_credentials.user_details && user_credentials.user_details._id
       ? true
       : false
   );
@@ -155,9 +153,7 @@ const Root = () => {
         }
       />
       <main>
-        <UserCredentails.Provider value={user_credentials}>
-          <Outlet />
-        </UserCredentails.Provider>
+        <Outlet />
       </main>
     </div>
   );

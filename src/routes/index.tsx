@@ -1,9 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Form, useLoaderData, Link } from "react-router-dom";
+import {
+  Form,
+  useLoaderData,
+  Link,
+  useNavigate,
+  NavLink,
+} from "react-router-dom";
 import { getProjects } from "../operations/projects";
+import { getCurrentUser } from "../operations/user";
 import Project from "../types/project";
 import { SavedUser } from "../types/user-context";
-import { UserCredentails } from "./root";
 
 export const loader = async () => {
   const projects = getProjects();
@@ -12,15 +18,22 @@ export const loader = async () => {
 
 const Index = () => {
   const projects = useLoaderData();
-  const fav_projects =
+  const fav_projects: Project[] =
     projects && Array.isArray(projects) && projects.length
       ? projects.filter((project: Project) => project.favorite)
       : null;
 
-  const { user_details } = useContext(UserCredentails) ?? {};
+  const [user_details, setUserDetails] = useState<SavedUser>(null);
+  const getUser = async () => {
+    const user = await getCurrentUser();
+    return user;
+  };
+  useEffect(() => {
+    getUser().then((user) => setUserDetails(user));
+  }, []);
   return (
     <div className="index">
-      {!!user_details && !!user_details._id ? (
+      {user_details && user_details._id ? (
         <LoggedInDisplay user_details={user_details} />
       ) : (
         <LoggedOutDisplay />
@@ -42,13 +55,13 @@ const Index = () => {
         </button>
       </Form>
       <div>
-        <h4>{fav_projects && fav_projects.length ? "Favorites:" : null}</h4>
-        <ul>
+        <h4 style={{ textAlign: "center" }}>
+          {!!fav_projects && fav_projects.length && "Favorites:"}
+        </h4>
+        <ul className="favorites-display">
           {fav_projects && fav_projects.length
             ? fav_projects.map((project: Project, key: number) => (
-                <li key={key}>
-                  <Link to={`/projects/${project.id}`}>{project.name}</Link>
-                </li>
+                <ProjectBox project={project} key={key} />
               ))
             : null}
         </ul>
@@ -97,5 +110,17 @@ function LoggedOutDisplay() {
         personal use, Tuu-Duu is right for everyone.
       </p>
     </div>
+  );
+}
+
+function ProjectBox({ project }: { project: Project }) {
+  const navigate = useNavigate();
+  return (
+    <NavLink to={`/projects/${project.id}`}>
+      <div style={{ minWidth: "200px" }} className="project-box">
+        <em>{project.name}</em>
+        <em style={{ fontSize: "14px" }}>{project.description}</em>
+      </div>
+    </NavLink>
   );
 }
