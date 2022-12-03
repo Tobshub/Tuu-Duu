@@ -4,6 +4,7 @@ import { Task, Todo, TodoStatus } from "../../types/project";
 import EditSVG from "../../images/Edit.svg";
 import DoneSVG from "../../images/Checkmark.svg";
 import DeleteSVG from "../../images/Delete.svg";
+import ActionButton from "../components/action-button";
 
 const TaskCard = ({
   task,
@@ -111,17 +112,18 @@ const TaskCard = ({
           })}
       </ul>
       <Form method="post" className="task-actions">
-        <button
-          type="submit"
+        <ActionButton
           name="editTask"
+          title="Edit task"
           value={index}
           className="edit-task-btn"
-        >
-          <img src={EditSVG} alt="Edit task" loading="lazy" />
-        </button>
-        <button
-          type="submit"
+          icon={EditSVG}
+          icon_alt="Edit task"
+          islazy={true}
+        />
+        <ActionButton
           name="deleteTask"
+          title="Delete task"
           value={index}
           className="delete-task-btn"
           onClick={() => {
@@ -131,9 +133,10 @@ const TaskCard = ({
             }, 200);
             delete_action();
           }}
-        >
-          <img src={DeleteSVG} alt="Delete task" loading="lazy" />
-        </button>
+          icon={DeleteSVG}
+          icon_alt="Delete task"
+          islazy={true}
+        />
       </Form>
     </div>
   );
@@ -156,15 +159,16 @@ const TodoComponent = ({
       <span>
         {todo.status === TodoStatus.AWAITING ? (
           <Form method="post">
-            <button
-              type="submit"
+            <ActionButton
               name="markTodo"
               title="Mark as done"
               value={[parent.toString(), index.toString()]}
               className="mark-todo-done-btn"
-            >
-              <img src={DoneSVG} alt="Mark todo as done" loading="lazy" />
-            </button>
+              icon={DoneSVG}
+              icon_alt="Mark as done"
+              islazy={true}
+              style={{ width: "18px" }}
+            />
           </Form>
         ) : null}
       </span>

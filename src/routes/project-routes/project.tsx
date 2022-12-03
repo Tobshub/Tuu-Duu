@@ -25,6 +25,7 @@ import ActionNotifcation from "../app-notifications/action-notifcation";
 import TaskCard from "../task-routes/task-card";
 import { UserCreds } from "../../types/user-context";
 import { OrgProject } from "../../types/orgs";
+import ActionButton from "../components/action-button";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
@@ -118,37 +119,32 @@ const ProjectPage = ({
             : ""}
         </h2>
         <Form method="post">
-          <button
-            type="submit"
-            title="mark as favorite"
-            name="action"
+          <ActionButton
+            title={isFav ? "unfavorite project" : "favorite project"}
             value="toggle_favorite"
             className="set-fav-btn"
             onClick={() => {
               setFav(!isFav);
             }}
-            style={{ color: "white" }}
-          >
-            <img src={isFav ? FavSVG : UnFavSVG} alt="Toggle Favorite" />
-          </button>
-          <button
-            type="submit"
-            name="action"
+            icon={isFav ? FavSVG : UnFavSVG}
+            icon_alt="Toggle Favorite"
+          />
+          <ActionButton
             value="edit_project"
             title="Change title or description"
             className="project-edit"
-          >
-            <img src={EditSVG} alt="Edit project" loading="lazy" />
-          </button>
-          <button
-            type="submit"
-            name="action"
+            icon={EditSVG}
+            icon_alt="Edit Project"
+            islazy={true}
+          />
+          <ActionButton
             value="delete_project"
             title="Delete this project"
             className="project-delete"
-          >
-            <img src={DeleteSVG} alt="Delete project" loading="lazy" />
-          </button>
+            icon={DeleteSVG}
+            icon_alt="Delete project"
+            islazy={true}
+          />
         </Form>
       </div>
       <p className="project-description">
@@ -200,15 +196,14 @@ const Tasks = ({
   return (
     <div className="task-container">
       <Form method="post">
-        <button
-          type="submit"
-          name="action"
+        <ActionButton
           value="new_task"
           className="new-task-btn"
           title="Add a task"
-        >
-          <img src={AddSVG} alt="New task" loading="lazy" />
-        </button>
+          icon={AddSVG}
+          icon_alt="New task"
+          islazy={true}
+        />
       </Form>
       <div className="project-tasks">
         {tasks && tasks.length ? (

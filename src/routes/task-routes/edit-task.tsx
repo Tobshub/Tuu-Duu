@@ -80,6 +80,7 @@ const EditTask = () => {
           name="name"
           value={name}
           autoComplete="off"
+          className="form-control"
           onChange={({ target }) => setName(target.value)}
         />
         <label htmlFor="deadline">Deadline:</label>
@@ -87,6 +88,7 @@ const EditTask = () => {
           type="datetime-local"
           id="deadline"
           name="deadline"
+          className="form-control"
           value={
             !!deadline ? new Date(deadline).toISOString().slice(0, -1) : ""
           }
