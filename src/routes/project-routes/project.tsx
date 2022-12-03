@@ -19,12 +19,11 @@ import DeleteSVG from "../../images/Delete.svg";
 import FavSVG from "../../images/Star_filled.svg";
 import UnFavSVG from "../../images/Star_blank.svg";
 import AddSVG from "../../images/Add.svg";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import "../task-routes/tasks.css";
 import ActionNotifcation from "../app-notifications/action-notifcation";
 import TaskCard from "../task-routes/task-card";
 import { UserCreds } from "../../types/user-context";
-import { UserCredentails } from "../root";
 import { OrgProject } from "../../types/orgs";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
@@ -86,14 +85,12 @@ const ProjectPage = ({
   const [isFav, setFav] = useState(
     typeof project === "object" && "favorite" in project
       ? project.favorite
-        ? true
-        : false
       : false
   );
   const [showNotification, setShowNotification] = useState(false);
-  const user_credentials = useContext<UserCreds>(UserCredentails);
 
   useEffect(() => {
+    if (!showNotification) return () => {};
     const removeNotification = setTimeout(
       () => setShowNotification(false),
       5000
@@ -101,6 +98,14 @@ const ProjectPage = ({
     return () => {
       clearTimeout(removeNotification);
     };
+  }, [project]);
+
+  useMemo(() => {
+    setFav(
+      typeof project === "object" && "favorite" in project && project.favorite
+        ? true
+        : false
+    );
   }, [project]);
 
   return (
@@ -121,12 +126,9 @@ const ProjectPage = ({
             onClick={() => {
               setFav(!isFav);
             }}
+            style={{ color: "white" }}
           >
-            <img
-              src={isFav ? FavSVG : UnFavSVG}
-              alt="Toggle Favorite"
-              loading="lazy"
-            />
+            <img src={isFav ? FavSVG : UnFavSVG} alt="Toggle Favorite" />
           </button>
           <button
             type="submit"
