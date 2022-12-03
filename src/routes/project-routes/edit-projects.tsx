@@ -53,8 +53,8 @@ const EditProject = () => {
       : ""
   );
   const [description, setDesc] = useState(
-    typeof project === "object" && "desc" in project
-      ? project.desc.toString()
+    typeof project === "object" && "description" in project
+      ? project.description.toString()
       : ""
   );
   const navigate = useNavigate();

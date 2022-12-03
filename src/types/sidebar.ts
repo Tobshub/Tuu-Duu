@@ -1,4 +1,4 @@
-import Org from "./orgs";
+import Org, { OrgDetails } from "./orgs";
 import Project from "./project";
 
 export interface SideBarProps {
@@ -15,5 +15,5 @@ export interface SideBarProjectsListProps {
 
 export interface SideBarOrgsListProps {
   handleRedirectClick?: () => void,
-  orgs: Org[],
+  orgs: OrgDetails[],
 }

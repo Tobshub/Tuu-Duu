@@ -108,13 +108,15 @@ const LoginPage = () => {
       typeof is_valid_user === "object" &&
       "_id" in is_valid_user &&
       "username" in is_valid_user &&
-      "email" in is_valid_user
+      "email" in is_valid_user &&
+      "orgs" in is_valid_user
     ) {
-      const { _id, username, email } = is_valid_user;
+      const { _id, username, email, orgs } = is_valid_user;
       setUser({
         _id: _id.toString(),
         username: username.toString(),
         email: email.toString(),
+        org_refs: Array.isArray(orgs) ? orgs : [],
       }).finally(() => navigate("/"));
     } else if (is_valid_user === false) {
       showLoginError(true);

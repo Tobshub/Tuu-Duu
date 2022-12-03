@@ -5,31 +5,36 @@ import Project from "../types/project";
 import { SyncServerResponse } from "../types/server-response";
 
 export const syncProjects = async (config? : string) => {
-  const user = await getCurrentUser();
-  if (!user || !user._id) return getProjects();
-  const sync_resources = {
-      user_projects: getProjects(),
-      user_id: user._id,
-      config,
-  };
+  try {
+    const user = await getCurrentUser();
+      if (!user || !user._id) return getProjects();
+      const sync_resources = {
+        user_projects: getProjects(),
+        user_id: user._id,
+        config,
+      };
   
-  const sync_url = `${env.REACT_APP_TUU_DUU_API}/user/sync_projects`;
+    const sync_url = `${env.REACT_APP_TUU_DUU_API}/user/sync_projects`;
 
-  const sync_results = await axios.put(sync_url, sync_resources, {
-    headers: {
-      "Content-Type": "application/json; encoding=utf-8",
-      "Access-Control-Allow-Origin": "*"
-    },
-    method: "cors",
-    timeout: 2000, // use timeout config incase the server is spun down
-  }).then(data => data.data).then((res: SyncServerResponse) => res).catch((e) => console.error(e));
+    const sync_results = await axios.put(sync_url, sync_resources, {
+      headers: {
+        "Content-Type": "application/json; encoding=utf-8",
+        "Access-Control-Allow-Origin": "*"
+      },
+      method: "cors",
+      timeout: 2000, // use timeout config incase the server is spun down
+    }).then(data => data.data).then((res: SyncServerResponse) => res).catch((e) => console.error(e));
   
-  // console.log({sync_results}) 
+    // console.log({sync_results}) 
 
-  if (!sync_results) return sync_resources.user_projects;
+    if (!sync_results) return sync_resources.user_projects;
 
-  sessionStorage.setItem("projects", JSON.stringify(sync_results.projects));
-  return sync_results.projects;
+    sessionStorage.setItem("projects", JSON.stringify(sync_results.projects));
+    return sync_results.projects;
+  } catch (error) {
+   console.error(error);
+   return null;
+  }
 }
 
 

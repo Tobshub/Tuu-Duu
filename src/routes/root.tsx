@@ -28,14 +28,11 @@ import DeleteSVG from "../images/Delete.svg";
 import InlineMenuSVG from "../images/inline-menu.svg";
 import BurgerMenuSVG from "../images/BurgerMenu.svg";
 import CloseSVG from "../images/Close.svg";
-import "react-notifications/lib/notifications.css";
 import { SavedUser, UserCreds } from "../types/user-context";
 import { useLocation } from "react-router";
 import { SideBarProjectsListProps, SideBarProps } from "../types/sidebar";
 import SideBar from "./components/sidebar";
 import { getCurrentUser, setUser } from "../operations/user";
-
-export const UserCredentails: Context<UserCreds> = React.createContext(null);
 
 export async function loader() {
   const projects = getProjects();
@@ -64,6 +61,7 @@ const Root = () => {
       _id: "",
       username: "",
       email: "",
+      org_refs: [],
     },
     setUserDetails: async (new_details: SavedUser) => {
       setUserCredentials((state) => ({ ...state, user_details: new_details }));
@@ -80,6 +78,7 @@ const Root = () => {
             _id: "",
             username: "",
             email: "",
+            org_refs: [],
           });
         } else {
           await user_credentials.setUserDetails(user);
@@ -89,7 +88,7 @@ const Root = () => {
   }, []);
 
   const [isLoggedIn, setLoggedIn] = useState<boolean>(
-    user_credentials.user_details && user_credentials.user_details.email
+    user_credentials.user_details && user_credentials.user_details._id
       ? true
       : false
   );
@@ -139,7 +138,6 @@ const Root = () => {
           <img
             src={!sideBarDisplay ? BurgerMenuSVG : CloseSVG}
             alt="Toggle sidebar"
-            loading="lazy"
           />
         </button>
       </div>
@@ -155,9 +153,7 @@ const Root = () => {
         }
       />
       <main>
-        <UserCredentails.Provider value={user_credentials}>
-          <Outlet />
-        </UserCredentails.Provider>
+        <Outlet />
       </main>
     </div>
   );
@@ -246,8 +242,7 @@ const NavItem = ({
         onBlur={() => {
           setTimeout(() => setShowMenu(false), 200);
         }}
-        className="dropdown-toggle"
-        data-toggle="dropdown"
+        className="dropdown-toggler"
       >
         <img src={InlineMenuSVG} alt="inline menu" />
       </button>
