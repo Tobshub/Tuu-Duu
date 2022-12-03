@@ -54,11 +54,7 @@ form:has(.new-task-btn) {
   margin-bottom: 1rem;
 }
 
-.new-task-btn,
-.edit-task-btn,
-.delete-task-btn,
-.new-todo-btn,
-.mark-todo-done-btn {
+.new-todo-btn {
   outline: none;
   border: 0;
   border-radius: 50%;
@@ -74,28 +70,12 @@ form:has(.new-task-btn) {
   border-radius: 5px;
 }
 
-.mark-todo-done-btn {
-  width: 18px;
-}
-
-.new-task-btn:hover,
-.new-task-btn:focus,
-.edit-task-btn:hover,
-.edit-task-btn:focus,
-.delete-task-btn:hover,
-.delete-task-btn:focus,
 .new-todo-btn:hover,
-.new-todo-btn:focus,
-.mark-todo-done-btn:hover,
-.mark-todo-done-btn:focus {
+.new-todo-btn:focus {
   scale: 1.4;
 }
 
-.new-task-btn:active,
-.edit-task-btn:active,
-.delete-task-btn:active,
-.new-todo-btn:active,
-.mark-todo-done-btn:active {
+.new-todo-btn:active {
   scale: 1;
 }
 
@@ -128,14 +108,14 @@ form:has(.new-task-btn) {
 
 .new-task > form,
 .edit-task > form {
-  background-color: #fff;
+  background-color: #444444ec;
   width: min(325px, 100%);
   padding: 1em 0.75em;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   font-size: 15px;
-  color: #000;
+  color: #fff;
   font-weight: 600;
   gap: 0.5rem;
 }
