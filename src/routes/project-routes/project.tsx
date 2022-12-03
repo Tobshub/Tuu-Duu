@@ -74,6 +74,7 @@ export const action = async ({
     const [task_index, todo_index] = formData.markTodo.toString().split(",");
     await markTodo(id, parseInt(task_index), parseInt(todo_index));
   }
+  return;
 };
 
 const ProjectPage = ({
