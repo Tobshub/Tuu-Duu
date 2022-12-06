@@ -49,13 +49,13 @@ const EditProject = () => {
   }
 
   async function formSubmit() {
-    const edits = new Project(
-      content.name,
-      content.description,
-      project.id,
-      project.tasks,
-      project.favorite
-    );
+    const edits = new Project({
+      name: content.name,
+      description: content.description,
+      id: project.id,
+      tasks: project.tasks,
+      favorite: project.favorite,
+    });
     let success = false;
     if (JSON.stringify(edits) !== JSON.stringify(project)) {
       success = await editProject(edits);

@@ -262,7 +262,6 @@ const Menu = ({
           name="delete"
           value={project.id}
           onClick={() => {
-            console.log("delete from menu");
             setMagicStyle("magictime holeOut");
             setTimeout(() => {
               setMagicStyle("magictime");

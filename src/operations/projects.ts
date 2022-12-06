@@ -40,15 +40,16 @@ export const syncProjects = async (projects: Project[], config? : string) => {
 
 export const addProject = async (project: Project) => {
   const {_id } = await getCurrentUser();
+  if (!_id) return;
   try {
     const req_url = `${env.REACT_APP_TUU_DUU_API}/user/projects`;
     const req_body = {
       _id,
       project_data: project,
     }
-    const response = await axios.post(req_url, req_body, axiosConfig).then(value => value.data).then((res: GetProjectsServerResponse) => res.projects).catch(e => console.error(e));
+    const response = await axios.post(req_url, req_body, axiosConfig).then(value => value.data).then((res: GetProjectsServerResponse) => res).catch(e => console.error(e));
 
-    return (response && response.length)? response : [];
+    return response && response.success
   } catch (error) {
     console.error(error);
     return;

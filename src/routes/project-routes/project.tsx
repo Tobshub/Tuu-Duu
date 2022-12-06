@@ -80,10 +80,13 @@ export const action = async ({
 
 const ProjectPage = () => {
   const project_id = useLoaderData().toString();
+  const location = useLocation();
+
   const {
     data: projects,
     error,
     isLoading,
+    isFetching,
     refetch,
   } = useQuery({
     queryKey: "projects",
@@ -91,7 +94,16 @@ const ProjectPage = () => {
     enabled: false,
   });
 
+  if (location.state && location.state.shouldRefetch) {
+    refetch({ queryKey: "projects" });
+    location.state = {};
+  }
+
   const project = projects?.find((project) => project.id === project_id);
+
+  if (!project) {
+    refetch({ queryKey: "projects" });
+  }
 
   const [isFav, setFav] = useState(project?.favorite ?? false);
   const [showNotification, setShowNotification] = useState(false);
@@ -111,27 +123,13 @@ const ProjectPage = () => {
     setFav(project?.favorite);
   }, [project?.id]);
 
-  const location = useLocation();
-
-  useEffect(() => {
-    const showUpdate = location.state as { shouldRefetch: boolean };
-    if (showUpdate?.shouldRefetch) {
-      refetch({ queryKey: "projects" });
-    }
-    location.state = {};
-  }, []);
-
   if (error) throw new Error(error.toString());
   if (isLoading) return <>Loading...</>;
 
   return (
     <div className="project">
       <div className="project-title">
-        <h2>
-          {typeof project === "object" && "name" in project
-            ? project.name.toString()
-            : ""}
-        </h2>
+        <h2>{project?.name}</h2>
         <Form method="post">
           <ActionButton
             type="button"
@@ -165,24 +163,20 @@ const ProjectPage = () => {
         </Form>
       </div>
       <p className="project-description">
-        {typeof project === "object" &&
-          "description" in project &&
-          project.description && (
-            <>
-              Description: <br />
-              {project.description.toString()}
-            </>
-          )}
+        {!!project && project.description && (
+          <>
+            Description: <br />
+            {project.description.toString()}
+          </>
+        )}
       </p>
       <div>
-        {typeof project === "object" &&
-          "tasks" in project &&
-          Array.isArray(project.tasks) && (
-            <Tasks
-              tasks={project.tasks}
-              delete_action={() => setShowNotification(true)}
-            />
-          )}
+        {!!project?.tasks && (
+          <Tasks
+            tasks={project.tasks}
+            delete_action={() => setShowNotification(true)}
+          />
+        )}
       </div>
       <Outlet />
       {showNotification && (

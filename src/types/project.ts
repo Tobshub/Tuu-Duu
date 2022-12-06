@@ -1,5 +1,13 @@
 import { generateId } from "../operations/user";
 
+type ProjectProps = {
+  name: string;
+  description?: string;
+  id?: string;
+  tasks?: Task[];
+  favorite?: boolean;
+}
+
 export default class Project {
   name: string;
   description: string;
@@ -7,9 +15,9 @@ export default class Project {
   tasks: Task[];
   favorite: boolean;
 
-  constructor(name: string, description: string, id?: string, tasks?: Task[], favorite?: boolean) {
+  constructor({name, description, id, favorite, tasks}: ProjectProps) {
     this.name = name;
-    this.description = description;
+    this.description = description ?? '';
     this.id = id ?? generateId();
     this.favorite = favorite ?? false;
     this.tasks = tasks ?? [];

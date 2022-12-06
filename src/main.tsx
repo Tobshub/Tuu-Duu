@@ -21,7 +21,7 @@ import EditProject, {
   loader as editProjectLoader,
 } from "./routes/project-routes/edit-projects";
 import NewTask, {
-  action as newTaskAction,
+  loader as newTaskLoader,
 } from "./routes/task-routes/new-task";
 import EditTask, {
   loader as editTaskLoader,
@@ -75,6 +75,7 @@ const router = createBrowserRouter([
             path: "/projects/:projectId/edit",
             element: <EditProject />,
             loader: editProjectLoader,
+            action: async () => {},
           },
           {
             path: "/projects/:projectId",
@@ -85,7 +86,7 @@ const router = createBrowserRouter([
               {
                 path: "/projects/:projectId/tasks/new",
                 element: <NewTask />,
-                action: newTaskAction,
+                loader: newTaskLoader,
               },
               {
                 path: "/projects/:projectId/tasks/:taskIndex/edit",
