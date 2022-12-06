@@ -87,6 +87,7 @@ const router = createBrowserRouter([
                 path: "/projects/:projectId/tasks/new",
                 element: <NewTask />,
                 loader: newTaskLoader,
+                action: async () => {},
               },
               {
                 path: "/projects/:projectId/tasks/:taskIndex/edit",

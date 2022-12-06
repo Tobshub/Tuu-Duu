@@ -24,11 +24,24 @@ export default class Project {
   }
 }
 
-export interface Task {
+interface TaskProps {
   name: string,
   status?: TaskStatus,
   todos?: Todo[],
   deadline?: Date;
+}
+
+export class Task {
+  name: string;
+  status: TaskStatus;
+  todos: Todo[];
+  deadline?: Date;
+  constructor({name, status, todos, deadline}: TaskProps) {
+    this.name = name ?? "Untitled";
+    this.status = status ?? TaskStatus.IDLE;
+    this.todos = todos ?? [];
+    this.deadline = deadline;
+  }
 }
 
 export enum TaskStatus {
