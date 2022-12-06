@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import {
   Form,
   useLoaderData,
@@ -12,13 +13,16 @@ import Project from "../types/project";
 import { SavedUser } from "../types/user-context";
 import { UserContext } from "./root";
 
-export const loader = async () => {
-  const projects = getProjects();
-  return projects;
-};
-
 const Index = () => {
-  const projects = useLoaderData();
+  const {
+    data: projects,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: "projects",
+    queryFn: () => getProjects(),
+    enabled: true,
+  });
   const fav_projects: Project[] =
     projects && Array.isArray(projects) && projects.length
       ? projects.filter((project: Project) => project.favorite)
@@ -49,7 +53,7 @@ const Index = () => {
       </Form>
       <div>
         <h4 style={{ textAlign: "center" }}>
-          {!!fav_projects && fav_projects.length && "Favorites:"}
+          {!!fav_projects && !!fav_projects.length && "Favorites:"}
         </h4>
         <ul className="favorites-display">
           {fav_projects && fav_projects.length

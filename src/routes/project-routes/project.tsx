@@ -6,13 +6,14 @@ import {
   useNavigate,
   Params,
   useActionData,
+  useLocation,
 } from "react-router-dom";
 import {
   deleteProject,
+  editProject,
   getProject,
-  setFavorite,
+  getProjects,
 } from "../../operations/projects";
-import { deleteTask, markTodo, restoreLastTask } from "../../operations/tasks";
 import Project, { Task } from "../../types/project";
 import EditSVG from "../../images/Edit.svg";
 import DeleteSVG from "../../images/Delete.svg";
@@ -26,13 +27,11 @@ import TaskCard from "../task-routes/task-card";
 import { UserCreds } from "../../types/user-context";
 import { OrgProject } from "../../types/orgs";
 import ActionButton from "../components/action-button";
+import { useQuery } from "react-query";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
-  const project = await getProject(id);
-  if (!project)
-    throw new Error("Invalid project-ID or problem while retrieving Project");
-  return project;
+  return id;
 };
 
 export const action = async ({
@@ -48,19 +47,19 @@ export const action = async ({
   if (!id) return;
   if (formData.action) {
     switch (formData.action) {
-      case "toggle_favorite":
-        await setFavorite(id);
-        break;
+      // case "toggle_favorite":
+      // await setFavorite(id);
+      //   break;
       case "edit_project":
         return redirect(`/projects/${id}/edit`);
       case "delete_project":
         await deleteProject(id);
-        return redirect("/?sync_config=overwrite");
+        return redirect("/");
       case "new_task":
         return redirect(`/projects/${id}/tasks/new`);
-      case "revert_action":
-        await restoreLastTask();
-        return;
+      // case "revert_action":
+      //   await restoreLastTask();
+      // return;
       default:
         console.log("no action set for that");
         break;
@@ -68,27 +67,33 @@ export const action = async ({
   } else if (formData.editTask) {
     const key = formData.editTask;
     return redirect(`/projects/${id}/tasks/${key}/edit`);
-  } else if (formData.deleteTask) {
-    const key = parseInt(formData.deleteTask.toString());
-    await deleteTask(id, key);
-  } else if (formData.markTodo) {
-    const [task_index, todo_index] = formData.markTodo.toString().split(",");
-    await markTodo(id, parseInt(task_index), parseInt(todo_index));
   }
+  // else if (formData.deleteTask) {
+  //   const key = parseInt(formData.deleteTask.toString());
+  //   await deleteTask(id, key);
+  // } else if (formData.markTodo) {
+  //   const [task_index, todo_index] = formData.markTodo.toString().split(",");
+  //   await markTodo(id, parseInt(task_index), parseInt(todo_index));
+  // }
   return;
 };
 
-const ProjectPage = ({
-  load_project,
-}: {
-  load_project?: Project | OrgProject;
-}) => {
-  const project = load_project ?? useLoaderData();
-  const [isFav, setFav] = useState(
-    typeof project === "object" && "favorite" in project
-      ? project.favorite
-      : false
-  );
+const ProjectPage = () => {
+  const project_id = useLoaderData().toString();
+  const {
+    data: projects,
+    error,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: "projects",
+    queryFn: () => getProjects(),
+    enabled: false,
+  });
+
+  const project = projects?.find((project) => project.id === project_id);
+
+  const [isFav, setFav] = useState(project?.favorite ?? false);
   const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
@@ -103,12 +108,21 @@ const ProjectPage = ({
   }, [project]);
 
   useMemo(() => {
-    setFav(
-      typeof project === "object" && "favorite" in project && project.favorite
-        ? true
-        : false
-    );
-  }, [project]);
+    setFav(project?.favorite);
+  }, [project?.id]);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const showUpdate = location.state as { shouldRefetch: boolean };
+    if (showUpdate?.shouldRefetch) {
+      refetch({ queryKey: "projects" });
+    }
+    location.state = {};
+  }, []);
+
+  if (error) throw new Error(error.toString());
+  if (isLoading) return <>Loading...</>;
 
   return (
     <div className="project">
@@ -120,11 +134,14 @@ const ProjectPage = ({
         </h2>
         <Form method="post">
           <ActionButton
+            type="button"
             title={isFav ? "unfavorite project" : "favorite project"}
             value="toggle_favorite"
             className="set-fav-btn"
-            onClick={() => {
-              setFav(!isFav);
+            onClick={async () => {
+              setFav((state) => !state);
+              project.favorite = !project.favorite;
+              await editProject(project);
             }}
             icon={isFav ? FavSVG : UnFavSVG}
             icon_alt="Toggle Favorite"

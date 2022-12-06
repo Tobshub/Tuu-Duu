@@ -20,6 +20,10 @@ interface ServerResponse {
   readonly message: string,
 }
 
+export interface GetProjectsServerResponse extends ServerResponse {
+  projects: Project[]
+}
+
 export interface SyncServerResponse extends ServerResponse {
   projects: Project[],
 }

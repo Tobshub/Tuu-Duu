@@ -1,71 +1,81 @@
 import React, { useState } from "react";
 import { NavItem } from "react-bootstrap";
+import { useQuery } from "react-query";
 import {
   Form,
   Params,
   redirect,
+  useActionData,
   useLoaderData,
   useNavigate,
 } from "react-router-dom";
-import { editProject, getProject } from "../../operations/projects";
+import {
+  editProject,
+  getProject,
+  getProjects,
+} from "../../operations/projects";
 import Project from "../../types/project";
 
 export async function loader({ params }: { params: Params<string> }) {
   const id = params.projectId;
-  const project = await getProject(id);
-  if (!project)
-    throw new Error("Invalid project-ID or problem while retrieving Project");
-  return project;
-}
-
-export async function action({
-  params,
-  request,
-}: {
-  params: Params<string>;
-  request: Request;
-}) {
-  const res = await request.formData();
-  const { name, description, ...formData } = Object.fromEntries(res);
-  const id = params.projectId;
-  if (!id) return;
-  const project = await getProject(id);
-  if (!project) return;
-
-  const data = new Project(
-    name.toString(),
-    description.toString(),
-    project.id,
-    project.tasks,
-    project.favorite
-  );
-  if (formData.edit) {
-    await editProject(data, id);
-    return redirect(`/projects/${id}`);
-  }
+  return id;
 }
 
 const EditProject = () => {
-  const project = useLoaderData();
-  const [title, setTitle] = useState(
-    typeof project === "object" && "name" in project
-      ? project.name.toString()
-      : ""
-  );
-  const [description, setDesc] = useState(
-    typeof project === "object" && "description" in project
-      ? project.description.toString()
-      : ""
-  );
+  const project_id = useLoaderData().toString();
+  const {
+    data: projects,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: "projects",
+    queryFn: () => getProjects(),
+    enabled: false,
+  });
+  const project = projects?.find((project) => project.id === project_id);
+  const [content, setContent] = useState({
+    name: project.name,
+    description: project.description,
+  });
   const navigate = useNavigate();
 
+  function handleChange({
+    target,
+  }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    setContent((state) => ({
+      ...state,
+      [target.name]: target.value,
+    }));
+  }
+
+  async function formSubmit() {
+    const edits = new Project(
+      content.name,
+      content.description,
+      project.id,
+      project.tasks,
+      project.favorite
+    );
+    let success = false;
+    if (JSON.stringify(edits) !== JSON.stringify(project)) {
+      success = await editProject(edits);
+    }
+    return navigate("..", {
+      state: { shouldRefetch: success },
+      relative: "path",
+    });
+  }
+
+  if (error) throw new Error(error.toString());
+  if (isLoading) return <>Loading...</>;
+
   return (
-    <Form className="edit-project" method="post">
+    <Form className="edit-project" method="put" onSubmit={() => formSubmit()}>
       <input
         type="text"
         name="name"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        value={content.name}
+        onChange={handleChange}
         placeholder="Project Name"
         id="usr"
         className="form-control np-name"
@@ -75,8 +85,8 @@ const EditProject = () => {
         placeholder="Project Description"
         id="comment"
         className="form-control np-desc"
-        value={description}
-        onChange={(e) => setDesc(e.target.value)}
+        value={content.description}
+        onChange={handleChange}
       />
       <button type="submit" className="btn btn-primary" name="edit" value={1}>
         Edit
@@ -86,7 +96,7 @@ const EditProject = () => {
         className="btn btn-danger"
         name="cancel"
         value={1}
-        onClick={() => navigate(-1)}
+        onClick={() => navigate("..", { relative: "path" })}
       >
         Cancel
       </button>

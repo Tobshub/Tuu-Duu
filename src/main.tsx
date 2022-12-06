@@ -8,7 +8,7 @@ import Root, {
 } from "./routes/root";
 import "./main.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Index, { loader as indexLoader } from "./routes";
+import Index from "./routes";
 import NewProject, {
   action as newProjectAction,
 } from "./routes/project-routes/new-project";
@@ -19,7 +19,6 @@ import {
 } from "./routes/project-routes/project";
 import EditProject, {
   loader as editProjectLoader,
-  action as editProjectAction,
 } from "./routes/project-routes/edit-projects";
 import NewTask, {
   action as newTaskAction,
@@ -61,7 +60,6 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        loader: indexLoader,
         element: <Index />,
       },
       {
@@ -77,7 +75,6 @@ const router = createBrowserRouter([
             path: "/projects/:projectId/edit",
             element: <EditProject />,
             loader: editProjectLoader,
-            action: editProjectAction,
           },
           {
             path: "/projects/:projectId",
@@ -145,14 +142,18 @@ let app_root = null;
 
 document.addEventListener("DOMContentLoaded", (event) => {
   if (!app_root) {
-    app_root = document.getElementById("root1") as HTMLElement;
-    const root = ReactDOM.createRoot(app_root);
-    root.render(
-      <React.StrictMode>
-        <Suspense fallback={<SuspensePage />}>
-          <RouterProvider router={router} />
-        </Suspense>
-      </React.StrictMode>
-    );
+    app_root = document.getElementById("root") as HTMLElement;
+    try {
+      const root = ReactDOM.createRoot(app_root);
+      root.render(
+        <React.StrictMode>
+          <Suspense fallback={<SuspensePage />}>
+            <RouterProvider router={router} />
+          </Suspense>
+        </React.StrictMode>
+      );
+    } catch (e) {
+      console.error(e);
+    }
   }
 });

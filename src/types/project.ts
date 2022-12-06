@@ -6,7 +6,6 @@ export default class Project {
   id: string;
   tasks: Task[];
   favorite: boolean;
-  last_save: number;
 
   constructor(name: string, description: string, id?: string, tasks?: Task[], favorite?: boolean) {
     this.name = name;
@@ -14,7 +13,6 @@ export default class Project {
     this.id = id ?? generateId();
     this.favorite = favorite ?? false;
     this.tasks = tasks ?? [];
-    this.last_save = new Date().getTime();
   }
 }
 
