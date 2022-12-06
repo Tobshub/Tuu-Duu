@@ -8,12 +8,13 @@ export type ActionButtonProps = {
   islazy?: boolean;
   name?: string;
   className: string;
+  type?: "button" | "submit" | "reset";
 };
 
 const ActionButton = (props: ActionButtonProps) => {
   return (
     <button
-      type="submit"
+      type={props.type ?? "submit"}
       name={props.name ?? "action"}
       value={props.value}
       className={props.className + " action-button"}
