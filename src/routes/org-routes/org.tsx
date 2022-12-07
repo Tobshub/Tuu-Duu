@@ -1,23 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
-import { Params, useLoaderData } from "react-router";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  Params,
+  useLoaderData,
+} from "react-router";
 import { getOrg } from "../../operations/orgs";
 import { getCurrentUser } from "../../operations/user";
 import Org, { OrgRef } from "../../types/orgs";
 
-export async function loader({ params }: { params: Params<string> }) {
+export async function loader({ params }: LoaderFunctionArgs) {
   // TODO: make org refs now have _id and id, pass id through the url, use _id to get the required data
   const org_id = await params.orgId;
   const org = await getOrg(org_id);
   return org;
 }
 
-export async function action({
-  params,
-  request,
-}: {
-  params: Params<string>;
-  request: Request;
-}) {
+export async function action({ params, request }: ActionFunctionArgs) {
   const { orgId } = await params;
   // open project
   // make project

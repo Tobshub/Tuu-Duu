@@ -3,6 +3,7 @@ import { NavItem } from "react-bootstrap";
 import { useQuery } from "react-query";
 import {
   Form,
+  LoaderFunctionArgs,
   Params,
   redirect,
   useActionData,
@@ -16,7 +17,7 @@ import {
 } from "../../operations/projects";
 import Project from "../../types/project";
 
-export async function loader({ params }: { params: Params<string> }) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const id = params.projectId;
   return id;
 }

@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import env from "../../../env.json";
 import {
+  ActionFunctionArgs,
   Form,
+  LoaderFunctionArgs,
   Params,
   redirect,
   useActionData,
@@ -11,7 +13,7 @@ import { getCurrentUser, setUser } from "../../operations/user";
 import { AppUser, LoginServerResponse } from "../../types/server-response";
 import { SavedUser } from "../../types/user-context";
 
-export async function loader({ params }: { params: Params<string> }) {
+export async function loader({ params }: LoaderFunctionArgs) {
   getCurrentUser().then((user) => {
     if (user && user._id) {
       return redirect("/");
@@ -19,13 +21,7 @@ export async function loader({ params }: { params: Params<string> }) {
   });
 }
 
-export async function action({
-  params,
-  request,
-}: {
-  params: Params<string>;
-  request: Request;
-}) {
+export async function action({ params, request }: ActionFunctionArgs) {
   const res = await request.formData();
   const { username, email, password, ...formData } = Object.fromEntries(res);
 

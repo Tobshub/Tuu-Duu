@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
+  ActionFunctionArgs,
   Form,
+  LoaderFunctionArgs,
   Params,
   redirect,
   useLoaderData,
@@ -14,18 +16,12 @@ import { useQuery } from "react-query";
 import { editProject, getProjects } from "../../operations/projects";
 import ActionButton from "../components/action-button";
 
-export async function loader({ params }: { params: Params<string> }) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const { projectId: id, taskIndex: index } = params;
   return { id, index };
 }
 
-export async function action({
-  params,
-  request,
-}: {
-  params: Params<string>;
-  request: Request;
-}) {
+export async function action({ params, request }: ActionFunctionArgs) {
   const res = await request.formData();
   const { projectId: id, taskIndex: index } = params;
 }

@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useQuery } from "react-query";
 import {
   Form,
+  LoaderFunctionArgs,
   Params,
   redirect,
   useLoaderData,
@@ -10,7 +11,7 @@ import {
 import { editProject, getProjects } from "../../operations/projects";
 import { Task, TaskStatus } from "../../types/project";
 
-export async function loader({ params }: { params: Params<string> }) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const { projectId } = params;
   return projectId;
 }
