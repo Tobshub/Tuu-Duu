@@ -4,20 +4,19 @@ import {
   Params,
   redirect,
   useLoaderData,
+  useLocation,
   useNavigate,
 } from "react-router-dom";
-import { addTodo, editTask, getTask } from "../../operations/tasks";
 import { Task, Todo, TodoStatus } from "../../types/project";
 import AddSVG from "../../images/Add_black.svg";
 import { validDate } from "./new-task";
+import { useQuery } from "react-query";
+import { editProject, getProjects } from "../../operations/projects";
+import ActionButton from "../components/action-button";
 
 export async function loader({ params }: { params: Params<string> }) {
   const { projectId: id, taskIndex: index } = params;
-  if (!id || !index) return;
-
-  const task = await getTask(id, parseInt(index));
-  if (!task) return redirect(`/projects/${id}/`);
-  return task;
+  return { id, index };
 }
 
 export async function action({
@@ -29,40 +28,84 @@ export async function action({
 }) {
   const res = await request.formData();
   const { projectId: id, taskIndex: index } = params;
-  if (!id || !index) return;
-  const { name, deadline, newTodo, ...formData } = Object.fromEntries(res);
-  if (formData.save) {
-    const task: Task = {
-      name: name ? name.toString() : "Untitled",
-      deadline: deadline ? new Date(deadline.toString()) : undefined,
-    };
-    await editTask(id, parseInt(index), task);
-    return redirect(`/projects/${id}`);
-  }
-  if (formData.addTodo && newTodo) {
-    const todo: Todo = {
-      content: newTodo.toString(),
-      status: TodoStatus.AWAITING,
-    };
-    await addTodo(id, parseInt(index), todo);
-  }
 }
 
 const EditTask = () => {
-  const task = useLoaderData();
-  // if (typeof task === "object" && "name" in task && "deadline" in task)
-  const [name, setName] = useState(
-    typeof task === "object" && "name" in task ? task.name.toString() : ""
-  );
-  const [deadline, setDeadline] = useState(
-    typeof task === "object" && "deadline" in task
-      ? new Date(task.deadline.toString())
-      : undefined
-  );
-  const [invalidDate, setInvalidDate] = useState(false);
+  const { id: project_id, index } = useLoaderData() as {
+    id: string;
+    index: number;
+  };
+  const {
+    data: projects,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: "projects",
+    queryFn: () => getProjects(),
+    enabled: false,
+  });
+
+  const project = projects.find((project) => project.id === project_id);
+  const task = project.tasks[index];
+
+  if (!task) throw new Error("no such task");
+
+  const [task_content, setTaskContent] = useState({
+    name: task.name,
+    deadline: task.deadline ?? null,
+  });
+  const [form_errors, setFormError] = useState({
+    name: false,
+    deadline: false,
+  });
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const navigate = useNavigate();
   const [todo, setTodo] = useState("");
+
+  function handleChange({ target }: React.ChangeEvent<HTMLInputElement>) {
+    setTaskContent((state) => ({
+      ...state,
+      [target.name]: target.value,
+    }));
+    setFormError((state) => ({
+      ...state,
+      [target.name]: false,
+    }));
+  }
+
+  function addTodo() {
+    project.tasks[index].todos.push(new Todo({ content: todo }));
+    editProject(project);
+    setTodo("");
+  }
+
+  function checkFormErrors(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    let valid = true;
+    if (task_content.deadline && !validDate(task_content.deadline)) {
+      e.preventDefault();
+      setFormError((state) => ({ ...state, deadline: true }));
+      valid = false;
+    }
+    if (!task_content.name.length) {
+      e.preventDefault();
+      setFormError((state) => ({ ...state, name: true }));
+      valid = false;
+    }
+    return valid;
+  }
+
+  async function handleSave() {
+    project.tasks[index] = new Task({
+      ...project.tasks[index],
+      name: task_content.name,
+      deadline: task_content.deadline,
+    });
+    await editProject(project);
+    return navigate("..", {
+      relative: "route",
+      state: { shouldRefetch: true },
+    });
+  }
 
   return (
     <div className="edit-task">
@@ -72,16 +115,17 @@ const EditTask = () => {
         style={{
           animationDuration: "300ms",
         }}
+        onSubmit={() => handleSave()}
       >
         <label htmlFor="name">Name</label>
         <input
           type="text"
           id="name"
           name="name"
-          value={name}
+          value={task_content.name}
           autoComplete="off"
           className="form-control"
-          onChange={({ target }) => setName(target.value)}
+          onChange={handleChange}
         />
         <label htmlFor="deadline">Deadline:</label>
         <input
@@ -90,23 +134,17 @@ const EditTask = () => {
           name="deadline"
           className="form-control"
           value={
-            !!deadline ? new Date(deadline).toISOString().slice(0, -1) : ""
+            task_content.deadline
+              ? new Date(task_content.deadline).toISOString().slice(0, -1)
+              : ""
           }
-          onChange={({ target }) => {
-            const { value } = target;
-            setDeadline(value ? new Date(value) : undefined);
-            setInvalidDate(false);
-          }}
+          onChange={handleChange}
         />
-        {invalidDate && (
+        {form_errors.deadline && (
           <span className="invalid-date">Deadline has passed</span>
         )}
         <div className="display-todos">
-          {typeof task === "object" &&
-          "todos" in task &&
-          task.todos &&
-          Array.isArray(task.todos) &&
-          task.todos.length ? (
+          {task.todos && task.todos.length ? (
             task.todos.map((todo, key) => (
               <input value={todo.content} key={key} disabled />
             ))
@@ -126,17 +164,22 @@ const EditTask = () => {
             }}
           />
           <div className="input-group-btn">
-            <button
-              type="submit"
+            <ActionButton
+              type={"button"}
               className="new-todo-btn"
               name="addTodo"
+              icon={AddSVG}
+              icon_alt="Add todo"
+              islazy={true}
               value={1}
+              title="Add a todo"
               onClick={() => {
-                setTimeout(() => setTodo(""), 100);
+                if (!todo.length) {
+                  return;
+                }
+                addTodo();
               }}
-            >
-              <img src={AddSVG} alt="Add todo" loading="lazy" />
-            </button>
+            />
           </div>
         </div>
         <button
@@ -144,12 +187,9 @@ const EditTask = () => {
           className="btn btn-success"
           name="save"
           value={1}
-          onClick={(e) => {
-            if (deadline && !validDate(deadline)) {
-              e.preventDefault();
-              setInvalidDate(true);
-              return;
-            }
+          onClick={async (e) => {
+            const valid = checkFormErrors(e);
+            if (!valid) return;
             setMagicStyle("magictime holeOut");
           }}
         >
@@ -161,7 +201,7 @@ const EditTask = () => {
           onClick={() => {
             setMagicStyle("magictime holeOut");
             setTimeout(() => {
-              navigate(-1);
+              navigate("..", { relative: "route" });
             }, 200);
           }}
         >
