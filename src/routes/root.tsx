@@ -5,6 +5,7 @@ import React, {
   Context,
   useRef,
   useMemo,
+  createContext,
 } from "react";
 import "./root.css";
 import {
@@ -33,10 +34,12 @@ import { useLocation } from "react-router";
 import { SideBarProjectsListProps, SideBarProps } from "../types/sidebar";
 import SideBar from "./components/sidebar";
 import { getCurrentUser, setUser } from "../operations/user";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 
 export async function loader() {
-  const projects = getProjects();
-  return projects;
+  const user = await getCurrentUser();
+  if (!user) return redirect("/login");
+  return user;
 }
 
 export async function action({ request }: { request: Request }) {
@@ -52,40 +55,21 @@ export async function action({ request }: { request: Request }) {
   }
 }
 
+export const UserContext = createContext(null);
+const projectQuery = new QueryClient();
+
 const Root = () => {
-  const [projects, setProjects] = useState(useLoaderData());
+  const user = useLoaderData() as SavedUser;
   const navigate = useNavigate();
   const [sideBarDisplay, setSideBarDisplay] = useState(true);
   const [user_credentials, setUserCredentials] = useState<UserCreds>({
-    user_details: {
-      _id: "",
-      username: "",
-      email: "",
-      org_refs: [],
-    },
+    user_details: { ...user },
     setUserDetails: async (new_details: SavedUser) => {
       setUserCredentials((state) => ({ ...state, user_details: new_details }));
       await setUser(new_details);
       return;
     },
   });
-
-  useEffect(() => {
-    getCurrentUser()
-      .then(async (user) => {
-        if (!user) {
-          user_credentials.setUserDetails({
-            _id: "",
-            username: "",
-            email: "",
-            org_refs: [],
-          });
-        } else {
-          await user_credentials.setUserDetails(user);
-        }
-      })
-      .catch((e) => console.error(e.message));
-  }, []);
 
   const [isLoggedIn, setLoggedIn] = useState<boolean>(
     user_credentials.user_details && user_credentials.user_details._id
@@ -110,52 +94,39 @@ const Root = () => {
     }, 100);
   };
 
-  // trigger re-render and sync when projects are added/deleted
-  const { search } = useLocation();
-
-  useMemo(() => {
-    const sync_config = new URLSearchParams(search).get("sync_config");
-
-    syncProjects(sync_config ?? "").then((res) =>
-      res && JSON.stringify(res) !== JSON.stringify(projects)
-        ? setProjects(res)
-        : null
-    );
-    if (sync_config === "overwrite") navigate("/");
-  }, [useLoaderData()]);
-
   return (
-    <div className="root-div">
-      <div className="toggle-sidebar">
-        <button
-          className="new-project-btn"
-          title="New Project"
-          style={{
-            width: "30px",
-          }}
-          onClick={() => setSideBarDisplay((state) => !state)}
-        >
-          <img
-            src={!sideBarDisplay ? BurgerMenuSVG : CloseSVG}
-            alt="Toggle sidebar"
-          />
-        </button>
+    <QueryClientProvider client={projectQuery}>
+      <div className="root-div">
+        <div className="toggle-sidebar">
+          <button
+            className="new-project-btn"
+            title="New Project"
+            style={{
+              width: "30px",
+            }}
+            onClick={() => setSideBarDisplay((state) => !state)}
+          >
+            <img
+              src={!sideBarDisplay ? BurgerMenuSVG : CloseSVG}
+              alt="Toggle sidebar"
+            />
+          </button>
+        </div>
+        <SideBar
+          isLoggedIn={isLoggedIn}
+          sideBarDisplay={sideBarDisplay}
+          handleRedirectClick={handleRedirectClick}
+          itemListElement={
+            <SideBarProjectsList handleRedirectClick={handleRedirectClick} />
+          }
+        />
+        <main>
+          <UserContext.Provider value={user_credentials.user_details}>
+            <Outlet />
+          </UserContext.Provider>
+        </main>
       </div>
-      <SideBar
-        isLoggedIn={isLoggedIn}
-        sideBarDisplay={sideBarDisplay}
-        handleRedirectClick={handleRedirectClick}
-        itemListElement={
-          <SideBarProjectsList
-            handleRedirectClick={handleRedirectClick}
-            projects={Array.isArray(projects) ? projects : null}
-          />
-        }
-      />
-      <main>
-        <Outlet />
-      </main>
-    </div>
+    </QueryClientProvider>
   );
 };
 
@@ -163,9 +134,19 @@ export default Root;
 
 const SideBarProjectsList = ({
   handleRedirectClick,
-  projects,
 }: SideBarProjectsListProps) => {
-  const [search_query, setSearchQuery] = useState("");
+  const [project_filter, setProjectFilter] = useState("");
+
+  const {
+    data: projects,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: "projects",
+    queryFn: () => getProjects(),
+    enabled: true,
+  });
+
   return (
     <nav className="nav-bar navbar navbar-default">
       <div className="nav-title">
@@ -188,15 +169,15 @@ const SideBarProjectsList = ({
           type="search"
           name="search_project"
           className="form-control search-project"
-          value={search_query}
-          onChange={({ target }) => setSearchQuery(target.value)}
+          value={project_filter}
+          onChange={({ target }) => setProjectFilter(target.value)}
         />
       </div>
       <ul className="nav navbar-nav nav-bar">
         {projects && projects.length ? (
           projects.map((project: Project, key: number) => {
             if (
-              project.name.toLowerCase().includes(search_query.toLowerCase())
+              project.name.toLowerCase().includes(project_filter.toLowerCase())
             ) {
               return (
                 <NavItem
@@ -281,7 +262,6 @@ const Menu = ({
           name="delete"
           value={project.id}
           onClick={() => {
-            console.log("delete from menu");
             setMagicStyle("magictime holeOut");
             setTimeout(() => {
               setMagicStyle("magictime");

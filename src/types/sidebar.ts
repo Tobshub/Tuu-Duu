@@ -10,7 +10,7 @@ export interface SideBarProps {
 
 export interface SideBarProjectsListProps {
   handleRedirectClick?: () => void,
-  projects: Project[],
+  projects?: Project[],
 }
 
 export interface SideBarOrgsListProps {

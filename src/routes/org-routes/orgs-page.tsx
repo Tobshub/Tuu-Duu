@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  ActionFunctionArgs,
   NavLink,
   Outlet,
   Params,
@@ -26,13 +27,7 @@ export async function loader() {
   return orgs;
 }
 
-export async function action({
-  params,
-  request,
-}: {
-  params: Params<string>;
-  request: Request;
-}) {
+export async function action({ params, request }: ActionFunctionArgs) {
   const res = await request.formData();
   const formData = Object.fromEntries(res);
   switch (formData.action) {

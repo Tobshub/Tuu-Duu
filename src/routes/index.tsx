@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import {
   Form,
   useLoaderData,
@@ -10,27 +11,25 @@ import { getProjects } from "../operations/projects";
 import { getCurrentUser } from "../operations/user";
 import Project from "../types/project";
 import { SavedUser } from "../types/user-context";
-
-export const loader = async () => {
-  const projects = getProjects();
-  return projects;
-};
+import { UserContext } from "./root";
 
 const Index = () => {
-  const projects = useLoaderData();
+  const {
+    data: projects,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: "projects",
+    queryFn: () => getProjects(),
+    enabled: true,
+  });
   const fav_projects: Project[] =
     projects && Array.isArray(projects) && projects.length
       ? projects.filter((project: Project) => project.favorite)
       : null;
 
-  const [user_details, setUserDetails] = useState<SavedUser>(null);
-  const getUser = async () => {
-    const user = await getCurrentUser();
-    return user;
-  };
-  useEffect(() => {
-    getUser().then((user) => setUserDetails(user));
-  }, []);
+  const user_details = useContext<SavedUser>(UserContext);
+
   return (
     <div className="index">
       {user_details && user_details._id ? (
@@ -38,25 +37,23 @@ const Index = () => {
       ) : (
         <LoggedOutDisplay />
       )}
-      {projects && Array.isArray(projects) && projects.length ? (
-        <em>Navigate to an existing Project from the sidebar</em>
-      ) : (
-        <em>You have no projects or Todos</em>
-      )}
+      <div style={{ display: "block" }}>
+        {projects && Array.isArray(projects) && projects.length ? (
+          <em>Navigate to an existing Project from the sidebar or </em>
+        ) : (
+          <em>You have no projects or Todos, you can </em>
+        )}
+        <em>create a</em> <Link to="/projects/new">New Project</Link>.
+      </div>
 
-      <Form action="/projects/new">
-        <button type="submit" className="btn btn-success btn-sm">
-          New Project
-        </button>
-      </Form>
-      <Form action="/orgs">
+      {/* <Form action="/orgs">
         <button type="submit" className="btn btn-sm btn-primary">
           Organizations
         </button>
-      </Form>
+      </Form> */}
       <div>
         <h4 style={{ textAlign: "center" }}>
-          {!!fav_projects && fav_projects.length && "Favorites:"}
+          {!!fav_projects && !!fav_projects.length && "Favorites:"}
         </h4>
         <ul className="favorites-display">
           {fav_projects && fav_projects.length

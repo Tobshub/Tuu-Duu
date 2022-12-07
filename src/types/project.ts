@@ -1,28 +1,47 @@
 import { generateId } from "../operations/user";
 
+type ProjectProps = {
+  name: string;
+  description?: string;
+  id?: string;
+  tasks?: Task[];
+  favorite?: boolean;
+}
+
 export default class Project {
   name: string;
   description: string;
   id: string;
   tasks: Task[];
   favorite: boolean;
-  last_save: number;
 
-  constructor(name: string, description: string, id?: string, tasks?: Task[], favorite?: boolean) {
+  constructor({name, description, id, favorite, tasks}: ProjectProps) {
     this.name = name;
-    this.description = description;
+    this.description = description ?? '';
     this.id = id ?? generateId();
     this.favorite = favorite ?? false;
     this.tasks = tasks ?? [];
-    this.last_save = new Date().getTime();
   }
 }
 
-export interface Task {
+interface TaskProps {
   name: string,
   status?: TaskStatus,
   todos?: Todo[],
   deadline?: Date;
+}
+
+export class Task {
+  name: string;
+  status: TaskStatus;
+  todos: Todo[];
+  deadline?: Date;
+  constructor({name, status, todos, deadline}: TaskProps) {
+    this.name = name ?? "Untitled";
+    this.status = status ?? TaskStatus.IDLE;
+    this.todos = todos ?? [];
+    this.deadline = deadline;
+  }
 }
 
 export enum TaskStatus {
@@ -31,11 +50,19 @@ export enum TaskStatus {
   COMPLETE = 'completed',
 }
 
-export interface Todo {
+interface TodoProps {
   content: string,
   status?: TodoStatus
 }
 
+export class Todo {
+  content: string;
+  status: TodoStatus;
+  constructor({content, status}: TodoProps) {
+    this.content = content;
+    this.status = status ?? TodoStatus.AWAITING;
+  }
+}
 
 export enum TodoStatus {
   AWAITING = "awaiting",

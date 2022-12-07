@@ -6,13 +6,14 @@ import {
   useNavigate,
   Params,
   useActionData,
+  useLocation,
 } from "react-router-dom";
 import {
   deleteProject,
+  editProject,
   getProject,
-  setFavorite,
+  getProjects,
 } from "../../operations/projects";
-import { deleteTask, markTodo, restoreLastTask } from "../../operations/tasks";
 import Project, { Task } from "../../types/project";
 import EditSVG from "../../images/Edit.svg";
 import DeleteSVG from "../../images/Delete.svg";
@@ -25,13 +26,12 @@ import ActionNotifcation from "../app-notifications/action-notifcation";
 import TaskCard from "../task-routes/task-card";
 import { UserCreds } from "../../types/user-context";
 import { OrgProject } from "../../types/orgs";
+import ActionButton from "../components/action-button";
+import { useQuery } from "react-query";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
-  const project = await getProject(id);
-  if (!project)
-    throw new Error("Invalid project-ID or problem while retrieving Project");
-  return project;
+  return id;
 };
 
 export const action = async ({
@@ -47,19 +47,15 @@ export const action = async ({
   if (!id) return;
   if (formData.action) {
     switch (formData.action) {
-      case "toggle_favorite":
-        await setFavorite(id);
-        break;
       case "edit_project":
         return redirect(`/projects/${id}/edit`);
       case "delete_project":
-        await deleteProject(id);
-        return redirect("/?sync_config=overwrite");
+        return redirect(`/projects/${id}/delete`);
       case "new_task":
         return redirect(`/projects/${id}/tasks/new`);
-      case "revert_action":
-        await restoreLastTask();
-        return;
+      // case "revert_action":
+      //   await restoreLastTask();
+      // return;
       default:
         console.log("no action set for that");
         break;
@@ -67,27 +63,38 @@ export const action = async ({
   } else if (formData.editTask) {
     const key = formData.editTask;
     return redirect(`/projects/${id}/tasks/${key}/edit`);
-  } else if (formData.deleteTask) {
-    const key = parseInt(formData.deleteTask.toString());
-    await deleteTask(id, key);
-  } else if (formData.markTodo) {
-    const [task_index, todo_index] = formData.markTodo.toString().split(",");
-    await markTodo(id, parseInt(task_index), parseInt(todo_index));
   }
   return;
 };
 
-const ProjectPage = ({
-  load_project,
-}: {
-  load_project?: Project | OrgProject;
-}) => {
-  const project = load_project ?? useLoaderData();
-  const [isFav, setFav] = useState(
-    typeof project === "object" && "favorite" in project
-      ? project.favorite
-      : false
-  );
+const ProjectPage = () => {
+  const project_id = useLoaderData().toString();
+  const location = useLocation();
+
+  const {
+    data: projects,
+    error,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useQuery({
+    queryKey: "projects",
+    queryFn: () => getProjects(),
+    enabled: false,
+  });
+
+  if (location.state && location.state.shouldRefetch) {
+    refetch({ queryKey: "projects" });
+    location.state = {};
+  }
+
+  const project = projects?.find((project) => project.id === project_id);
+
+  if (!project) {
+    refetch({ queryKey: "projects" });
+  }
+
+  const [isFav, setFav] = useState(project?.favorite ?? false);
   const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
@@ -102,74 +109,63 @@ const ProjectPage = ({
   }, [project]);
 
   useMemo(() => {
-    setFav(
-      typeof project === "object" && "favorite" in project && project.favorite
-        ? true
-        : false
-    );
-  }, [project]);
+    setFav(project?.favorite);
+  }, [project?.id]);
+
+  if (error) throw new Error(error.toString());
+  if (isLoading) return <>Loading...</>;
 
   return (
     <div className="project">
       <div className="project-title">
-        <h2>
-          {typeof project === "object" && "name" in project
-            ? project.name.toString()
-            : ""}
-        </h2>
+        <h2>{project?.name}</h2>
         <Form method="post">
-          <button
-            type="submit"
-            title="mark as favorite"
-            name="action"
+          <ActionButton
+            type="button"
+            title={isFav ? "unfavorite project" : "favorite project"}
             value="toggle_favorite"
             className="set-fav-btn"
-            onClick={() => {
-              setFav(!isFav);
+            onClick={async () => {
+              setFav((state) => !state);
+              project.favorite = !project.favorite;
+              await editProject(project);
             }}
-            style={{ color: "white" }}
-          >
-            <img src={isFav ? FavSVG : UnFavSVG} alt="Toggle Favorite" />
-          </button>
-          <button
-            type="submit"
-            name="action"
+            icon={isFav ? FavSVG : UnFavSVG}
+            icon_alt="Toggle Favorite"
+          />
+          <ActionButton
             value="edit_project"
             title="Change title or description"
             className="project-edit"
-          >
-            <img src={EditSVG} alt="Edit project" loading="lazy" />
-          </button>
-          <button
-            type="submit"
-            name="action"
+            icon={EditSVG}
+            icon_alt="Edit Project"
+            islazy={true}
+          />
+          <ActionButton
             value="delete_project"
             title="Delete this project"
             className="project-delete"
-          >
-            <img src={DeleteSVG} alt="Delete project" loading="lazy" />
-          </button>
+            icon={DeleteSVG}
+            icon_alt="Delete project"
+            islazy={true}
+          />
         </Form>
       </div>
       <p className="project-description">
-        {typeof project === "object" &&
-          "description" in project &&
-          project.description && (
-            <>
-              Description: <br />
-              {project.description.toString()}
-            </>
-          )}
+        {!!project && project.description && (
+          <>
+            Description: <br />
+            {project.description.toString()}
+          </>
+        )}
       </p>
       <div>
-        {typeof project === "object" &&
-          "tasks" in project &&
-          Array.isArray(project.tasks) && (
-            <Tasks
-              tasks={project.tasks}
-              delete_action={() => setShowNotification(true)}
-            />
-          )}
+        {!!project?.tasks && (
+          <Tasks
+            project={project}
+            show_notification={() => setShowNotification(true)}
+          />
+        )}
       </div>
       <Outlet />
       {showNotification && (
@@ -191,33 +187,39 @@ const ProjectPage = ({
 export default ProjectPage;
 
 const Tasks = ({
-  tasks,
-  delete_action,
+  project,
+  show_notification,
 }: {
-  tasks: Task[] | undefined;
-  delete_action: () => void;
+  project: Project;
+  show_notification: () => void;
 }) => {
+  async function deleteTask(index) {
+    project.tasks.splice(index, 1);
+    await editProject(project);
+  }
+
   return (
     <div className="task-container">
       <Form method="post">
-        <button
-          type="submit"
-          name="action"
+        <ActionButton
           value="new_task"
           className="new-task-btn"
           title="Add a task"
-        >
-          <img src={AddSVG} alt="New task" loading="lazy" />
-        </button>
+          icon={AddSVG}
+          icon_alt="New task"
+          islazy={true}
+        />
       </Form>
       <div className="project-tasks">
-        {tasks && tasks.length ? (
-          tasks.map((task, key) => (
+        {project.tasks && project.tasks.length ? (
+          project.tasks.map((task, key) => (
             <TaskCard
+              project={project}
               task={task}
               key={key}
               index={key}
-              delete_action={delete_action}
+              show_notification={show_notification}
+              deleteFunction={() => deleteTask(key)}
             />
           ))
         ) : (

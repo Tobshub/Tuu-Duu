@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import env from "../../../env.json";
 import {
+  ActionFunctionArgs,
   Form,
+  LoaderFunctionArgs,
   Params,
   redirect,
   useActionData,
@@ -9,8 +11,9 @@ import {
 } from "react-router-dom";
 import { getCurrentUser, setUser } from "../../operations/user";
 import { AppUser, LoginServerResponse } from "../../types/server-response";
+import { SavedUser } from "../../types/user-context";
 
-export async function loader({ params }: { params: Params<string> }) {
+export async function loader({ params }: LoaderFunctionArgs) {
   getCurrentUser().then((user) => {
     if (user && user._id) {
       return redirect("/");
@@ -18,13 +21,7 @@ export async function loader({ params }: { params: Params<string> }) {
   });
 }
 
-export async function action({
-  params,
-  request,
-}: {
-  params: Params<string>;
-  request: Request;
-}) {
+export async function action({ params, request }: ActionFunctionArgs) {
   const res = await request.formData();
   const { username, email, password, ...formData } = Object.fromEntries(res);
 
@@ -87,7 +84,7 @@ const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const submitBtn = useRef<HTMLButtonElement | null>(null);
   const passwordInput = useRef<HTMLInputElement | null>(null);
-  const is_valid_user = useActionData();
+  const is_valid_user = useActionData() as AppUser | false;
   const navigate = useNavigate();
   const [loginError, showLoginError] = useState(false);
   const [inputError, showInputError] = useState(false);
@@ -103,20 +100,13 @@ const LoginPage = () => {
   }, [isLogin]);
 
   useEffect(() => {
-    if (
-      is_valid_user &&
-      typeof is_valid_user === "object" &&
-      "_id" in is_valid_user &&
-      "username" in is_valid_user &&
-      "email" in is_valid_user &&
-      "orgs" in is_valid_user
-    ) {
+    if (is_valid_user) {
       const { _id, username, email, orgs } = is_valid_user;
       setUser({
-        _id: _id.toString(),
-        username: username.toString(),
-        email: email.toString(),
-        org_refs: Array.isArray(orgs) ? orgs : [],
+        _id,
+        username,
+        email,
+        org_refs: orgs ?? [],
       }).finally(() => navigate("/"));
     } else if (is_valid_user === false) {
       showLoginError(true);

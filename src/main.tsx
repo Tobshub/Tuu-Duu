@@ -8,7 +8,7 @@ import Root, {
 } from "./routes/root";
 import "./main.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Index, { loader as indexLoader } from "./routes";
+import Index from "./routes";
 import NewProject, {
   action as newProjectAction,
 } from "./routes/project-routes/new-project";
@@ -19,10 +19,9 @@ import {
 } from "./routes/project-routes/project";
 import EditProject, {
   loader as editProjectLoader,
-  action as editProjectAction,
 } from "./routes/project-routes/edit-projects";
 import NewTask, {
-  action as newTaskAction,
+  loader as newTaskLoader,
 } from "./routes/task-routes/new-task";
 import EditTask, {
   loader as editTaskLoader,
@@ -50,6 +49,10 @@ import OrgPage, {
   loader as orgLoader,
   action as orgAction,
 } from "./routes/org-routes/org";
+import DeleteProjectComponent, {
+  loader as deleteProjectLoader,
+  action as deleteProjectAction,
+} from "./routes/project-routes/delete-project";
 
 const router = createBrowserRouter([
   {
@@ -61,7 +64,6 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        loader: indexLoader,
         element: <Index />,
       },
       {
@@ -77,7 +79,7 @@ const router = createBrowserRouter([
             path: "/projects/:projectId/edit",
             element: <EditProject />,
             loader: editProjectLoader,
-            action: editProjectAction,
+            action: async () => {},
           },
           {
             path: "/projects/:projectId",
@@ -88,13 +90,20 @@ const router = createBrowserRouter([
               {
                 path: "/projects/:projectId/tasks/new",
                 element: <NewTask />,
-                action: newTaskAction,
+                loader: newTaskLoader,
+                action: async () => {},
               },
               {
                 path: "/projects/:projectId/tasks/:taskIndex/edit",
                 element: <EditTask />,
                 loader: editTaskLoader,
                 action: editTaskAction,
+              },
+              {
+                path: "/projects/:projectId/delete",
+                element: <DeleteProjectComponent />,
+                loader: deleteProjectLoader,
+                action: deleteProjectAction,
               },
             ],
           },
@@ -141,19 +150,22 @@ const router = createBrowserRouter([
   },
 ]);
 
-// suspense shows while lazy loading components are loading
-const app_root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
+let app_root = null;
 
-try {
-  app_root.render(
-    <React.StrictMode>
-      <Suspense fallback={<SuspensePage />}>
-        <RouterProvider router={router} />
-      </Suspense>
-    </React.StrictMode>
-  );
-} catch (error) {
-  console.log("ha! caught the error");
-}
+document.addEventListener("DOMContentLoaded", (event) => {
+  if (!app_root) {
+    app_root = document.getElementById("root") as HTMLElement;
+    try {
+      const root = ReactDOM.createRoot(app_root);
+      root.render(
+        <React.StrictMode>
+          <Suspense fallback={<SuspensePage />}>
+            <RouterProvider router={router} />
+          </Suspense>
+        </React.StrictMode>
+      );
+    } catch (e) {
+      console.error(e);
+    }
+  }
+});

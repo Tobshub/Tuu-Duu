@@ -1,18 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import { Form } from "react-router-dom";
-import { Task, Todo, TodoStatus } from "../../types/project";
+import Project, { Task, Todo, TodoStatus } from "../../types/project";
 import EditSVG from "../../images/Edit.svg";
 import DoneSVG from "../../images/Checkmark.svg";
 import DeleteSVG from "../../images/Delete.svg";
+import ActionButton from "../components/action-button";
+import { editProject } from "../../operations/projects";
 
 const TaskCard = ({
+  project,
   task,
   index,
-  delete_action,
+  show_notification,
+  deleteFunction,
 }: {
+  project: Project;
   task: Task;
   index: number;
-  delete_action: () => void;
+  show_notification: () => void;
+  deleteFunction: () => void;
 }) => {
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const [gridRow, setGridRow] = useState("");
@@ -71,7 +77,7 @@ const TaskCard = ({
       onMouseEnter={() => toggleShowShadow(true)}
       onMouseLeave={() => toggleShowShadow(false)}
     >
-      <h3>{task.name}</h3>
+      <h4>{task.name}</h4>
       <h6>
         {!!task.deadline ? new Date(task.deadline).toLocaleString() : null}
       </h6>
@@ -81,10 +87,12 @@ const TaskCard = ({
             if (todo.status === TodoStatus.AWAITING) {
               return (
                 <TodoComponent
+                  project={project}
                   todo={todo}
                   key={key}
                   index={key}
                   parent={index}
+                  markTodoFn={() => setHasCompletedTodos(true)}
                 />
               );
             }
@@ -111,17 +119,19 @@ const TaskCard = ({
           })}
       </ul>
       <Form method="post" className="task-actions">
-        <button
-          type="submit"
+        <ActionButton
           name="editTask"
+          title="Edit task"
           value={index}
           className="edit-task-btn"
-        >
-          <img src={EditSVG} alt="Edit task" loading="lazy" />
-        </button>
-        <button
-          type="submit"
+          icon={EditSVG}
+          icon_alt="Edit task"
+          islazy={true}
+        />
+        <ActionButton
+          type="button"
           name="deleteTask"
+          title="Delete task"
           value={index}
           className="delete-task-btn"
           onClick={() => {
@@ -129,11 +139,13 @@ const TaskCard = ({
             setTimeout(() => {
               setMagicStyle("magictime");
             }, 200);
-            delete_action();
+            show_notification();
+            deleteFunction();
           }}
-        >
-          <img src={DeleteSVG} alt="Delete task" loading="lazy" />
-        </button>
+          icon={DeleteSVG}
+          icon_alt="Delete task"
+          islazy={true}
+        />
       </Form>
     </div>
   );
@@ -145,27 +157,34 @@ const TodoComponent = ({
   todo,
   index,
   parent,
+  project,
+  markTodoFn,
 }: {
   todo: Todo;
   index: number;
   parent: number;
+  project?: Project;
+  markTodoFn?: () => void;
 }) => {
   return (
     <li>
       <span>{todo.content}</span>
       <span>
         {todo.status === TodoStatus.AWAITING ? (
-          <Form method="post">
-            <button
-              type="submit"
-              name="markTodo"
-              title="Mark as done"
-              value={[parent.toString(), index.toString()]}
-              className="mark-todo-done-btn"
-            >
-              <img src={DoneSVG} alt="Mark todo as done" loading="lazy" />
-            </button>
-          </Form>
+          <ActionButton
+            name="markTodo"
+            title="Mark as done"
+            className="mark-todo-done-btn"
+            icon={DoneSVG}
+            icon_alt="Mark as done"
+            islazy={true}
+            style={{ width: "18px" }}
+            onClick={() => {
+              project.tasks[parent].todos[index].status = TodoStatus.DONE;
+              editProject(project);
+              markTodoFn();
+            }}
+          />
         ) : null}
       </span>
     </li>
