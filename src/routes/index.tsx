@@ -41,16 +41,16 @@ const Index = () => {
         {projects && Array.isArray(projects) && projects.length ? (
           <em>Navigate to an existing Project from the sidebar or </em>
         ) : (
-          <em>You have no projects or Todos, you</em>
+          <em>You have no projects or Todos, you can </em>
         )}
-        <em>create a</em> <Link to="/projects/new">New Project</Link>
+        <em>create a</em> <Link to="/projects/new">New Project</Link>.
       </div>
 
-      <Form action="/orgs">
+      {/* <Form action="/orgs">
         <button type="submit" className="btn btn-sm btn-primary">
           Organizations
         </button>
-      </Form>
+      </Form> */}
       <div>
         <h4 style={{ textAlign: "center" }}>
           {!!fav_projects && !!fav_projects.length && "Favorites:"}

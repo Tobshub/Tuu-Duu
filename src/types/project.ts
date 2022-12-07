@@ -50,11 +50,19 @@ export enum TaskStatus {
   COMPLETE = 'completed',
 }
 
-export interface Todo {
+interface TodoProps {
   content: string,
   status?: TodoStatus
 }
 
+export class Todo {
+  content: string;
+  status: TodoStatus;
+  constructor({content, status}: TodoProps) {
+    this.content = content;
+    this.status = status ?? TodoStatus.AWAITING;
+  }
+}
 
 export enum TodoStatus {
   AWAITING = "awaiting",

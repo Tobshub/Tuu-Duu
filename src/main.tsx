@@ -49,6 +49,10 @@ import OrgPage, {
   loader as orgLoader,
   action as orgAction,
 } from "./routes/org-routes/org";
+import DeleteProjectComponent, {
+  loader as deleteProjectLoader,
+  action as deleteProjectAction,
+} from "./routes/project-routes/delete-project";
 
 const router = createBrowserRouter([
   {
@@ -94,6 +98,12 @@ const router = createBrowserRouter([
                 element: <EditTask />,
                 loader: editTaskLoader,
                 action: editTaskAction,
+              },
+              {
+                path: "/projects/:projectId/delete",
+                element: <DeleteProjectComponent />,
+                loader: deleteProjectLoader,
+                action: deleteProjectAction,
               },
             ],
           },

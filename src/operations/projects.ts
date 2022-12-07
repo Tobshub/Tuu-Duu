@@ -10,7 +10,7 @@ const axiosConfig = {
     "Access-Control-Allow-Origin": "*"
   },
   method: "cors",
-  timeout: 2000, // use timeout config incase the server is spun down
+  timeout: 3000, // use timeout config incase the server is spun down
 }
 
 export const syncProjects = async (projects: Project[], config? : string) => {

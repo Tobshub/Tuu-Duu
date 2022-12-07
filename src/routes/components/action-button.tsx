@@ -1,6 +1,6 @@
 export type ActionButtonProps = {
   icon: string;
-  value: any;
+  value?: any;
   onClick?: () => void;
   icon_alt: string;
   title: string;
@@ -16,7 +16,7 @@ const ActionButton = (props: ActionButtonProps) => {
     <button
       type={props.type ?? "submit"}
       name={props.name ?? "action"}
-      value={props.value}
+      value={props.value ?? ""}
       className={props.className + " action-button"}
       onClick={() => (props.onClick ? props.onClick() : null)}
       style={props.style ?? {}}

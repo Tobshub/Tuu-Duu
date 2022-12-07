@@ -47,14 +47,10 @@ export const action = async ({
   if (!id) return;
   if (formData.action) {
     switch (formData.action) {
-      // case "toggle_favorite":
-      // await setFavorite(id);
-      //   break;
       case "edit_project":
         return redirect(`/projects/${id}/edit`);
       case "delete_project":
-        await deleteProject(id);
-        return redirect("/");
+        return redirect(`/projects/${id}/delete`);
       case "new_task":
         return redirect(`/projects/${id}/tasks/new`);
       // case "revert_action":
@@ -68,13 +64,6 @@ export const action = async ({
     const key = formData.editTask;
     return redirect(`/projects/${id}/tasks/${key}/edit`);
   }
-  // else if (formData.deleteTask) {
-  //   const key = parseInt(formData.deleteTask.toString());
-  //   await deleteTask(id, key);
-  // } else if (formData.markTodo) {
-  //   const [task_index, todo_index] = formData.markTodo.toString().split(",");
-  //   await markTodo(id, parseInt(task_index), parseInt(todo_index));
-  // }
   return;
 };
 
@@ -173,8 +162,8 @@ const ProjectPage = () => {
       <div>
         {!!project?.tasks && (
           <Tasks
-            tasks={project.tasks}
-            delete_action={() => setShowNotification(true)}
+            project={project}
+            show_notification={() => setShowNotification(true)}
           />
         )}
       </div>
@@ -198,12 +187,17 @@ const ProjectPage = () => {
 export default ProjectPage;
 
 const Tasks = ({
-  tasks,
-  delete_action,
+  project,
+  show_notification,
 }: {
-  tasks: Task[] | undefined;
-  delete_action: () => void;
+  project: Project;
+  show_notification: () => void;
 }) => {
+  async function deleteTask(index) {
+    project.tasks.splice(index, 1);
+    await editProject(project);
+  }
+
   return (
     <div className="task-container">
       <Form method="post">
@@ -217,13 +211,15 @@ const Tasks = ({
         />
       </Form>
       <div className="project-tasks">
-        {tasks && tasks.length ? (
-          tasks.map((task, key) => (
+        {project.tasks && project.tasks.length ? (
+          project.tasks.map((task, key) => (
             <TaskCard
+              project={project}
               task={task}
               key={key}
               index={key}
-              delete_action={delete_action}
+              show_notification={show_notification}
+              deleteFunction={() => deleteTask(key)}
             />
           ))
         ) : (

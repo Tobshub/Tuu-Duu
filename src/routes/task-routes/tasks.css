@@ -80,7 +80,8 @@ form:has(.new-task-btn) {
 }
 
 .new-task,
-.edit-task {
+.edit-task,
+.delete-project {
   position: fixed;
   top: 0;
   left: 0;
@@ -107,7 +108,8 @@ form:has(.new-task-btn) {
 }
 
 .new-task > form,
-.edit-task > form {
+.edit-task > form,
+.delete-project > form {
   background-color: #444444ec;
   width: min(325px, 100%);
   padding: 1em 0.75em;
