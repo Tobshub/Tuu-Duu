@@ -98,7 +98,7 @@ const ProjectPage = () => {
   const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
-    if (!showNotification) return () => {};
+    if (!showNotification) return () => { };
     const removeNotification = setTimeout(
       () => setShowNotification(false),
       5000
@@ -111,6 +111,11 @@ const ProjectPage = () => {
   useMemo(() => {
     setFav(project?.favorite);
   }, [project?.id]);
+
+  function deleteTask(index: number) {
+    project.tasks.splice(index, 1);
+    editProject(project);
+  }
 
   if (error) throw new Error(error.toString());
   if (isLoading) return <>Loading...</>;
@@ -164,6 +169,7 @@ const ProjectPage = () => {
           <Tasks
             project={project}
             show_notification={() => setShowNotification(true)}
+            deleteTask={(index: number) => deleteTask(index)}
           />
         )}
       </div>
@@ -189,14 +195,13 @@ export default ProjectPage;
 const Tasks = ({
   project,
   show_notification,
+  deleteTask
 }: {
   project: Project;
   show_notification: () => void;
+  deleteTask: (index: number) => void
 }) => {
-  async function deleteTask(index) {
-    project.tasks.splice(index, 1);
-    await editProject(project);
-  }
+
 
   return (
     <div className="task-container">

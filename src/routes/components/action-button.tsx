@@ -18,13 +18,14 @@ const ActionButton = (props: ActionButtonProps) => {
       name={props.name ?? "action"}
       value={props.value ?? ""}
       className={props.className + " action-button"}
-      onClick={() => (props.onClick ? props.onClick() : null)}
+      onClick={props.onClick ? () => props.onClick() : null}
       style={props.style ?? {}}
     >
       <img
         src={props.icon}
         alt={props.icon_alt}
         loading={props.islazy ? "lazy" : "eager"}
+        width={"inherit"}
       />
     </button>
   );

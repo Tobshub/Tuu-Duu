@@ -58,8 +58,8 @@ const Index = () => {
         <ul className="favorites-display">
           {fav_projects && fav_projects.length
             ? fav_projects.map((project: Project, key: number) => (
-                <ProjectBox project={project} key={key} />
-              ))
+              <ProjectBox project={project} key={key} />
+            ))
             : null}
         </ul>
       </div>
@@ -82,7 +82,7 @@ function LoggedInDisplay({ user_details }: { user_details: SavedUser }) {
   // show tasks that are about to reach their deadline
   return (
     <div>
-      <h1>Welcome back, {user_details.username}</h1>
+      <h1>Hi, {user_details.username}</h1>
       <h3>
         {new Date(dateTime).toLocaleTimeString(undefined, {
           hour: "2-digit",

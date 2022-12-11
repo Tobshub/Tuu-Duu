@@ -17,11 +17,11 @@ import {
   redirect,
   useLoaderData,
   Params,
+  ActionFunctionArgs,
 } from "react-router-dom";
 import {
   getProjects,
   deleteProject,
-  syncProjects,
 } from "../operations/projects";
 import Project from "../types/project";
 import AddSVG from "../images/Add.svg";
@@ -35,6 +35,7 @@ import { SideBarProjectsListProps, SideBarProps } from "../types/sidebar";
 import SideBar from "./components/sidebar";
 import { getCurrentUser, setUser } from "../operations/user";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import ActionButton from "./components/action-button";
 
 export async function loader() {
   const user = await getCurrentUser();
@@ -42,7 +43,7 @@ export async function loader() {
   return user;
 }
 
-export async function action({ request }: { request: Request }) {
+export async function action({ request }: ActionFunctionArgs) {
   const res = await request.formData();
   const formData = Object.fromEntries(res);
   if (!formData) return;
@@ -109,6 +110,7 @@ const Root = () => {
             <img
               src={!sideBarDisplay ? BurgerMenuSVG : CloseSVG}
               alt="Toggle sidebar"
+              width={"inherit"}
             />
           </button>
         </div>
@@ -152,15 +154,15 @@ const SideBarProjectsList = ({
       <div className="nav-title">
         <h2>My Projects</h2>
         <Form method="post">
-          <button
-            type="submit"
+          <ActionButton
+            title="Create a new Project"
             className="new-project-btn"
             name="new"
             value={1}
             onClick={handleRedirectClick}
-          >
-            <img src={AddSVG} alt="New project" />
-          </button>
+            icon={AddSVG}
+            icon_alt="New project"
+          />
         </Form>
       </div>
       <div className="input-group">
