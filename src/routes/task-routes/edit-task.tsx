@@ -15,6 +15,7 @@ import { validDate } from "./new-task";
 import { useQuery } from "react-query";
 import { editProject, getProjects } from "../../operations/projects";
 import ActionButton from "../components/action-button";
+import { setTaskStatus } from "../../operations/tasks";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { projectId: id, taskIndex: index } = params;
@@ -71,7 +72,6 @@ const EditTask = () => {
 
   function addTodo() {
     project.tasks[index].todos.push(new Todo({ content: todo }));
-    editProject(project);
     setTodo("");
   }
 
@@ -95,6 +95,7 @@ const EditTask = () => {
       ...project.tasks[index],
       name: task_content.name,
       deadline: task_content.deadline,
+      status: setTaskStatus(task)
     });
     await editProject(project);
     return navigate("..", {
@@ -129,11 +130,6 @@ const EditTask = () => {
           id="deadline"
           name="deadline"
           className="form-control"
-          value={
-            task_content.deadline
-              ? new Date(task_content.deadline).toISOString().slice(0, -1)
-              : ""
-          }
           onChange={handleChange}
         />
         {form_errors.deadline && (

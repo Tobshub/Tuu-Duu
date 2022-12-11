@@ -4,38 +4,13 @@ import { getCurrentUser } from "./user";
 import Project from "../types/project";
 import { GetProjectsServerResponse, SyncServerResponse } from "../types/server-response";
 
-const axiosConfig = {
+export const axiosConfig = {
   headers: {
     "Content-Type": "application/json; encoding=utf-8",
     "Access-Control-Allow-Origin": "*"
   },
   method: "cors",
   timeout: 3000, // use timeout config incase the server is spun down
-}
-
-export const syncProjects = async (projects: Project[], config? : string) => {
-  if (!projects) return;
-  try {
-    const user = await getCurrentUser();
-      if (!user || !user._id) return
-      const sync_resources = {
-        user_projects: projects,
-        user_id: user._id,
-        config,
-      };
-  
-    const sync_url = `${env.REACT_APP_TUU_DUU_API}/user/sync_projects`;
-
-    const sync_results = await axios.put(sync_url, sync_resources, axiosConfig).then(data => data.data).then((res: SyncServerResponse) => res).catch((e) => console.error(e));
-  
-    // console.log({sync_results}) 
-
-    if (!sync_results) return sync_resources.user_projects;
-    return sync_results.projects;
-  } catch (error) {
-   console.error(error);
-   return;
-  }
 }
 
 export const addProject = async (project: Project) => {
