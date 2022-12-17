@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Form } from "react-router-dom";
 import Project, { Task, TaskStatus, Todo, TodoStatus } from "../../types/project";
 import EditSVG from "../../images/Edit.svg";
@@ -12,21 +12,18 @@ const TaskCard = ({
   project,
   task,
   index,
-  show_notification,
   deleteFunction,
 }: {
   project: Project;
   task: Task;
   index: number;
-  show_notification: () => void;
   deleteFunction: () => void;
 }) => {
-  const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const [gridRow, setGridRow] = useState("");
   const [showShadow, toggleShowShadow] = useState(false);
   const [shadowColor, setShadowColor] = useState("white");
   // change the span of task cards depending on their length
-  const cardRef = useRef(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (cardRef.current) {
       const this_card = cardRef.current;
@@ -49,21 +46,23 @@ const TaskCard = ({
     });
   }, [task.status]);
 
+
   async function markTodo(todoIndex: number) {
     project.tasks[index].todos[todoIndex].status = TodoStatus.DONE;
     task.status = setTaskStatus(task);
     project.tasks[index] = task;
     editProject(project);
+    toggleShowShadow(false);
   }
 
   return (
     <div
-      className={`task-card ${magicStyle}`}
+      className={`task-card`}
       ref={cardRef}
       key={index}
       style={{
         gridRow: gridRow,
-        animationDuration: "350ms",
+        animationDuration: "200ms",
         boxShadow: showShadow ? `0 0 0.6em 0.1em ${shadowColor}` : "",
       }}
       onMouseEnter={() => toggleShowShadow(true)}
@@ -122,12 +121,7 @@ const TaskCard = ({
           value={index}
           className="delete-task-btn"
           onClick={() => {
-            setMagicStyle("magictime holeOut");
-            setTimeout(() => {
-              setMagicStyle("magictime");
-            }, 200);
             deleteFunction();
-            show_notification();
           }}
           icon={DeleteSVG}
           icon_alt="Delete task"

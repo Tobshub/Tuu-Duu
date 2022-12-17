@@ -114,10 +114,16 @@ const ProjectPage = () => {
 
   function deleteTask(index: number) {
     project.tasks.splice(index, 1);
-    editProject(project);
+    editProject(project).then((val) => {
+      if (val) {
+        refetch({ queryKey: "projects" });
+      }
+    })
+    setShowNotification(true);
+    return;
   }
 
-  if (error) throw new Error(error.toString());
+  if (error) throw new Error(JSON.stringify(error));
   if (isLoading) return <>Loading...</>;
 
   return (
@@ -168,7 +174,6 @@ const ProjectPage = () => {
         {!!project?.tasks && (
           <Tasks
             project={project}
-            show_notification={() => setShowNotification(true)}
             deleteTask={(index: number) => deleteTask(index)}
           />
         )}
@@ -194,14 +199,16 @@ export default ProjectPage;
 
 const Tasks = ({
   project,
-  show_notification,
   deleteTask
 }: {
   project: Project;
-  show_notification: () => void;
   deleteTask: (index: number) => void
 }) => {
+  const [tasks, setTasks] = useState(project.tasks)
 
+  useMemo(() => {
+    setTasks(project.tasks)
+  }, [project.tasks])
 
   return (
     <div className="task-container">
@@ -216,14 +223,13 @@ const Tasks = ({
         />
       </Form>
       <div className="project-tasks">
-        {project.tasks && project.tasks.length ? (
-          project.tasks.map((task, key) => (
+        {tasks && tasks.length ? (
+          tasks.map((task, key) => (
             <TaskCard
               project={project}
               task={task}
               key={key}
               index={key}
-              show_notification={show_notification}
               deleteFunction={() => deleteTask(key)}
             />
           ))
