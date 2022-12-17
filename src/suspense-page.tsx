@@ -8,7 +8,7 @@ const SuspensePage = () => {
         height: "100vh",
       }}
     >
-      <h3>Requesting Page...</h3>
+      <h6>Loading...</h6>
     </div>
   );
 };
