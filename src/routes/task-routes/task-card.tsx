@@ -19,6 +19,7 @@ const TaskCard = ({
   index: number;
   deleteFunction: () => void;
 }) => {
+  const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const [gridRow, setGridRow] = useState("");
   const [showShadow, toggleShowShadow] = useState(false);
   const [shadowColor, setShadowColor] = useState("white");
@@ -57,7 +58,7 @@ const TaskCard = ({
 
   return (
     <div
-      className={`task-card`}
+      className={`task-card ${magicStyle}`}
       ref={cardRef}
       key={index}
       style={{
@@ -121,6 +122,7 @@ const TaskCard = ({
           value={index}
           className="delete-task-btn"
           onClick={() => {
+            setMagicStyle("magictime holeout")
             deleteFunction();
           }}
           icon={DeleteSVG}

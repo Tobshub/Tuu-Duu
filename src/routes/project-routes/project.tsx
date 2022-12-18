@@ -114,12 +114,16 @@ const ProjectPage = () => {
 
   function deleteTask(index: number) {
     project.tasks.splice(index, 1);
-    editProject(project).then((val) => {
+    editProject(project).then(async (val) => {
       if (val) {
-        refetch({ queryKey: "projects" });
+        await refetch({ queryKey: "projects" });
+      }
+      return val;
+    }).then((val) => {
+      if (val) {
+        setShowNotification(true);
       }
     })
-    setShowNotification(true);
     return;
   }
 
