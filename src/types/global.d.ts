@@ -1,3 +1,5 @@
+import React from "react";
+
 export {};
 
 declare global {
@@ -48,9 +50,10 @@ declare global {
 
   interface SideBarProps {
     isLoggedIn: boolean;
-    sideBarDisplay: boolean;
+    sideBarDisplay: "show" | "hide" | "min";
     handleRedirectClick?: () => void;
-    itemListElement: JSX.Element;
+    toggle: () => void;
+    children: JSX.Element;
   }
 
   interface SideBarProjectsListProps {
@@ -85,20 +88,12 @@ declare global {
     favorite?: boolean;
   };
 
-  class Project {
+  interface Project {
     name: string;
     description: string;
     id: string;
     tasks: Task[];
     favorite: boolean;
-
-    constructor({ name, description, id, favorite, tasks }: ProjectProps) {
-      this.name = name;
-      this.description = description ?? "";
-      this.id = id ?? generateId();
-      this.favorite = favorite ?? false;
-      this.tasks = tasks ?? [];
-    }
   }
 
   interface TaskProps {
@@ -264,13 +259,15 @@ declare global {
   type ActionButtonProps = {
     icon: string;
     value?: any;
-    onClick?: () => void;
+    onClick?: (
+      e?: React.MouseEvent<HTMLButtonElement | MouseEvent>
+    ) => void;
     icon_alt: string;
     title: string;
-    style?: {};
+    style?: React.HTMLAttributes.style;
     islazy?: boolean;
     name?: string;
-    className: string;
+    className?: string;
     type?: "button" | "submit" | "reset";
   };
 }
