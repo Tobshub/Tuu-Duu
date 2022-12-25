@@ -5,10 +5,11 @@ const ActionButton = (props: ActionButtonProps) => {
       name={props.name ?? "action"}
       value={props.value ?? ""}
       className={props.className + " action-button"}
-      onClick={props.onClick ? () => props.onClick() : null}
+      onClick={props.onClick ? e => props.onClick(e) : null}
       style={props.style ?? {}}
     >
       <img
+        style={props.style?.width ? { width: props.style?.width } : {}}
         src={props.icon}
         alt={props.icon_alt}
         loading={props.islazy ? "lazy" : "eager"}

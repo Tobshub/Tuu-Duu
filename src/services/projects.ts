@@ -1,5 +1,5 @@
 import axios from "axios";
-import env from "../data/env.json";
+import env from "@data/env.json";
 import { getCurrentUser } from "./user";
 
 export const axiosConfig = {

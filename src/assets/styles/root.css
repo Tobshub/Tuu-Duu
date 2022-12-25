@@ -8,22 +8,21 @@
 }
 
 .toggle-sidebar {
-  position: fixed;
-  top: 0;
-  left: 0.4em;
-  z-index: 200;
-  width: inherit;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
 .root-div > header {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   padding: 0.75em 0.5em 0;
   background-color: #080400;
   width: max(15%, 200px);
-  height: 100%;
+  height: 99%;
   position: relative;
 }
 
@@ -70,7 +69,7 @@
   color: #fff;
 }
 
-.nav-bar > form {
+.nav-bar > a:has(.new-project-btn) {
   height: 100%;
   display: flex;
   align-items: center;
@@ -144,11 +143,33 @@
 .nav-bar ul li:last-of-type {
   border-bottom: 1px solid #fff;
 }
-/* 
-.nav-bar li:has(.nav-active) {
-  background-color: rgb(71, 71, 243);
-  color: white;
-} */
+
+ul.nav-bar-list::-webkit-scrollbar {
+  width: 1px;
+}
+ul.nav-bar-list::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+ul.nav-bar-list::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 0.5px solid slategrey;
+}
+
+li.nav-item-min {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.nav-item-min > a,
+.nav-item-min > a:hover {
+  display: grid;
+  place-items: center;
+  font-style: normal;
+  text-transform: capitalize;
+}
 
 .nav-dropdown {
   position: absolute;
@@ -198,6 +219,13 @@
   }
 }
 
+.user-actions-min {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .root-div > main {
   width: 100%;
   height: 100%;
@@ -225,6 +253,7 @@
 .index > div {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .index p {
@@ -250,9 +279,9 @@
 }
 
 .index .favorites-display .project-box {
-  max-width: 250px;
+  width: 250px;
   border: 1px solid #fff;
-  padding: 0.5em 0.75em;
+  padding: 0.5em;
   border-radius: 10px;
   font-size: 20px;
   color: #fff;
