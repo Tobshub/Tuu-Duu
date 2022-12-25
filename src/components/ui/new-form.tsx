@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import { Form, useNavigate } from "react-router-dom";
-import { NewFormProps } from "../../types/new-form";
 
 const NewForm = ({
   form_type,
@@ -18,7 +17,7 @@ const NewForm = ({
   function handleChange({
     target,
   }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    setFormValues((state) => ({
+    setFormValues(state => ({
       ...state,
       [target.name]: target.value,
     }));
@@ -26,7 +25,10 @@ const NewForm = ({
   }
 
   return (
-    <Form className="new-project" method="post">
+    <Form
+      className="new-project"
+      method="post"
+    >
       <input
         type="text"
         name="name"

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
-import { getCurrentUser } from "../operations/user";
-import { SavedUser } from "../types/user-context";
+import { getCurrentUser } from "@services/user";
 
 export async function loader() {
   const user = await getCurrentUser();
@@ -18,10 +17,10 @@ const SettingsPage = () => {
   });
 
   useEffect(() => {
-    getCurrentUser().then((user) => {
+    getCurrentUser().then(user => {
       if (user && user._id) {
         const { email, username } = user;
-        setUserSettings((state) => ({ ...state, email, username }));
+        setUserSettings(state => ({ ...state, email, username }));
       }
     });
   }, []);

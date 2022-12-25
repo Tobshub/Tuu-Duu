@@ -46,6 +46,12 @@ const OrgsRoot = () => {
     }, 100);
   };
 
+  const toggle = () => {
+    setTimeout(() => {
+      setSideBarDisplay(state => !state);
+    }, 100);
+  };
+
   return (
     <div className="root-div">
       <div className="toggle-sidebar">
@@ -65,17 +71,23 @@ const OrgsRoot = () => {
       </div>
       <SideBar
         isLoggedIn={true}
-        sideBarDisplay={sideBarDisplay}
-        handleRedirectClick={handleRedirectClick}
-        itemListElement={
-          <SideBarOrgsList
-            orgs={
-              typeof orgs === "object" && Array.isArray(orgs) ? orgs : null
-            }
-            handleRedirectClick={handleRedirectClick}
-          />
+        toggle={toggle}
+        sideBarDisplay={
+          sideBarDisplay
+            ? "show"
+            : window.innerWidth > 600
+            ? "min"
+            : "hide"
         }
-      />
+        handleRedirectClick={handleRedirectClick}
+      >
+        <SideBarOrgsList
+          orgs={
+            typeof orgs === "object" && Array.isArray(orgs) ? orgs : null
+          }
+          handleRedirectClick={handleRedirectClick}
+        />
+      </SideBar>
       <main>
         <Outlet />
       </main>
