@@ -1,58 +1,59 @@
-import React, { lazy, Suspense } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "magic.css/dist/magic.css";
+import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
-import Root, {
-  loader as rootLoader,
-  action as rootAction,
-} from "./routes/root";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./main.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Index from "./routes";
+import { action as newOrgAction } from "./pages/Org/new-org";
+import { action as orgAction, loader as orgLoader } from "./pages/Org/org";
+import {
+  OrgsIndexPage,
+  action as orgsAction,
+  loader as orgsLoader,
+} from "./pages/Org/orgs-page";
+import {
+  action as editTaskAction,
+  loader as editTaskLoader,
+} from "./pages/Project/Task/edit-task";
+import { loader as newTaskLoader } from "./pages/Project/Task/new-task";
+import {
+  action as deleteProjectAction,
+  loader as deleteProjectLoader,
+} from "./pages/Project/delete-project";
+import { loader as editProjectLoader } from "./pages/Project/edit-projects";
 import NewProject, {
   action as newProjectAction,
-} from "./routes/project-routes/new-project";
-const ProjectPage = lazy(() => import("./routes/project-routes/project"));
+} from "./pages/Project/new-project";
 import {
-  loader as projectLoader,
   action as projectAction,
-} from "./routes/project-routes/project";
-import EditProject, {
-  loader as editProjectLoader,
-} from "./routes/project-routes/edit-projects";
-import NewTask, {
-  loader as newTaskLoader,
-} from "./routes/task-routes/new-task";
-import EditTask, {
-  loader as editTaskLoader,
-  action as editTaskAction,
-} from "./routes/task-routes/edit-task";
-const LoginPage = lazy(() => import("./routes/user-routes/login"));
-import { action as loginAction } from "./routes/user-routes/login";
-import "./routes/user-routes/login.css";
-const RootErrorElement = lazy(() => import("./routes/root-error"));
+  loader as projectLoader,
+} from "./pages/Project/project";
+import Root, {
+  action as rootAction,
+  loader as rootLoader,
+} from "./pages/Root/root";
+import { action as loginAction } from "./pages/User/login";
+import "./pages/User/login.css";
+import { action as logoutAction } from "./pages/User/logout";
+import SuspensePage from "./pages/suspense-page";
+const Index = lazy(() => import("./pages"));
+const ProjectPage = lazy(() => import("./pages/Project/project"));
+const EditProject = lazy(() => import("./pages/Project/edit-projects"));
+const NewTask = lazy(() => import("./pages/Project/Task/new-task"));
+const EditTask = lazy(() => import("./pages/Project/Task/edit-task"));
+const LoginPage = lazy(() => import("./pages/User/login"));
+const RootErrorElement = lazy(() => import("./pages/Root/root-error"));
 const ProjectErrorElement = lazy(
-  () => import("./routes/project-routes/project-error")
+  () => import("./pages/Project/project-error")
 );
-const SettingsPage = lazy(() => import("./routes/user-settings"));
-const LogoutPage = lazy(() => import("./routes/user-routes/logout"));
-import { action as logoutAction } from "./routes/user-routes/logout";
-import SuspensePage from "./suspense-page";
-const OrgsRoot = lazy(() => import("./routes/org-routes/orgs-page"));
-import {
-  loader as orgsLoader,
-  action as orgsAction,
-  OrgsIndexPage,
-} from "./routes/org-routes/orgs-page";
-import NewOrg, { action as newOrgAction } from "./routes/org-routes/new-org";
-import OrgPage, {
-  loader as orgLoader,
-  action as orgAction,
-} from "./routes/org-routes/org";
-import DeleteProjectComponent, {
-  loader as deleteProjectLoader,
-  action as deleteProjectAction,
-} from "./routes/project-routes/delete-project";
+const SettingsPage = lazy(() => import("./pages/user-settings"));
+const LogoutPage = lazy(() => import("./pages/User/logout"));
+const OrgsRoot = lazy(() => import("./pages/Org/orgs-page"));
+const NewOrg = lazy(() => import("./pages/Org/new-org"));
+const OrgPage = lazy(() => import("./pages/Org/org"));
+const DeleteProjectComponent = lazy(
+  () => import("./pages/Project/delete-project")
+);
 
 const router = createBrowserRouter([
   {
@@ -152,7 +153,7 @@ const router = createBrowserRouter([
 
 let app_root = null;
 
-document.addEventListener("DOMContentLoaded", (event) => {
+document.addEventListener("DOMContentLoaded", event => {
   if (!app_root) {
     app_root = document.getElementById("root") as HTMLElement;
     try {
