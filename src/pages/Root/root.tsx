@@ -72,9 +72,13 @@ const Root = () => {
     setSideBarDisplay(state => !state);
   };
 
+  let prevWidth = window.innerWidth;
   window.addEventListener(
     "resize",
-    debounce(() => setSideBarDisplay(true), 500)
+    debounce(() => {
+      if (prevWidth === window.innerWidth) return;
+      setSideBarDisplay(true);
+    }, 500)
   );
 
   return (
