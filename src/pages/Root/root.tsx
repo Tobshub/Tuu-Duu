@@ -77,6 +77,7 @@ const Root = () => {
     "resize",
     debounce(() => {
       if (prevWidth === window.innerWidth) return;
+      prevWidth = window.innerWidth;
       setSideBarDisplay(true);
     }, 500)
   );
