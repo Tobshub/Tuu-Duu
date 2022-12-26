@@ -7,6 +7,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { editProject, getProjects } from "@services/projects";
+import { Task } from "./task-types";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { projectId } = params;

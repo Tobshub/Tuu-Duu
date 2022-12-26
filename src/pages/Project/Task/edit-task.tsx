@@ -12,6 +12,7 @@ import { useQuery } from "react-query";
 import { editProject, getProjects } from "@services/projects";
 import ActionButton from "@UIcomponents/action-button";
 import { setTaskStatus } from "@services/tasks";
+import { Task, Todo } from "./task-types";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { projectId: id, taskIndex: index } = params;

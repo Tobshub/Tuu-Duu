@@ -88,8 +88,7 @@ declare global {
     favorite?: boolean;
   };
 
-  interface Project {
-    name: string;
+  interface Project extends ProjectProps {
     description: string;
     id: string;
     tasks: Task[];
@@ -103,31 +102,18 @@ declare global {
     deadline?: Date;
   }
 
-  class Task {
-    name: string;
+  interface Task extends TaskProps {
     status: "idle" | "in progess" | "completed";
     todos: Todo[];
-    deadline?: Date;
-    constructor({ name, status, todos, deadline }: TaskProps) {
-      this.name = name ?? "Untitled";
-      this.status = status ?? "idle";
-      this.todos = todos ?? [];
-      this.deadline = deadline;
-    }
   }
 
   interface TodoProps {
     content: string;
-    status?: "awaiting";
+    status?: "awaiting" | "completed";
   }
 
-  class Todo {
-    content: string;
+  interface Todo extends TodoProps {
     status: "awaiting" | "completed";
-    constructor({ content, status }: TodoProps) {
-      this.content = content;
-      this.status = status ?? "awaiting";
-    }
   }
 
   interface DeletedTask {
@@ -148,6 +134,7 @@ declare global {
     _id?: string;
   }
 
+  // TODO:  remove this class
   class Org implements CreateOrgClass {
     #_id: string;
     org_id: string;
