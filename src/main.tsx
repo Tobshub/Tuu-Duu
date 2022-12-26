@@ -36,7 +36,7 @@ import { action as loginAction } from "./pages/User/login";
 import "./pages/User/login.css";
 import { action as logoutAction } from "./pages/User/logout";
 import SuspensePage from "./pages/suspense-page";
-const Index = lazy(() => import("./pages"));
+import Index from "./pages/index";
 const ProjectPage = lazy(() => import("./pages/Project/project"));
 const EditProject = lazy(() => import("./pages/Project/edit-projects"));
 const NewTask = lazy(() => import("./pages/Project/Task/new-task"));
