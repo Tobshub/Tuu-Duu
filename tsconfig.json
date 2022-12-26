@@ -21,7 +21,8 @@
       "@images/*": ["./assets/images/*"],
       "@data/*": ["./data/*"],
       "@services/*": ["./services/*"],
-      "@UIcomponents/*": ["./components/ui/*"]
+      "@UIcomponents/*": ["./components/ui/*"],
+      "@utils/*": ["./utils/*"]
     }
   },
   "include": ["src"],

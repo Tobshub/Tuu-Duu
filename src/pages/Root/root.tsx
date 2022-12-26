@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import ActionButton from "@UIcomponents/action-button";
 import SideBarProjectsList from "./root-sidebar";
 import MinSideBarProjectList from "./min-root-sidebar";
+import debounce from "@utils/debounce";
 
 export async function loader() {
   const user = await getCurrentUser();
@@ -72,7 +73,7 @@ const Root = () => {
   };
 
   window.addEventListener("resize", () => {
-    setSideBarDisplay(true);
+    debounce(() => setSideBarDisplay(true), 500);
   });
 
   return (
