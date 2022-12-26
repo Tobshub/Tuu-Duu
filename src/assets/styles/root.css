@@ -27,7 +27,7 @@
   padding: 0.75em 0.5em 0;
   background-color: #080400;
   width: max(15%, 200px);
-  height: 99%;
+  height: 100vh;
   position: relative;
 }
 

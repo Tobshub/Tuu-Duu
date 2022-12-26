@@ -5,6 +5,8 @@
   place-items: center;
   position: relative;
   background-image: url(../../assets/images/simple-bg.svg);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .login-form-back {
