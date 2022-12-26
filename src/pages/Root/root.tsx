@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext, useRef } from "react";
 import "@styles/root.css";
 import {
   Outlet,
@@ -68,14 +68,33 @@ const Root = () => {
   };
 
   const toggleSideBar = () => {
-    setTimeout(() => {
-      setSideBarDisplay(state => !state);
-    }, 100);
+    setSideBarDisplay(state => !state);
   };
+
+  window.addEventListener("resize", () => {
+    setSideBarDisplay(true);
+  });
 
   return (
     <QueryClientProvider client={projectQuery}>
       <div className="root-div">
+        <div
+          className="open-sidebar"
+          style={{
+            zIndex: "100",
+            justifyContent: "flex-start",
+          }}
+        >
+          <ActionButton
+            title="open sidebar"
+            style={{
+              width: "30px",
+            }}
+            onClick={toggleSideBar}
+            icon={BurgerMenuSVG}
+            icon_alt="Toggle sidebar"
+          />
+        </div>
         <SideBar
           isLoggedIn={isLoggedIn}
           sideBarDisplay={

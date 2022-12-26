@@ -54,10 +54,10 @@ const MinNavItem = ({ project }: { project: Project }) => {
     <li
       className="nav-item-min"
       style={{
-        border: "1px solid #fff",
+        border: "2px solid #fff",
+        borderRadius: "50%",
         display: "grid",
         placeItems: "center",
-        borderRadius: "50%",
         padding: "0",
         width: "40px",
         margin: ".3rem 0",

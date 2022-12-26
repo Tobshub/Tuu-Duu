@@ -83,7 +83,7 @@ const MinSideBar = ({
   return (
     <header
       style={{
-        width: "min(5%, 100px)",
+        width: "80px",
       }}
     >
       <div className="toggle-sidebar">
