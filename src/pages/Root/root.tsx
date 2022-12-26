@@ -72,9 +72,10 @@ const Root = () => {
     setSideBarDisplay(state => !state);
   };
 
-  window.addEventListener("resize", () => {
-    debounce(() => setSideBarDisplay(true), 500);
-  });
+  window.addEventListener(
+    "resize",
+    debounce(() => setSideBarDisplay(true), 500)
+  );
 
   return (
     <QueryClientProvider client={projectQuery}>
