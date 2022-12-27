@@ -27,12 +27,15 @@ const NewProject = () => {
   location.state = { shouldRefetch: true };
 
   return (
-    <NewForm
-      form_type={"Project"}
-      backAction={() => {
-        location.state = {};
-      }}
-    />
+    <>
+      <h1>Create a new Project</h1>
+      <NewForm
+        form_type={"Project"}
+        backAction={() => {
+          location.state = {};
+        }}
+      />
+    </>
   );
 };
 

@@ -8,7 +8,7 @@ import {
   useLoaderData,
   useNavigate,
 } from "react-router-dom";
-import { deleteProject, getProjects } from "../../services/projects";
+import { deleteProject, getProjects } from "@services/projects";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { projectId } = params;

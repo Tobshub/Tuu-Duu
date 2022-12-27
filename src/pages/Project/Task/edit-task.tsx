@@ -19,11 +19,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return { id, index };
 }
 
-export async function action({ params, request }: ActionFunctionArgs) {
-  const res = await request.formData();
-  const { projectId: id, taskIndex: index } = params;
-}
-
 const EditTask = () => {
   const { id: project_id, index } = useLoaderData() as {
     id: string;

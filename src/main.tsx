@@ -11,10 +11,7 @@ import {
   action as orgsAction,
   loader as orgsLoader,
 } from "./pages/Org/orgs-page";
-import {
-  action as editTaskAction,
-  loader as editTaskLoader,
-} from "./pages/Project/Task/edit-task";
+import { loader as editTaskLoader } from "./pages/Project/Task/edit-task";
 import { loader as newTaskLoader } from "./pages/Project/Task/new-task";
 import {
   action as deleteProjectAction,
@@ -80,7 +77,6 @@ const router = createBrowserRouter([
             path: "/projects/:projectId/edit",
             element: <EditProject />,
             loader: editProjectLoader,
-            action: async () => {},
           },
           {
             path: "/projects/:projectId",
@@ -92,13 +88,11 @@ const router = createBrowserRouter([
                 path: "/projects/:projectId/tasks/new",
                 element: <NewTask />,
                 loader: newTaskLoader,
-                action: async () => {},
               },
               {
                 path: "/projects/:projectId/tasks/:taskIndex/edit",
                 element: <EditTask />,
                 loader: editTaskLoader,
-                action: editTaskAction,
               },
               {
                 path: "/projects/:projectId/delete",
