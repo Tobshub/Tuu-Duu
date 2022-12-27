@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import env from "../../data/env.json";
+import env from "@data/env.json";
 import {
   ActionFunctionArgs,
   Form,
@@ -8,7 +8,8 @@ import {
   useActionData,
   useNavigate,
 } from "react-router-dom";
-import { getCurrentUser, setUser } from "../../services/user";
+import { getCurrentUser, setUser } from "@services/user";
+import useApi from "@utils/axios";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   getCurrentUser().then(user => {
@@ -44,21 +45,11 @@ export async function action({ params, request }: ActionFunctionArgs) {
         };
         break;
     }
-    const user_api_url =
-      formData.action === "Login"
-        ? `${env.REACT_APP_TUU_DUU_API}/user/login`
-        : `${env.REACT_APP_TUU_DUU_API}/user/sign_up`;
-    const user_api_data = await fetch(user_api_url, {
-      method: "POST",
-      mode: "cors",
-      body: JSON.stringify(request_body),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-        "Access-Control-Allow-Origin": `${env.REACT_APP_TUU_DUU_API}`,
-        Vary: "Origin",
-      },
-    })
-      .then(data => data.json())
+    const req_url =
+      formData.action === "Login" ? "/user/login" : "/user/sign_up";
+    const user_api_data = await useApi
+      .post(req_url, request_body)
+      .then(res => res.data)
       .then((data: LoginServerResponse) => {
         if (data.success) {
           return data.user;
