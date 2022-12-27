@@ -5,6 +5,7 @@ import {
   Form,
   Params,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import { editProject, getProjects } from "@services/projects";
 import EditSVG from "@images/Edit.svg";
@@ -37,15 +38,6 @@ export const action = async ({
   if (!id) return;
   if (formData.action) {
     switch (formData.action) {
-      case "edit_project":
-        return redirect(`/projects/${id}/edit`);
-      case "delete_project":
-        return redirect(`/projects/${id}/delete`);
-      case "new_task":
-        return redirect(`/projects/${id}/tasks/new`);
-      // case "revert_action":
-      //   await restoreLastTask();
-      // return;
       default:
         console.log("no action set for that");
         break;
@@ -65,7 +57,6 @@ const ProjectPage = () => {
     data: projects,
     error,
     isLoading,
-    isFetching,
     refetch,
   } = useQuery({
     queryKey: "projects",
@@ -119,7 +110,9 @@ const ProjectPage = () => {
     return;
   }
 
-  if (error) throw new Error(JSON.stringify(error));
+  const navigate = useNavigate();
+
+  if (error) throw error;
   if (isLoading) return <>Loading...</>;
 
   return (
@@ -141,20 +134,22 @@ const ProjectPage = () => {
             icon_alt="Toggle Favorite"
           />
           <ActionButton
-            value="edit_project"
+            type="button"
             title="Change title or description"
             className="project-edit"
             icon={EditSVG}
             icon_alt="Edit Project"
             islazy={true}
+            onClick={() => navigate("./edit")}
           />
           <ActionButton
-            value="delete_project"
+            type="button"
             title="Delete this project"
             className="project-delete"
             icon={DeleteSVG}
             icon_alt="Delete project"
             islazy={true}
+            onClick={() => navigate("./delete")}
           />
         </Form>
       </div>
@@ -209,9 +204,9 @@ const Tasks = ({
 
   return (
     <div className="task-container">
-      <Form method="post">
+      <Form action="./tasks/new">
         <ActionButton
-          value="new_task"
+          name=""
           className="new-task-btn"
           title="Add a task"
           icon={AddSVG}
