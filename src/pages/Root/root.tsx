@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import BurgerMenuSVG from "@images/BurgerMenu.svg";
 import CloseSVG from "@images/Close.svg";
+import SprinkleBgSVG from "@images/sprinkle-bg.svg";
 import SideBar from "@UIcomponents/sidebar";
 import { getCurrentUser, setUser } from "@services/user";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -122,7 +123,7 @@ const Root = () => {
             <MinSideBarProjectList />
           )}
         </SideBar>
-        <main>
+        <main style={{ backgroundImage: `url(${SprinkleBgSVG})` }}>
           <UserContext.Provider value={user_credentials.user_details}>
             <Outlet />
           </UserContext.Provider>

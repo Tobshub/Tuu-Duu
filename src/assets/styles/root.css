@@ -25,7 +25,7 @@
   justify-content: flex-start;
   align-items: center;
   padding: 0.75em 0.5em 0;
-  background-color: #080400;
+  background-color: #000001aa;
   width: max(15%, 200px);
   height: 100vh;
   position: relative;
@@ -245,9 +245,13 @@ li.nav-item-min {
   overflow-x: hidden;
   overflow-y: scroll;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .index {
