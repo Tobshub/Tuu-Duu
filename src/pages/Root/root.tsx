@@ -1,4 +1,10 @@
-import { useState, useEffect, createContext, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  createContext,
+  useRef,
+  Suspense,
+} from "react";
 import "@styles/root.css";
 import {
   Outlet,
@@ -16,6 +22,7 @@ import ActionButton from "@UIcomponents/action-button";
 import SideBarProjectsList from "./root-sidebar";
 import MinSideBarProjectList from "./min-root-sidebar";
 import debounce from "@utils/debounce";
+import SuspensePage from "pages/suspense-page";
 
 export async function loader() {
   const user = await getCurrentUser();
@@ -125,7 +132,9 @@ const Root = () => {
         </SideBar>
         <main style={{ backgroundImage: `url(${SprinkleBgSVG})` }}>
           <UserContext.Provider value={user_credentials.user_details}>
-            <Outlet />
+            <Suspense fallback={<SuspensePage />}>
+              <Outlet />
+            </Suspense>
           </UserContext.Provider>
         </main>
       </div>
