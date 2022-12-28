@@ -214,11 +214,11 @@ const Tasks = ({
       </Form>
       <div className="project-tasks">
         {tasks && tasks.length ? (
-          tasks.map((task, key) => (
+          tasks.map(task => (
             <TaskCard
               project={project}
               task={task}
-              key={key}
+              key={task.id}
               deleteFunction={() => deleteTask(task.id)}
             />
           ))

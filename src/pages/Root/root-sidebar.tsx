@@ -47,7 +47,7 @@ const SideBarProjectsList = ({
       </div>
       <ul className="nav navbar-nav nav-bar">
         {projects && projects.length ? (
-          projects.map((project: Project, key: number) => {
+          projects.map((project, key) => {
             if (
               project.name
                 .toLowerCase()
@@ -56,8 +56,7 @@ const SideBarProjectsList = ({
               return (
                 <NavItem
                   project={project}
-                  index={key}
-                  key={key}
+                  key={project.id}
                   closeMenu={handleRedirectClick}
                 />
               );
@@ -75,11 +74,9 @@ export default SideBarProjectsList;
 
 const NavItem = ({
   project,
-  index,
   closeMenu,
 }: {
   project: Project;
-  index: number;
   closeMenu: () => void;
 }) => {
   const [magicStyle, setMagicStyle] = useState("");
@@ -109,23 +106,12 @@ const NavItem = ({
         />
       </button>
 
-      {showMenu && (
-        <Menu
-          project={project}
-          setMagicStyle={setMagicStyle}
-        />
-      )}
+      {showMenu && <Menu project={project} />}
     </li>
   );
 };
 
-const Menu = ({
-  project,
-  setMagicStyle,
-}: {
-  project: Project;
-  setMagicStyle: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+const Menu = ({ project }: { project: Project }) => {
   return (
     <div
       className="nav-dropdown dropdown magictime swashIn"
