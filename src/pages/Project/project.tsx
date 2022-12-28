@@ -43,8 +43,8 @@ export const action = async ({
         break;
     }
   } else if (formData.editTask) {
-    const key = formData.editTask;
-    return redirect(`/projects/${id}/tasks/${key}/edit`);
+    const task_id = formData.editTask;
+    return redirect(`/projects/${id}/tasks/${task_id}/edit`);
   }
   return;
 };
@@ -93,20 +93,18 @@ const ProjectPage = () => {
     setFav(project?.favorite);
   }, [project?.id]);
 
-  function deleteTask(index: number) {
-    project.tasks.splice(index, 1);
-    editProject(project)
-      .then(async val => {
-        if (val) {
-          await refetch({ queryKey: "projects" });
-        }
-        return val;
-      })
-      .then(val => {
-        if (val) {
-          setShowNotification(true);
-        }
-      });
+  function deleteTask(task_id: string) {
+    project.tasks.splice(
+      project.tasks.findIndex(task => task.id === task_id),
+      1
+    );
+    editProject(project).then(async val => {
+      if (val) {
+        await refetch({ queryKey: "projects" });
+        setShowNotification(true);
+      }
+      return val;
+    });
     return;
   }
 
@@ -165,7 +163,7 @@ const ProjectPage = () => {
         {!!project?.tasks && (
           <Tasks
             project={project}
-            deleteTask={(index: number) => deleteTask(index)}
+            deleteTask={(task_id: string) => deleteTask(task_id)}
           />
         )}
       </div>
@@ -194,7 +192,7 @@ const Tasks = ({
   deleteTask,
 }: {
   project: Project;
-  deleteTask: (index: number) => void;
+  deleteTask: (task_id: string) => void;
 }) => {
   const [tasks, setTasks] = useState(project.tasks);
 
@@ -221,8 +219,7 @@ const Tasks = ({
               project={project}
               task={task}
               key={key}
-              index={key}
-              deleteFunction={() => deleteTask(key)}
+              deleteFunction={() => deleteTask(task.id)}
             />
           ))
         ) : (

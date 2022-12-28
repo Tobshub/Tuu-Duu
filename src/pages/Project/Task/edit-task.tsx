@@ -3,6 +3,7 @@ import {
   ActionFunctionArgs,
   Form,
   LoaderFunctionArgs,
+  redirect,
   useLoaderData,
   useNavigate,
 } from "react-router-dom";
@@ -15,15 +16,16 @@ import { setTaskStatus } from "@services/tasks";
 import { Task, Todo } from "./task-types";
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  const { projectId: id, taskIndex: index } = params;
-  return { id, index };
+  const { projectId: id, taskId: task_id } = params;
+  return { id, task_id };
 }
 
 const EditTask = () => {
-  const { id: project_id, index } = useLoaderData() as {
+  const { id: project_id, task_id } = useLoaderData() as {
     id: string;
-    index: number;
+    task_id: string;
   };
+
   const {
     data: projects,
     error,
@@ -35,7 +37,7 @@ const EditTask = () => {
   });
 
   const project = projects.find(project => project.id === project_id);
-  const task = project.tasks[index];
+  const task = project.tasks.find(task => task.id === task_id);
 
   if (!task) throw new Error("no such task");
 
@@ -63,7 +65,7 @@ const EditTask = () => {
   }
 
   function addTodo() {
-    project.tasks[index].todos.push(new Todo({ content: todo }));
+    task.todos.push(new Todo({ content: todo }));
     setTodo("");
   }
 
@@ -84,9 +86,11 @@ const EditTask = () => {
     return valid;
   }
 
-  async function handleSave() {
-    project.tasks[index] = new Task({
-      ...project.tasks[index],
+  async function handleSave(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    project.tasks[project.tasks.indexOf(task)] = new Task({
+      ...project.tasks[project.tasks.indexOf(task)],
       name: task_content.name,
       deadline: task_content.deadline,
       status: setTaskStatus(task),
@@ -106,7 +110,7 @@ const EditTask = () => {
         style={{
           animationDuration: "300ms",
         }}
-        onSubmit={() => handleSave()}
+        onSubmit={handleSave}
       >
         <label htmlFor="name">Name</label>
         <input

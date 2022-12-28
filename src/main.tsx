@@ -90,7 +90,7 @@ const router = createBrowserRouter([
                 loader: newTaskLoader,
               },
               {
-                path: "/projects/:projectId/tasks/:taskIndex/edit",
+                path: "/projects/:projectId/tasks/:taskId/edit",
                 element: <EditTask />,
                 loader: editTaskLoader,
               },

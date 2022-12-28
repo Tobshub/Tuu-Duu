@@ -10,12 +10,10 @@ import { setTaskStatus } from "@services/tasks";
 const TaskCard = ({
   project,
   task,
-  index,
   deleteFunction,
 }: {
   project: Project;
   task: Task;
-  index: number;
   deleteFunction: () => void;
 }) => {
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
@@ -31,7 +29,7 @@ const TaskCard = ({
       const span_ratio = parseInt((height / 100).toString());
       setGridRow(`span ${span_ratio > 2 ? span_ratio - 1 : span_ratio}`);
     }
-  }, [task, index]);
+  }, [task.todos]);
 
   useEffect(() => {
     setShadowColor(() => {
@@ -46,9 +44,11 @@ const TaskCard = ({
   }, [task.status]);
 
   async function markTodo(todoIndex: number) {
-    project.tasks[index].todos[todoIndex].status = "completed";
+    task.todos[todoIndex].status = "completed";
     task.status = setTaskStatus(task);
-    project.tasks[index] = task;
+    project.tasks[
+      project.tasks.findIndex(prevTask => prevTask.id === task.id)
+    ] = task;
     editProject(project);
     toggleShowShadow(false);
   }
@@ -57,7 +57,6 @@ const TaskCard = ({
     <div
       className={`task-card ${magicStyle}`}
       ref={cardRef}
-      key={index}
       style={{
         gridRow: gridRow,
         animationDuration: "200ms",
@@ -109,7 +108,7 @@ const TaskCard = ({
         <ActionButton
           name="editTask"
           title="Edit task"
-          value={index}
+          value={task.id}
           className="edit-task-btn"
           icon={EditSVG}
           icon_alt="Edit task"
@@ -119,7 +118,6 @@ const TaskCard = ({
           type="button"
           name="deleteTask"
           title="Delete task"
-          value={index}
           className="delete-task-btn"
           onClick={() => {
             setMagicStyle("magictime holeout");

@@ -67,60 +67,62 @@ declare global {
   }
 
   // user objects
-  interface UserCreds {
+  type UserCreds = {
     user_details: SavedUser;
     setUserDetails: (new_details: SavedUser) => Promise<void>;
-  }
+  };
 
-  interface SavedUser {
+  type SavedUser = {
     readonly _id: string;
     email: string;
     username: string;
     org_refs?: OrgRef[];
-  }
+  };
 
   // project types
-  type ProjectProps = {
+  interface ProjectProps {
     name: string;
     description?: string;
     id?: string;
     tasks?: Task[];
     favorite?: boolean;
-  };
+  }
 
-  interface Project extends ProjectProps {
+  type Project = ProjectProps & {
     description: string;
     id: string;
     tasks: Task[];
     favorite: boolean;
-  }
+  };
 
   interface TaskProps {
+    id?: string;
     name: string;
     status?: "idle" | "in progess" | "completed";
     todos?: Todo[];
     deadline?: Date;
   }
 
-  interface Task extends TaskProps {
+  type Task = TaskProps & {
+    id: string;
     status: "idle" | "in progess" | "completed";
     todos: Todo[];
-  }
+  };
 
   interface TodoProps {
     content: string;
     status?: "awaiting" | "completed";
   }
 
-  interface Todo extends TodoProps {
+  type Todo = TodoProps & {
     status: "awaiting" | "completed";
-  }
+  };
 
-  interface DeletedTask {
+  type DeletedTask = {
     project_id: string;
     task_content: Task;
     original_index: number;
-  }
+  };
 
   // Org types
   interface CreateOrgClass {
@@ -223,16 +225,16 @@ declare global {
     action?: NotificationAction;
   }
 
-  interface NotificationContent {
+  type NotificationContent = {
     title?: string;
     message?: string;
-  }
+  };
 
-  interface NotificationAction {
+  type NotificationAction = {
     name: string;
     target: string;
     execute: (...args: any) => void;
-  }
+  };
 
   // component props
   interface NewFormProps {
