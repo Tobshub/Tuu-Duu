@@ -105,7 +105,7 @@ const EditTask = () => {
   return (
     <div className="edit-task">
       <Form
-        method="post"
+        method="put"
         className={magicStyle}
         style={{
           animationDuration: "300ms",

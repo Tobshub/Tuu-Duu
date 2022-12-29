@@ -88,11 +88,13 @@ const router = createBrowserRouter([
                 path: "/projects/:projectId/tasks/new",
                 element: <NewTask />,
                 loader: newTaskLoader,
+                action: async () => {} /* catch form actions */,
               },
               {
                 path: "/projects/:projectId/tasks/:taskId/edit",
                 element: <EditTask />,
                 loader: editTaskLoader,
+                action: async () => {} /* catch form actions */,
               },
               {
                 path: "/projects/:projectId/delete",
@@ -145,22 +147,30 @@ const router = createBrowserRouter([
   },
 ]);
 
-let app_root = null;
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <Suspense fallback={<SuspensePage />}>
+      <RouterProvider router={router} />
+    </Suspense>
+  </React.StrictMode>
+);
 
-document.addEventListener("DOMContentLoaded", event => {
-  if (!app_root) {
-    app_root = document.getElementById("root") as HTMLElement;
-    try {
-      const root = ReactDOM.createRoot(app_root);
-      root.render(
-        <React.StrictMode>
-          <Suspense fallback={<SuspensePage />}>
-            <RouterProvider router={router} />
-          </Suspense>
-        </React.StrictMode>
-      );
-    } catch (e) {
-      console.error(e);
-    }
-  }
-});
+// let app_root = null;
+
+// document.addEventListener("DOMContentLoaded", event => {
+//   if (!app_root) {
+//     app_root = document.getElementById("root") as HTMLElement;
+//     try {
+//       const root = ReactDOM.createRoot(app_root);
+//       root.render(
+//         <React.StrictMode>
+//           <Suspense fallback={<SuspensePage />}>
+//             <RouterProvider router={router} />
+//           </Suspense>
+//         </React.StrictMode>
+//       );
+//     } catch (e) {
+//       console.error(e);
+//     }
+//   }
+// });

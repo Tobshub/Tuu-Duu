@@ -87,7 +87,7 @@ const NewTask = () => {
         style={{
           animationDuration: "300ms",
         }}
-        onSubmit={() => handleSubmit()}
+        onSubmit={handleSubmit}
       >
         <label htmlFor="name">Task Name:</label>
         <input
