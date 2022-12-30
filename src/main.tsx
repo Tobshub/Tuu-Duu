@@ -71,7 +71,7 @@ const router = createBrowserRouter([
           {
             path: "/projects/new",
             element: <NewProject />,
-            action: newProjectAction,
+            action: async () => null,
           },
           {
             path: "/projects/:projectId/edit",
