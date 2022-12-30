@@ -19,12 +19,7 @@ const ActionNotifcation = ({ content, action }: NotificationArgs) => {
             type="submit"
             disabled={loading}
             title={`${action.name} ${action.target}`}
-            onClick={() => {
-              setTimeout(() => {
-                setLoading(true);
-                action.execute();
-              }, 100);
-            }}
+            onClick={() => action.execute().then(() => setLoading(true))}
             name="action"
             value="revert_action"
           >

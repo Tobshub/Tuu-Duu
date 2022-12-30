@@ -233,7 +233,7 @@ declare global {
   type NotificationAction = {
     name: string;
     target: string;
-    execute: (...args: any) => void;
+    execute: (...args: any) => Promise<void>;
   };
 
   // component props
