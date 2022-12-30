@@ -52,7 +52,7 @@ const EditProject = () => {
         }
       });
     }
-    return navigate("..", { relative: "route" });
+    return navigate("..", { relative: "path" });
   }
 
   if (error) throw new Error(error.toString());
