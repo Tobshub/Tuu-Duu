@@ -2,7 +2,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "magic.css/dist/magic.css";
 import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  redirect,
+} from "react-router-dom";
 import "./main.css";
 import { action as newOrgAction } from "./pages/Org/new-org";
 import { action as orgAction, loader as orgLoader } from "./pages/Org/org";
@@ -66,6 +70,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/projects",
+        loader: () => redirect("/"),
         errorElement: <ProjectErrorElement />,
         children: [
           {
