@@ -58,11 +58,7 @@ const ProjectPage = () => {
     error,
     isLoading,
     refetch,
-  } = useQuery({
-    queryKey: "projects",
-    queryFn: () => getProjects(),
-    enabled: false,
-  });
+  } = useQuery<Project[]>("projects");
 
   if (location.state && location.state.shouldRefetch) {
     refetch({ queryKey: "projects" });
@@ -171,11 +167,10 @@ const ProjectPage = () => {
       {showNotification && (
         <ActionNotifcation
           content={{ message: "Task Deleted" }}
-          // @ts-ignore
           action={{
             name: "Undo",
             target: "Task",
-            execute: () => {
+            execute: async () => {
               setShowNotification(false);
             },
           }}

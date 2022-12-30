@@ -28,11 +28,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
 
 const DeleteProjectComponent = () => {
   const project_id = useLoaderData().toString();
-  const { data: projects, error } = useQuery({
-    queryKey: "projects",
-    queryFn: () => getProjects(),
-    enabled: false,
-  });
+  const { data: projects, error } = useQuery<Project[]>("projects");
 
   const project = projects.find(project => project.id === project_id);
 

@@ -30,11 +30,7 @@ const EditTask = () => {
     data: projects,
     error,
     refetch,
-  } = useQuery({
-    queryKey: "projects",
-    queryFn: () => getProjects(),
-    enabled: false,
-  });
+  } = useQuery<Project[]>("projects");
 
   const project = projects.find(project => project.id === project_id);
   const task = project.tasks.find(task => task.id === task_id);

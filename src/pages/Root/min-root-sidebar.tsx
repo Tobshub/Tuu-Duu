@@ -1,15 +1,10 @@
-import { getProjects } from "@services/projects";
 import { useQuery } from "react-query";
 import { Form, Link, NavLink } from "react-router-dom";
 import AddSVG from "@images/Add.svg";
 import ActionButton from "@UIcomponents/action-button";
 
 const MinSideBarProjectList = () => {
-  const { data: projects, error } = useQuery({
-    queryKey: "projects",
-    queryFn: () => getProjects(),
-    enabled: true,
-  });
+  const { data: projects, error } = useQuery<Project[]>("projects");
 
   if (error) throw error;
   return (

@@ -23,6 +23,8 @@ import SideBarProjectsList from "./root-sidebar";
 import MinSideBarProjectList from "./min-root-sidebar";
 import debounce from "@utils/debounce";
 import SuspensePage from "pages/suspense-page";
+import UserContext from "@context/user-context";
+import { getProjects } from "@services/projects";
 
 export async function loader() {
   const user = await getCurrentUser();
@@ -39,33 +41,27 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export const UserContext = createContext(null);
-const projectQuery = new QueryClient();
+const projectQuery = new QueryClient({
+  defaultOptions: {
+    queries: {
+      queryKey: "projects",
+      queryFn: () => getProjects(),
+      staleTime: 5 * 60 * 1000,
+      // enabled: false,
+    },
+  },
+});
 
 const Root = () => {
-  const user = useLoaderData() as SavedUser;
+  const loaderData = useLoaderData();
+  const [user] = useState(loaderData as SavedUser);
   const [sideBarDisplay, setSideBarDisplay] = useState(true);
-  const [user_credentials, setUserCredentials] = useState<UserCreds>({
-    user_details: { ...user },
-    setUserDetails: async (new_details: SavedUser) => {
-      setUserCredentials(state => ({
-        ...state,
-        user_details: new_details,
-      }));
-      await setUser(new_details);
-      return;
-    },
-  });
 
   const [isLoggedIn, setLoggedIn] = useState<boolean>(true);
 
   useEffect(() => {
-    setLoggedIn(
-      user_credentials.user_details && user_credentials.user_details._id
-        ? true
-        : false
-    );
-  }, [user_credentials.user_details]);
+    setLoggedIn(user && user._id ? true : false);
+  }, [user]);
 
   // close the sidebar:
   const handleRedirectClick = () => {
@@ -131,7 +127,7 @@ const Root = () => {
           )}
         </SideBar>
         <main style={{ backgroundImage: `url(${SprinkleBgSVG})` }}>
-          <UserContext.Provider value={user_credentials.user_details}>
+          <UserContext.Provider value={user}>
             <Suspense fallback={<SuspensePage />}>
               <Outlet />
             </Suspense>

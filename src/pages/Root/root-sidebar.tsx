@@ -1,5 +1,4 @@
 import ActionButton from "@UIcomponents/action-button";
-import { getProjects } from "@services/projects";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { Form, Link, NavLink } from "react-router-dom";
@@ -11,11 +10,7 @@ const SideBarProjectsList = ({
 }: SideBarProjectsListProps) => {
   const [project_filter, setProjectFilter] = useState("");
 
-  const { data: projects, error } = useQuery({
-    queryKey: "projects",
-    queryFn: () => getProjects(),
-    enabled: true,
-  });
+  const { data: projects, error } = useQuery<Project[]>("projects");
 
   if (error) throw error;
 

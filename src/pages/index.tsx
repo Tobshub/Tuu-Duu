@@ -1,30 +1,21 @@
 import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link, NavLink } from "react-router-dom";
-import { getProjects } from "@services/projects";
-import { UserContext } from "./Root/root";
+import UserContext from "@context/user-context";
 
 const Index = () => {
-  const {
-    data: projects,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: "projects",
-    queryFn: () => getProjects(),
-    enabled: true,
-  });
+  const { data: projects, error } = useQuery<Project[]>("projects");
   const fav_projects: Project[] =
     projects && Array.isArray(projects) && projects.length
       ? projects.filter((project: Project) => project.favorite)
       : null;
 
-  const user_details = useContext<SavedUser>(UserContext);
+  const user = useContext<SavedUser>(UserContext);
 
   return (
     <div className="index">
-      {user_details && user_details._id ? (
-        <LoggedInDisplay user_details={user_details} />
+      {user && user._id ? (
+        <LoggedInDisplay user={user} />
       ) : (
         <LoggedOutDisplay />
       )}
@@ -63,9 +54,9 @@ const Index = () => {
 
 export default Index;
 
-function LoggedInDisplay({ user_details }: { user_details: SavedUser }) {
+function LoggedInDisplay({ user }: { user: SavedUser }) {
   const [dateTime, setDateTime] = useState(Date.now());
-  // greeting the user with their username
+  // greet the user with their username
   // show date and time
   useEffect(() => {
     const dateTime_interval = setInterval(() => {
@@ -76,7 +67,7 @@ function LoggedInDisplay({ user_details }: { user_details: SavedUser }) {
   // show tasks that are about to reach their deadline
   return (
     <div>
-      <h1>Hi, {user_details.username}</h1>
+      <h1>Hi, {user.username}</h1>
       <h3>
         {new Date(dateTime).toLocaleTimeString(undefined, {
           hour: "2-digit",

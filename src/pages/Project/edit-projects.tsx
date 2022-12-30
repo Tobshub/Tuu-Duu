@@ -20,11 +20,7 @@ const EditProject = () => {
     data: projects,
     error,
     isLoading,
-  } = useQuery({
-    queryKey: "projects",
-    queryFn: () => getProjects(),
-    enabled: false,
-  });
+  } = useQuery<Project[]>("projects");
   const project = projects?.find(project => project.id === project_id);
   const [content, setContent] = useState({
     name: project.name,
