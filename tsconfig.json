@@ -22,6 +22,7 @@
       "@data/*": ["./data/*"],
       "@services/*": ["./services/*"],
       "@UIcomponents/*": ["./components/ui/*"],
+      "@context/*": ["./components/context/*"],
       "@utils/*": ["./utils/*"]
     }
   },
