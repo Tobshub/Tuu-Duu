@@ -1,5 +1,5 @@
 import { Form, Params, redirect, useNavigate } from "react-router-dom";
-import { removeUser } from "../../services/user";
+import { removeUser } from "@services/user";
 
 export async function action({
   params,
