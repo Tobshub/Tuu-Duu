@@ -45,15 +45,14 @@ const EditProject = () => {
       tasks: project.tasks,
       favorite: project.favorite,
     });
-    let success = false;
     if (JSON.stringify(edits) !== JSON.stringify(project)) {
-      success = await editProject(edits);
-      projectsQuery.invalidateQueries("projects");
+      await editProject(edits).then(res => {
+        if (res) {
+          projectsQuery.setQueryData("projects", res);
+        }
+      });
     }
-    return navigate("..", {
-      state: { shouldRefetch: success },
-      relative: "path",
-    });
+    return navigate("..", { relative: "route" });
   }
 
   if (error) throw new Error(error.toString());
