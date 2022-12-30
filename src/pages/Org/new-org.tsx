@@ -29,10 +29,11 @@ export async function action({
 
 const NewOrg = () => {
   return (
-    <NewForm
-      form_type="Org"
-      required={{ name: true, description: false }}
-    />
+    <>Hello world</>
+    // <NewForm
+    //   form_type="Org"
+    //   required={{ name: true, description: false }}
+    // />
   );
 };
 
