@@ -18,7 +18,7 @@ import "@styles/tasks.css";
 import ActionNotifcation from "@UIcomponents/action-notifcation";
 import TaskCard from "./Task/task-card";
 import ActionButton from "@UIcomponents/action-button";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
@@ -83,17 +83,23 @@ const ProjectPage = () => {
     setFav(project?.favorite);
   }, [project?.id]);
 
+  const projectQueryClient = useQueryClient();
+  const deleteTaskMutation = useMutation(editProject, {
+    onSuccess: data => {
+      if (data) {
+        projectQueryClient.setQueryData("projects", data);
+      }
+    },
+  });
   function deleteTask(task_id: string) {
     project.tasks.splice(
       project.tasks.findIndex(task => task.id === task_id),
       1
     );
-    editProject(project).then(async val => {
-      if (val) {
-        await refetch({ queryKey: "projects" });
+    deleteTaskMutation.mutateAsync(project).then(res => {
+      if (res) {
         setShowNotification(true);
       }
-      return val;
     });
     return;
   }

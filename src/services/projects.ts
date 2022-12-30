@@ -61,7 +61,7 @@ export const editProject = async (data: Project) => {
       .then((res: GetProjectsServerResponse) => res)
       .catch(e => console.error(e));
 
-    return request && request.success;
+    return request && request.success ? request.projects : false;
   } catch (error) {
     console.error(error);
     return false;
