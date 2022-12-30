@@ -51,7 +51,6 @@ export const action = async ({
 
 const ProjectPage = () => {
   const project_id = useLoaderData().toString();
-  const location = useLocation();
 
   const {
     data: projects,
@@ -60,14 +59,9 @@ const ProjectPage = () => {
     refetch,
   } = useQuery<Project[]>("projects");
 
-  if (location.state && location.state.shouldRefetch) {
-    refetch({ queryKey: "projects" });
-    location.state = {};
-  }
-
   const project = projects?.find(project => project.id === project_id);
 
-  if (!project) {
+  if (!project && !error) {
     refetch({ queryKey: "projects" });
   }
 
