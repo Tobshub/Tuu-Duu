@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   ActionFunctionArgs,
   Form,
@@ -17,13 +17,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
 export async function action({ params, request }: ActionFunctionArgs) {
   const { projectId } = params;
-  const res = await request.formData();
-  const { action } = Object.fromEntries(res);
-
-  if (action && action === "delete_project") {
-    await deleteProject(projectId);
-    return redirect("/");
-  }
 }
 
 const DeleteProjectComponent = () => {
@@ -33,11 +26,29 @@ const DeleteProjectComponent = () => {
   const project = projects.find(project => project.id === project_id);
 
   const navigate = useNavigate();
+  const projectsQuery = useQueryClient();
+
+  const deleteProjectMutation = useMutation(deleteProject, {
+    onSuccess: data => {
+      if (data) {
+        projectsQuery.setQueryData("projects", data);
+      }
+    },
+  });
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    deleteProjectMutation.mutate(project_id);
+    navigate("/");
+  }
 
   if (error) throw new Error("error getting project");
   return (
     <div className="delete-project">
-      <Form method="post">
+      <Form
+        method="post"
+        onSubmit={handleSubmit}
+      >
         <h3>Are you sure you want to delete {project.name}?</h3>
         {!!project.favorite && <p>It's one of your favorites :(</p>}
         <button

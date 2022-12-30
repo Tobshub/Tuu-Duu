@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import {
   Form,
   LoaderFunctionArgs,
@@ -27,7 +27,7 @@ const EditProject = () => {
     description: project.description,
   });
   const navigate = useNavigate();
-
+  const projectsQuery = useQueryClient();
   function handleChange({
     target,
   }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -48,6 +48,7 @@ const EditProject = () => {
     let success = false;
     if (JSON.stringify(edits) !== JSON.stringify(project)) {
       success = await editProject(edits);
+      projectsQuery.invalidateQueries("projects");
     }
     return navigate("..", {
       state: { shouldRefetch: success },
