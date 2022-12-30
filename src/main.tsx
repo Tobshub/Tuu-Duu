@@ -70,7 +70,6 @@ const router = createBrowserRouter([
       },
       {
         path: "/projects",
-        loader: () => redirect("/"),
         errorElement: <ProjectErrorElement />,
         children: [
           {
