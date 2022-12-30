@@ -16,7 +16,7 @@ export const addProject = async (project: Project) => {
       .then((res: GetProjectsServerResponse) => res)
       .catch(e => console.error(e));
 
-    return response && response.success;
+    return response && response.success ? response.projects : false;
   } catch (error) {
     console.error(error);
     return;
