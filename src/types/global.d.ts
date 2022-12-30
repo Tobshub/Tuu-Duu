@@ -240,6 +240,13 @@ declare global {
   interface NewFormProps {
     form_type: string;
     required?: { name: boolean; description: boolean };
+    formValues: {
+      name: string;
+      description: string;
+    };
+    handleChange: (
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => void;
     nextAction?: () => void;
     backAction?: () => void;
   }

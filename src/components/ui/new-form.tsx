@@ -1,26 +1,11 @@
 import React, { useState, useRef } from "react";
 import { Form, useNavigate } from "react-router-dom";
 
-const NewForm = ({
-  form_type,
-  required,
-  nextAction,
-  backAction,
-}: NewFormProps) => {
-  const [formValues, setFormValues] = useState({
-    name: "",
-    description: "",
-  });
+const NewForm = (props: NewFormProps) => {
   const navigate = useNavigate();
   const createBtnRef = useRef(null);
 
-  function handleChange({
-    target,
-  }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    setFormValues(state => ({
-      ...state,
-      [target.name]: target.value,
-    }));
+  function localHandleChange() {
     createBtnRef.current ? (createBtnRef.current.disabled = false) : null;
   }
 
@@ -28,25 +13,37 @@ const NewForm = ({
     <Form
       className="new-project"
       method="post"
+      onSubmit={() => {
+        createBtnRef.current
+          ? (createBtnRef.current.disabled = true)
+          : null;
+        props.nextAction ? props.nextAction() : null;
+      }}
     >
       <input
         type="text"
         name="name"
-        required={required?.name ? true : false}
-        value={formValues.name}
-        onChange={handleChange}
-        placeholder={`${form_type} Title`}
+        required={props.required?.name ? true : false}
+        value={props.formValues.name}
+        onChange={e => {
+          props.handleChange(e);
+          localHandleChange();
+        }}
+        placeholder={`${props.form_type} Title`}
         id="usr"
         className="form-control np-name"
       />
       <textarea
         name="description"
-        placeholder={`${form_type} Description`}
-        required={required?.description ? true : false}
+        placeholder={`${props.form_type} Description`}
+        required={props.required?.description ? true : false}
         id="comment"
         className="form-control np-desc"
-        value={formValues.description}
-        onChange={handleChange}
+        value={props.formValues.description}
+        onChange={e => {
+          props.handleChange(e);
+          localHandleChange();
+        }}
       />
       <button
         name="action"
@@ -54,14 +51,6 @@ const NewForm = ({
         type="submit"
         ref={createBtnRef}
         className="btn btn-primary"
-        onClick={() => {
-          setTimeout(() => {
-            createBtnRef.current
-              ? (createBtnRef.current.disabled = true)
-              : null;
-          }, 50);
-          nextAction ? nextAction() : null;
-        }}
       >
         Create
       </button>
@@ -69,7 +58,7 @@ const NewForm = ({
         type="button"
         className="btn btn-danger"
         onClick={() => {
-          backAction ? backAction() : null;
+          props.backAction ? props.backAction() : null;
           navigate(-1);
         }}
       >
