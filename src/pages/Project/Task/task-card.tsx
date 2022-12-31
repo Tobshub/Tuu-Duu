@@ -6,6 +6,12 @@ import DeleteSVG from "@images/Delete.svg";
 import ActionButton from "@UIcomponents/action-button";
 import { editProject } from "@services/projects";
 import { setTaskStatus } from "@services/tasks";
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
 
 const TaskCard = ({
   project,
@@ -43,13 +49,19 @@ const TaskCard = ({
     });
   }, [task.status]);
 
+  const projectQueryClient = useQueryClient();
+
   async function markTodo(todoIndex: number) {
     task.todos[todoIndex].status = "completed";
     task.status = setTaskStatus(task);
     project.tasks[
       project.tasks.findIndex(prevTask => prevTask.id === task.id)
     ] = task;
-    editProject(project);
+    await editProject(project).then(res => {
+      if (res) {
+        projectQueryClient.setQueryData("projects", res);
+      }
+    });
     toggleShowShadow(false);
   }
 

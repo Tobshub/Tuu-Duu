@@ -18,7 +18,13 @@ import "@styles/tasks.css";
 import ActionNotifcation from "@UIcomponents/action-notifcation";
 import TaskCard from "./Task/task-card";
 import ActionButton from "@UIcomponents/action-button";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
@@ -84,7 +90,7 @@ const ProjectPage = () => {
   }, [project?.id]);
 
   const projectQueryClient = useQueryClient();
-  const deleteTaskMutation = useMutation(editProject, {
+  const editProjectMutation = useMutation(editProject, {
     onSuccess: data => {
       if (data) {
         projectQueryClient.setQueryData("projects", data);
@@ -92,16 +98,16 @@ const ProjectPage = () => {
     },
   });
   function deleteTask(task_id: string) {
-    project.tasks.splice(
+    const [deletedTask] = project.tasks.splice(
       project.tasks.findIndex(task => task.id === task_id),
       1
     );
-    deleteTaskMutation.mutateAsync(project).then(res => {
+    editProjectMutation.mutateAsync(project).then(res => {
       if (res) {
         setShowNotification(true);
       }
     });
-    return;
+    return deletedTask;
   }
 
   const navigate = useNavigate();
@@ -159,7 +165,7 @@ const ProjectPage = () => {
         {!!project?.tasks && (
           <Tasks
             project={project}
-            deleteTask={(task_id: string) => deleteTask(task_id)}
+            deleteTask={deleteTask}
           />
         )}
       </div>
@@ -189,12 +195,6 @@ const Tasks = ({
   project: Project;
   deleteTask: (task_id: string) => void;
 }) => {
-  const [tasks, setTasks] = useState(project.tasks);
-
-  useMemo(() => {
-    setTasks(project.tasks);
-  }, [project.tasks]);
-
   return (
     <div className="task-container">
       <Form action="./tasks/new">
@@ -208,8 +208,8 @@ const Tasks = ({
         />
       </Form>
       <div className="project-tasks">
-        {tasks && tasks.length ? (
-          tasks.map(task => (
+        {project.tasks && project.tasks.length ? (
+          project.tasks.map(task => (
             <TaskCard
               project={project}
               task={task}

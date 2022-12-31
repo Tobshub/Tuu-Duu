@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import {
   Form,
   LoaderFunctionArgs,
@@ -60,6 +60,8 @@ const NewTask = () => {
     return valid;
   }
 
+  const projectQueryClient = useQueryClient();
+
   async function handleSubmit() {
     const new_task = new Task({
       name: task_content.name,
@@ -68,7 +70,11 @@ const NewTask = () => {
         : undefined,
     });
     project.tasks.push(new_task);
-    await editProject(project);
+    await editProject(project).then(res => {
+      if (res) {
+        projectQueryClient.setQueryData("projects", res);
+      }
+    });
     return navigate("..", {
       relative: "route",
       // state: { shouldRefetch: true },
