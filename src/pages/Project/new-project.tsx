@@ -68,6 +68,7 @@ const NewProject = () => {
         }}
         formValues={formValues}
         nextAction={nextAction}
+        required={{ name: true }}
       />
     </>
   );
