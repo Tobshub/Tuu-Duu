@@ -62,13 +62,12 @@ const ProjectPage = () => {
     data: projects,
     error,
     isLoading,
-    refetch,
   } = useQuery<Project[]>("projects");
 
   const project = projects?.find(project => project.id === project_id);
 
   if (!project && !error) {
-    refetch({ queryKey: "projects" });
+    throw new Error("no project found with that id");
   }
 
   const [isFav, setFav] = useState(project?.favorite ?? false);
