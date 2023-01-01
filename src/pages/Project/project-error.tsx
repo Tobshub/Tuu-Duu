@@ -1,8 +1,9 @@
 import { useRouteError } from "react-router";
+import { Link } from "react-router-dom";
 
 const ProjectErrorElement = () => {
   const error = useRouteError();
-  console.error(error);
+  // console.error(error);
   return (
     <div
       style={{
@@ -19,12 +20,27 @@ const ProjectErrorElement = () => {
       <div>
         {typeof error === "object" && "status" in error && error.status ? (
           <>
-            <span>{typeof error.status === "string" && error.status}</span>
+            <span>
+              {typeof error.status === "string" ? error.status : null}
+            </span>
           </>
         ) : (
-          <span>{JSON.stringify(error)}</span>
+          <span>
+            {typeof error === "object" &&
+            "message" in error &&
+            typeof error.message === "string"
+              ? error.message
+              : null}
+          </span>
         )}
       </div>
+      <h2>Solutions:</h2>
+      <ul>
+        <li>Reload the page</li>
+        <li>
+          <Link to="/">Go back home</Link>
+        </li>
+      </ul>
     </div>
   );
 };
