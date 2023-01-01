@@ -227,13 +227,14 @@ declare global {
 
   type NotificationContent = {
     title?: string;
-    message?: string;
+    message: string;
   };
 
   type NotificationAction = {
     name: string;
     target: string;
     execute: (...args: any) => Promise<void>;
+    nextAction: (e: React.FormEvent<HTMLFormElement>) => void;
   };
 
   // component props
