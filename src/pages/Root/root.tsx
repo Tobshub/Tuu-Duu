@@ -26,6 +26,7 @@ import SuspensePage from "pages/suspense-page";
 import UserContext from "@context/user-context";
 import { getProjects } from "@services/projects";
 
+// get the user on the first load
 export async function loader() {
   const user = await getCurrentUser();
   if (!user) return redirect("/login");
@@ -41,13 +42,13 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-const projectQuery = new QueryClient({
+const projectQueryClient = new QueryClient({
   defaultOptions: {
+    // set default query to get all projects
     queries: {
       queryKey: "projects",
       queryFn: () => getProjects(),
-      staleTime: 5 * 60 * 1000,
-      // enabled: false,
+      staleTime: 5 * 60 * 1000 /* 5 minutes of stale time */,
     },
   },
 });
@@ -76,9 +77,12 @@ const Root = () => {
     setSideBarDisplay(state => !state);
   };
 
+  // re open the sidebar on window resize
+  // to catch cases where the side bar is supposed to resize
   let prevWidth = window.innerWidth;
   window.addEventListener(
     "resize",
+    // use debounce function to reduce the number of re-renders
     debounce(() => {
       if (prevWidth === window.innerWidth) return;
       prevWidth = window.innerWidth;
@@ -87,7 +91,7 @@ const Root = () => {
   );
 
   return (
-    <QueryClientProvider client={projectQuery}>
+    <QueryClientProvider client={projectQueryClient}>
       <div className="root-div">
         <div
           className="open-sidebar"

@@ -1,3 +1,4 @@
+// tbh I don't understand how this works
 export default function debounce(fn: () => void, ms: number) {
   let timer: NodeJS.Timeout | null;
   return () => {

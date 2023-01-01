@@ -1,6 +1,7 @@
 import axios from "axios";
 import env from "@data/env.json";
 
+// create axios instance for the interacting with the API server
 const useApi = axios.create({
   headers: {
     "Content-Type": "application/json; encoding=utf-8",
