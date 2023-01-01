@@ -51,6 +51,12 @@ const DeleteProjectComponent = () => {
       >
         <h3>Are you sure you want to delete {project.name}?</h3>
         {!!project.favorite && <p>It's one of your favorites :(</p>}
+        <div
+          className="alert alert-danger"
+          style={{ padding: ".1rem .2rem" }}
+        >
+          Deleted projects are lost forever!
+        </div>
         <button
           type="submit"
           className="btn btn-danger"
