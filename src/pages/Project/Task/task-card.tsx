@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Form } from "react-router-dom";
 import EditSVG from "@images/Edit.svg";
+import EditPenSVG from "@images/EditPen.svg";
 import DoneSVG from "@images/Checkmark.svg";
 import DeleteSVG from "@images/Delete.svg";
 import ActionButton from "@UIcomponents/action-button";
@@ -51,18 +52,33 @@ const TaskCard = ({
 
   const projectQueryClient = useQueryClient();
 
+  async function editAndSet(project: Project) {
+    const val = await editProject(project).then(res => {
+      if (res) {
+        projectQueryClient.setQueryData("projects", res);
+      }
+      return res;
+    });
+
+    return val ? val : [];
+  }
+
   async function markTodo(todoIndex: number) {
     task.todos[todoIndex].status = "completed";
     task.status = setTaskStatus(task);
     project.tasks[
       project.tasks.findIndex(prevTask => prevTask.id === task.id)
     ] = task;
-    await editProject(project).then(res => {
-      if (res) {
-        projectQueryClient.setQueryData("projects", res);
-      }
-    });
+    editAndSet(project);
     toggleShowShadow(false);
+  }
+
+  async function editTodo(todoIndex: number, content: string) {
+    task.todos[todoIndex].content = content;
+    project.tasks[
+      project.tasks.findIndex(prevTask => prevTask.id === task.id)
+    ] = task;
+    editAndSet(project);
   }
 
   return (
@@ -90,6 +106,7 @@ const TaskCard = ({
                   todo={todo}
                   key={key}
                   markTodoFn={() => markTodo(key)}
+                  editTodoFn={(content: string) => editTodo(key, content)}
                 />
               );
             }
@@ -149,30 +166,88 @@ export default TaskCard;
 const TodoComponent = ({
   todo,
   markTodoFn,
+  editTodoFn,
 }: {
   todo: Todo;
   markTodoFn?: () => void;
+  editTodoFn?: (content: string) => Promise<void>;
 }) => {
+  const [editMode, setEditMode] = useState(false);
+
+  if (editMode) {
+    return (
+      <EditTodoComponent
+        todo={todo}
+        cancel={() => setEditMode(false)}
+        confirm={editTodoFn}
+      />
+    );
+  }
   return (
     <li>
       <span>{todo.content}</span>
-      <span>
+      <span className="d-inline-flex align-items-center">
         {todo.status === "awaiting" ? (
-          <ActionButton
-            name="markTodo"
-            title="Mark as done"
-            className="mark-todo-done-btn"
-            icon={DoneSVG}
-            icon_alt="Mark as done"
-            islazy={true}
-            style={{ width: "18px" }}
-            onClick={() => {
-              todo.status === "completed";
-              markTodoFn ? markTodoFn() : null;
-            }}
-          />
+          <>
+            <ActionButton
+              className="todo-icon"
+              icon={EditPenSVG}
+              icon_alt="edit todo"
+              islazy={true}
+              title="edit todo"
+              onClick={() => setEditMode(true)}
+            />
+            <ActionButton
+              name="markTodo"
+              className="todo-icon"
+              title="Mark as done"
+              icon={DoneSVG}
+              icon_alt="Mark as done"
+              islazy={true}
+              onClick={() => {
+                todo.status === "completed";
+                markTodoFn ? markTodoFn() : null;
+              }}
+            />
+          </>
         ) : null}
       </span>
     </li>
+  );
+};
+
+const EditTodoComponent = ({
+  todo,
+  cancel,
+  confirm,
+}: {
+  todo: Todo;
+  cancel: () => void;
+  confirm: (content: string) => Promise<void>;
+}) => {
+  const [todoContent, setTodoContent] = useState(todo.content);
+
+  return (
+    <div className="d-flex flex-column gap-1">
+      <input
+        className="form-control"
+        value={todoContent}
+        onChange={({ target }) => setTodoContent(target.value)}
+      />
+      <span className="d-flex gap-2">
+        <button
+          className="btn btn-primary btn-sm"
+          onClick={() => confirm(todoContent).then(() => cancel())}
+        >
+          Confirm
+        </button>
+        <button
+          className="btn btn-danger btn-sm"
+          onClick={cancel}
+        >
+          Cancel
+        </button>
+      </span>
+    </div>
   );
 };
