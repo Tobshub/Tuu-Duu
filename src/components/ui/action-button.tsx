@@ -1,10 +1,15 @@
 const ActionButton = (props: ActionButtonProps) => {
   return (
     <button
+      title={props.title ?? ""}
       type={props.type ?? "submit"}
       name={props.name ?? "action"}
       value={props.value ?? ""}
-      className={props.className + " action-button"}
+      className={
+        props.className
+          ? props.className + " " + "action-button"
+          : "action-button"
+      }
       onClick={props.onClick ? e => props.onClick(e) : null}
       style={props.style ?? {}}
     >
