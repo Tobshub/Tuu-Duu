@@ -22,9 +22,6 @@ import {
   loader as deleteProjectLoader,
 } from "./pages/Project/delete-project";
 import { loader as editProjectLoader } from "./pages/Project/edit-projects";
-import NewProject, {
-  action as newProjectAction,
-} from "./pages/Project/new-project";
 import {
   action as projectAction,
   loader as projectLoader,
@@ -38,7 +35,9 @@ import "./pages/User/login.css";
 import { action as logoutAction } from "./pages/User/logout";
 import SuspensePage from "./pages/suspense-page";
 import Index from "./pages/index";
+// lazy load large react components
 const ProjectPage = lazy(() => import("./pages/Project/project"));
+const NewProject = lazy(() => import("./pages/Project/new-project"));
 const EditProject = lazy(() => import("./pages/Project/edit-projects"));
 const NewTask = lazy(() => import("./pages/Project/Task/new-task"));
 const EditTask = lazy(() => import("./pages/Project/Task/edit-task"));
@@ -56,6 +55,7 @@ const DeleteProjectComponent = lazy(
   () => import("./pages/Project/delete-project")
 );
 
+// create app router
 const router = createBrowserRouter([
   {
     path: "/",
@@ -160,6 +160,7 @@ const router = createBrowserRouter([
 //   </React.StrictMode>
 // );
 
+// bypasses the reactdom re-render error
 let app_root = null;
 
 document.addEventListener("DOMContentLoaded", event => {
@@ -169,6 +170,7 @@ document.addEventListener("DOMContentLoaded", event => {
       const root = ReactDOM.createRoot(app_root);
       root.render(
         <React.StrictMode>
+          {/* use suspense fallback for lazy loaded components */}
           <Suspense fallback={<SuspensePage />}>
             <RouterProvider router={router} />
           </Suspense>
