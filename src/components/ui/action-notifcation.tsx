@@ -14,16 +14,24 @@ const ActionNotifcation = ({ content, action }: NotificationArgs) => {
       {content && content.title && <h3>{content.title}</h3>}
       <p>{content && content.message}</p>
       {action && (
-        <Form method="post">
+        <Form
+          method="post"
+          onSubmit={action?.nextAction ?? null}
+        >
           <button
+            className="btn btn-warning btn-sm"
             type="submit"
             disabled={loading}
-            title={`${action.name} ${action.target}`}
-            onClick={() => action.execute().then(() => setLoading(true))}
+            title={`${action?.name} ${action?.target}`}
+            onClick={
+              action
+                ? () => action.execute().then(() => setLoading(true))
+                : null
+            }
             name="action"
             value="revert_action"
           >
-            {action.name}
+            {action?.name}
           </button>
         </Form>
       )}
