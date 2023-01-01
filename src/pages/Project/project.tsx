@@ -66,9 +66,11 @@ const ProjectPage = () => {
 
   const project = projects?.find(project => project.id === project_id);
 
-  if (!project && !error) {
+  if (!project && !error && !isLoading) {
     throw new Error("no project found with that id");
   }
+
+  if (error) throw error;
 
   const [isFav, setFav] = useState(project?.favorite ?? false);
   const [showNotification, setShowNotification] = useState(false);
@@ -97,21 +99,47 @@ const ProjectPage = () => {
     },
   });
   function deleteTask(task_id: string) {
-    const [deletedTask] = project.tasks.splice(
-      project.tasks.findIndex(task => task.id === task_id),
-      1
+    const original_index = project.tasks.findIndex(
+      task => task.id === task_id
     );
+    const deleted_task_content = project.tasks.splice(
+      original_index,
+      1
+    )[0];
+    const deleted_task: DeletedTask = {
+      project_id: project.id,
+      original_index: original_index,
+      task_content: deleted_task_content,
+    };
+
     editProjectMutation.mutateAsync(project).then(res => {
       if (res) {
+        projectQueryClient.setQueryData("deleted_task", deleted_task);
         setShowNotification(true);
       }
     });
-    return deletedTask;
+    return deleted_task;
+  }
+
+  const { data: last_deleted_task } = useQuery<DeletedTask>({
+    queryKey: "deleted_task",
+  });
+
+  async function restoreDeletedTask() {
+    project.tasks.splice(
+      last_deleted_task.original_index,
+      0,
+      last_deleted_task.task_content
+    );
+    await editProjectMutation.mutateAsync(project).then(res => {
+      if (res) {
+        projectQueryClient.setQueryData("deleted_task", undefined);
+      }
+    });
   }
 
   const navigate = useNavigate();
 
-  if (error) throw error;
   if (isLoading) return <>Loading...</>;
 
   return (
@@ -176,7 +204,10 @@ const ProjectPage = () => {
             name: "Undo",
             target: "Task",
             execute: async () => {
-              setShowNotification(false);
+              restoreDeletedTask().then(() => setShowNotification(false));
+            },
+            nextAction: e => {
+              e.preventDefault();
             },
           }}
         />
