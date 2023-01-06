@@ -1,4 +1,4 @@
-import * as controller from "@user/controller/userController";
+import * as controller from "../controller/userController";
 import projectRouter from "./projectRouter";
 import { Router } from "express";
 const router = Router();
