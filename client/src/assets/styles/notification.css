@@ -1,0 +1,33 @@
+.notification-container {
+  position: fixed;
+  top: 90%;
+  right: 0;
+  z-index: 300;
+  border: 1px solid white;
+  border-radius: 10px 0 0 10px;
+  padding: 0.25em 0.5em;
+  height: fit-content;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #080400aa;
+}
+
+.notification-container p {
+  margin: 0;
+  padding: 0;
+}
+
+.notification-container form {
+  width: fit-content;
+  height: fit-content;
+}
+
+.notification-container button {
+  outline: none;
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 0.1em 0.2em;
+}
