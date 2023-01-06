@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "license": "UNLICENSED",
   "scripts": {
-    "prestart": "npm i && tsc",
+    "prestart": "tsc",
     "start": "node ./dist/index.js",
-    "build": "tsc",
+    "build": "npm i",
     "dev": "concurrently \"tsc --watch\" \"nodemon ./dist/index.js\" "
   },
   "dependencies": {
