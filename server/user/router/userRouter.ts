@@ -1,4 +1,5 @@
-import * as controller from "../controller/userController";
+import * as controller from "@user/controller/userController";
+import projectRouter from "./projectRouter";
 import { Router } from "express";
 const router = Router();
 
@@ -11,16 +12,8 @@ router
   .post("/login", controller.getUserByEmail)
   .post("/sign_up", controller.addNewUser)
   .put("/update", controller.updateUser)
-  // query params: {_id}
-  .get("/projects", controller.getProjects)
-  // .get('/projects/:projectId', controller.getProject)
-  // body: {_id, project_data}
-  .post("/projects", controller.addProject)
-  // body : {_id, project_data}
-  .put("/projects", controller.editProject)
-  // query params: {_id, project_id}
-  .delete("/projects", controller.deleteProject)
-
+  // use project router for routing project endpoints
+  .use("/projects", projectRouter)
   .get("/orgs", (req, res) => {
     console.log("getting orgs that user is a part of...");
     res.send({ message: "getting orgs that user is a part of..." });
