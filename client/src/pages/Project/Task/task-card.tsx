@@ -4,6 +4,7 @@ import EditSVG from "@images/Edit.svg";
 import EditPenSVG from "@images/EditPen.svg";
 import DoneSVG from "@images/Checkmark.svg";
 import DeleteSVG from "@images/Delete.svg";
+import CloseSVG from "@images/Close.svg";
 import ActionButton from "@UIcomponents/action-button";
 import { editProject } from "@services/projects";
 import { setTaskStatus } from "@services/tasks";
@@ -70,7 +71,7 @@ const TaskCard = ({
       project.tasks.findIndex(prevTask => prevTask.id === task.id)
     ] = task;
     editAndSet(project);
-    toggleShowShadow(false);
+    toggleShowShadow(true);
   }
 
   async function editTodo(todoIndex: number, content: string) {
@@ -79,6 +80,16 @@ const TaskCard = ({
       project.tasks.findIndex(prevTask => prevTask.id === task.id)
     ] = task;
     editAndSet(project);
+  }
+
+  async function unMarkTodoFn(todoIndex: number) {
+    task.todos[todoIndex].status = "awaiting";
+    task.status = setTaskStatus(task);
+    project.tasks[
+      project.tasks.findIndex(prevTask => prevTask.id === task.id)
+    ] = task;
+    editAndSet(project);
+    toggleShowShadow(true);
   }
 
   return (
@@ -120,7 +131,13 @@ const TaskCard = ({
           !!task.todos.length &&
           task.todos.map((todo, key) => {
             if (todo.status === "completed") {
-              return <TodoComponent todo={todo} key={key} />;
+              return (
+                <TodoComponent
+                  todo={todo}
+                  key={key}
+                  unMarkTodoFn={() => unMarkTodoFn(key)}
+                />
+              );
             }
             return null;
           })}
@@ -159,10 +176,12 @@ const TodoComponent = ({
   todo,
   markTodoFn,
   editTodoFn,
+  unMarkTodoFn,
 }: {
   todo: Todo;
   markTodoFn?: () => void;
   editTodoFn?: (content: string) => Promise<void>;
+  unMarkTodoFn?: () => void;
 }) => {
   const [editMode, setEditMode] = useState(false);
 
@@ -192,17 +211,31 @@ const TodoComponent = ({
             <ActionButton
               name="markTodo"
               className="todo-icon"
-              title="Mark as done"
+              title="Done"
               icon={DoneSVG}
-              icon_alt="Mark as done"
+              icon_alt="Done"
               islazy={true}
               onClick={() => {
-                todo.status === "completed";
+                todo.status = "completed";
                 markTodoFn ? markTodoFn() : null;
               }}
             />
           </>
-        ) : null}
+        ) : (
+          <>
+            <ActionButton
+              className="todo-icon"
+              title="Not done"
+              icon={CloseSVG}
+              icon_alt="Not done"
+              islazy={true}
+              onClick={() => {
+                todo.status = "awaiting";
+                unMarkTodoFn ? unMarkTodoFn() : null;
+              }}
+            />
+          </>
+        )}
       </span>
     </li>
   );
