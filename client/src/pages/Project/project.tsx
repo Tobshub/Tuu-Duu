@@ -65,15 +65,15 @@ const ProjectPage = () => {
     isLoading,
   } = useQuery<Project[]>("projects");
 
+  if (isLoading) {
+    return <SuspensePage />;
+  }
+
   if (!projects) {
     throw new Error("this user has no projects");
   }
 
-  const project = projects.find(project => project.id === project_id);
-
-  if (isLoading) {
-    return <SuspensePage />;
-  }
+  const project = projects?.find(project => project.id === project_id);
 
   if (!project) {
     throw new Error("no project found with that id");
