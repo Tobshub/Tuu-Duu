@@ -9,7 +9,7 @@ export const setTaskStatus = (task: Task) => {
   return task.status;
 };
 
-function filterTodos(todos: Todo[]): Todo[][] {
+function filterTodos(todos: Todo[]): [Todo[], Todo[]] {
   const awaitingTodos = [];
   const completedTodos = [];
 
