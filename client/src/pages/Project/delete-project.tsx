@@ -20,10 +20,18 @@ export async function action({ params, request }: ActionFunctionArgs) {
 }
 
 const DeleteProjectComponent = () => {
-  const project_id = useLoaderData().toString();
+  const project_id = useLoaderData() as string;
   const { data: projects, error } = useQuery<Project[]>("projects");
 
+  if (!projects) {
+    throw new Error("this user has no projects");
+  }
+
   const project = projects.find(project => project.id === project_id);
+
+  if (!project) {
+    throw new Error("invalid project id");
+  }
 
   const navigate = useNavigate();
   const projectsQuery = useQueryClient();
@@ -45,10 +53,7 @@ const DeleteProjectComponent = () => {
   if (error) throw new Error("error getting project");
   return (
     <div className="delete-project">
-      <Form
-        method="post"
-        onSubmit={handleSubmit}
-      >
+      <Form method="post" onSubmit={handleSubmit}>
         <h3>Are you sure you want to delete {project.name}?</h3>
         {!!project.favorite && <p>It's one of your favorites :(</p>}
         <div

@@ -25,6 +25,7 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
+import SuspensePage from "pages/suspense-page";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
@@ -56,7 +57,7 @@ export const action = async ({
 };
 
 const ProjectPage = () => {
-  const project_id = useLoaderData().toString();
+  const project_id = useLoaderData() as string;
 
   const {
     data: projects,
@@ -64,9 +65,17 @@ const ProjectPage = () => {
     isLoading,
   } = useQuery<Project[]>("projects");
 
-  const project = projects?.find(project => project.id === project_id);
+  if (!projects) {
+    throw new Error("this user has no projects");
+  }
 
-  if (!project && !error && !isLoading) {
+  const project = projects.find(project => project.id === project_id);
+
+  if (isLoading) {
+    return <SuspensePage />;
+  }
+
+  if (!project) {
     throw new Error("no project found with that id");
   }
 
@@ -87,8 +96,10 @@ const ProjectPage = () => {
   }, [project]);
 
   useMemo(() => {
-    setFav(project?.favorite);
-  }, [project?.id]);
+    if (project) {
+      setFav(project.favorite);
+    }
+  }, [project.id]);
 
   const projectQueryClient = useQueryClient();
   const editProjectMutation = useMutation(editProject, {
@@ -98,27 +109,30 @@ const ProjectPage = () => {
       }
     },
   });
-  function deleteTask(task_id: string) {
-    const original_index = project.tasks.findIndex(
-      task => task.id === task_id
-    );
-    const deleted_task_content = project.tasks.splice(
-      original_index,
-      1
-    )[0];
-    const deleted_task: DeletedTask = {
-      project_id: project.id,
-      original_index: original_index,
-      task_content: deleted_task_content,
-    };
 
-    editProjectMutation.mutateAsync(project).then(res => {
-      if (res) {
-        projectQueryClient.setQueryData("deleted_task", deleted_task);
-        setShowNotification(true);
-      }
-    });
-    return deleted_task;
+  function deleteTask(task_id: string) {
+    if (project) {
+      const original_index = project.tasks.findIndex(
+        task => task.id === task_id
+      );
+      const deleted_task_content = project.tasks.splice(
+        original_index,
+        1
+      )[0];
+      const deleted_task: DeletedTask = {
+        project_id: project.id,
+        original_index: original_index,
+        task_content: deleted_task_content,
+      };
+
+      editProjectMutation.mutateAsync(project).then(res => {
+        if (res) {
+          projectQueryClient.setQueryData("deleted_task", deleted_task);
+          setShowNotification(true);
+        }
+      });
+      return deleted_task;
+    }
   }
 
   const { data: last_deleted_task } = useQuery<DeletedTask>({
@@ -126,16 +140,18 @@ const ProjectPage = () => {
   });
 
   async function restoreDeletedTask() {
-    project.tasks.splice(
-      last_deleted_task.original_index,
-      0,
-      last_deleted_task.task_content
-    );
-    await editProjectMutation.mutateAsync(project).then(res => {
-      if (res) {
-        projectQueryClient.setQueryData("deleted_task", undefined);
-      }
-    });
+    if (project && last_deleted_task) {
+      project.tasks.splice(
+        last_deleted_task.original_index,
+        0,
+        last_deleted_task.task_content
+      );
+      await editProjectMutation.mutateAsync(project).then(res => {
+        if (res) {
+          projectQueryClient.setQueryData("deleted_task", undefined);
+        }
+      });
+    }
   }
 
   const navigate = useNavigate();
@@ -190,10 +206,7 @@ const ProjectPage = () => {
       </p>
       <div>
         {!!project?.tasks && (
-          <Tasks
-            project={project}
-            deleteTask={deleteTask}
-          />
+          <Tasks project={project} deleteTask={deleteTask} />
         )}
       </div>
       <Outlet />

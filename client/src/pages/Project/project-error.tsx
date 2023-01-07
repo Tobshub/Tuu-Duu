@@ -18,7 +18,10 @@ const ProjectErrorElement = () => {
       <h1>Oops...</h1>
       <p>An error has occured.</p>
       <div>
-        {typeof error === "object" && "status" in error && error.status ? (
+        {error &&
+        typeof error === "object" &&
+        "status" in error &&
+        error.status ? (
           <>
             <span>
               {typeof error.status === "string" ? error.status : null}
@@ -26,7 +29,8 @@ const ProjectErrorElement = () => {
           </>
         ) : (
           <span>
-            {typeof error === "object" &&
+            {error &&
+            typeof error === "object" &&
             "message" in error &&
             typeof error.message === "string"
               ? error.message

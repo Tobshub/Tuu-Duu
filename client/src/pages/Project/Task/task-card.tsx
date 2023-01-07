@@ -120,20 +120,12 @@ const TaskCard = ({
           !!task.todos.length &&
           task.todos.map((todo, key) => {
             if (todo.status === "completed") {
-              return (
-                <TodoComponent
-                  todo={todo}
-                  key={key}
-                />
-              );
+              return <TodoComponent todo={todo} key={key} />;
             }
             return null;
           })}
       </ul>
-      <Form
-        method="post"
-        className="task-actions"
-      >
+      <Form method="post" className="task-actions">
         <ActionButton
           name="editTask"
           title="Edit task"
@@ -174,7 +166,7 @@ const TodoComponent = ({
 }) => {
   const [editMode, setEditMode] = useState(false);
 
-  if (editMode) {
+  if (editMode && editTodoFn) {
     return (
       <EditTodoComponent
         todo={todo}
@@ -241,10 +233,7 @@ const EditTodoComponent = ({
         >
           Confirm
         </button>
-        <button
-          className="btn btn-danger btn-sm"
-          onClick={cancel}
-        >
+        <button className="btn btn-danger btn-sm" onClick={cancel}>
           Cancel
         </button>
       </span>

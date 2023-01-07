@@ -15,12 +15,16 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 const NewTask = () => {
-  const project_id = useLoaderData().toString();
+  const project_id = useLoaderData() as string;
   const {
     data: projects,
     error,
     isLoading,
   } = useQuery<Project[]>("projects");
+
+  if (!projects) {
+    throw new Error("this user has no projects");
+  }
 
   const project = projects.find(project => project.id === project_id);
 
@@ -34,7 +38,7 @@ const NewTask = () => {
   });
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const navigate = useNavigate();
-  const addBtnRef = useRef<HTMLButtonElement>();
+  const addBtnRef = useRef<HTMLButtonElement | null>(null);
 
   function handleChange({ target }: React.ChangeEvent<HTMLInputElement>) {
     setTaskContent(state => ({
@@ -63,22 +67,24 @@ const NewTask = () => {
   const projectQueryClient = useQueryClient();
 
   async function handleSubmit() {
-    const new_task = new Task({
-      name: task_content.name,
-      deadline: task_content.deadline
-        ? new Date(task_content.deadline)
-        : undefined,
-    });
-    project.tasks.push(new_task);
-    await editProject(project).then(res => {
-      if (res) {
-        projectQueryClient.setQueryData("projects", res);
-      }
-    });
-    return navigate("..", {
-      relative: "route",
-      // state: { shouldRefetch: true },
-    });
+    if (project) {
+      const new_task = new Task({
+        name: task_content.name,
+        deadline: task_content.deadline
+          ? new Date(task_content.deadline)
+          : undefined,
+      });
+      project.tasks.push(new_task);
+      await editProject(project).then(res => {
+        if (res) {
+          projectQueryClient.setQueryData("projects", res);
+        }
+      });
+      return navigate("..", {
+        relative: "route",
+        // state: { shouldRefetch: true },
+      });
+    }
   }
 
   return (

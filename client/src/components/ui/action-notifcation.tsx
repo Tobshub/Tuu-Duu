@@ -14,10 +14,7 @@ const ActionNotifcation = ({ content, action }: NotificationArgs) => {
       {content && content.title && <h3>{content.title}</h3>}
       <p>{content && content.message}</p>
       {action && (
-        <Form
-          method="post"
-          onSubmit={action?.nextAction ?? null}
-        >
+        <Form method="post" onSubmit={action?.nextAction ?? null}>
           <button
             className="btn btn-warning btn-sm"
             type="submit"
@@ -26,7 +23,7 @@ const ActionNotifcation = ({ content, action }: NotificationArgs) => {
             onClick={
               action
                 ? () => action.execute().then(() => setLoading(true))
-                : null
+                : undefined
             }
             name="action"
             value="revert_action"

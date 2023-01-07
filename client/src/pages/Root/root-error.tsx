@@ -1,4 +1,5 @@
 import { useRouteError } from "react-router";
+import { Link } from "react-router-dom";
 
 const RootErrorElement = () => {
   const error = useRouteError();
@@ -17,12 +18,33 @@ const RootErrorElement = () => {
       <h1>Oops...</h1>
       <p>An error has occured.</p>
       <div>
-        {error && typeof error === "object" && "status" in error ? (
-          <span>{error.status.toString()}</span>
+        {error &&
+        typeof error === "object" &&
+        "status" in error &&
+        error.status ? (
+          <>
+            <span>
+              {typeof error.status === "string" ? error.status : null}
+            </span>
+          </>
         ) : (
-          <></>
+          <span>
+            {error &&
+            typeof error === "object" &&
+            "message" in error &&
+            typeof error.message === "string"
+              ? error.message
+              : null}
+          </span>
         )}
       </div>
+      <h2>Solutions:</h2>
+      <ul>
+        <li>Reload the page</li>
+        <li>
+          <Link to="/">Go back home</Link>
+        </li>
+      </ul>
     </div>
   );
 };

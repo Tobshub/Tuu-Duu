@@ -57,7 +57,7 @@ declare global {
   }
 
   interface SideBarProjectsListProps {
-    handleRedirectClick?: () => void;
+    handleRedirectClick: () => void;
     projects?: Project[];
   }
 

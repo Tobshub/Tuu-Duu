@@ -32,7 +32,16 @@ const EditTask = () => {
     refetch,
   } = useQuery<Project[]>("projects");
 
+  if (!projects) {
+    throw new Error("this user has no projects");
+  }
+
   const project = projects.find(project => project.id === project_id);
+
+  if (!project) {
+    throw new Error("project does not exist");
+  }
+
   const task = project.tasks.find(task => task.id === task_id);
 
   if (!task) throw new Error("no such task");
@@ -61,8 +70,10 @@ const EditTask = () => {
   }
 
   function addTodo() {
-    task.todos.push(new Todo({ content: todo }));
-    setTodo("");
+    if (task) {
+      task.todos.push(new Todo({ content: todo }));
+      setTodo("");
+    }
   }
 
   function checkFormErrors(
@@ -84,18 +95,19 @@ const EditTask = () => {
 
   async function handleSave(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    project.tasks[project.tasks.indexOf(task)] = new Task({
-      ...project.tasks[project.tasks.indexOf(task)],
-      name: task_content.name,
-      deadline: task_content.deadline,
-      status: setTaskStatus(task),
-    });
-    await editProject(project);
-    return navigate("..", {
-      relative: "route",
-      state: { shouldRefetch: true },
-    });
+    if (project && task) {
+      project.tasks[project.tasks.indexOf(task)] = new Task({
+        ...project.tasks[project.tasks.indexOf(task)],
+        name: task_content.name,
+        deadline: task_content.deadline ?? undefined,
+        status: setTaskStatus(task),
+      });
+      await editProject(project);
+      return navigate("..", {
+        relative: "route",
+        state: { shouldRefetch: true },
+      });
+    }
   }
 
   return (
@@ -132,11 +144,7 @@ const EditTask = () => {
         <div className="display-todos">
           {task.todos && task.todos.length ? (
             task.todos.map((todo, key) => (
-              <input
-                value={todo.content}
-                key={key}
-                disabled
-              />
+              <input value={todo.content} key={key} disabled />
             ))
           ) : (
             <em>No todos for this task</em>
