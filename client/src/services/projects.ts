@@ -41,9 +41,10 @@ export const getProjects = async () => {
       })
       .then(value => value.data)
       .then((res: GetProjectsServerResponse) => {
-        if (!is<Project[]>(res.projects)) {
-          throw new Error("Invalid data structure");
-        }
+        // if (!is<Project[]>(res.projects)) {
+        //   throw new Error("Invalid data structure");
+        // }
+        if (!res.success) throw new Error("request failed");
         return res.projects;
       })
       .catch(e => {
