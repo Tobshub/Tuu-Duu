@@ -70,13 +70,13 @@ const ProjectPage = () => {
   }
 
   if (!projects) {
-    throw new Error("this user has no projects");
+    throw new Error("This user may have no projects");
   }
 
   const project = projects?.find(project => project.id === project_id);
 
   if (!project) {
-    throw new Error("no project found with that id");
+    throw new Error("No project was found with that id");
   }
 
   if (error) throw error;
