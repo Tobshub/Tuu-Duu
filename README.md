@@ -1,11 +1,11 @@
-![image](https://user-images.githubusercontent.com/108701007/206099590-312d24a7-d8d0-4cf1-bf64-230c131a8317.png)
+![image](https://user-images.githubusercontent.com/108701007/211175574-0c86dd30-5fc8-4efd-a9d1-23d5841dc3e4.png)
 
 # Tuu-Duu
 A project planner web app made with react
 
 ## Features
 
-![image](https://user-images.githubusercontent.com/108701007/206100450-b9e82571-fa89-48da-96b0-c393b02b4c9b.png)
+![image](https://user-images.githubusercontent.com/108701007/211175584-d695422a-eda3-4df9-b05d-6410c51e5676.png)
 
 - Create projects
 - Create tasks in projects. These tasks act as generalized topics for actions that need to be done in a project
