@@ -5,7 +5,7 @@ A project planner web app made with react
 
 ## Features
 
-![image](https://user-images.githubusercontent.com/108701007/211175584-d695422a-eda3-4df9-b05d-6410c51e5676.png)
+![image](https://user-images.githubusercontent.com/108701007/211175605-412ed232-05b3-4f4b-9071-99e4e8770411.png)
 
 - Create projects
 - Create tasks in projects. These tasks act as generalized topics for actions that need to be done in a project
