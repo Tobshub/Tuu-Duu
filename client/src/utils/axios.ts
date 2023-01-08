@@ -8,7 +8,7 @@ const useApi = axios.create({
     "Access-Control-Allow-Origin": "*",
   },
   method: "cors",
-  timeout: 3000, // use timeout config incase the server is spun down
+  timeout: 5000, // use timeout config incase the server is spun down
   baseURL: env.REACT_APP_TUU_DUU_API,
 });
 
