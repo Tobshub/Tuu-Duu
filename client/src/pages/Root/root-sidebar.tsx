@@ -1,7 +1,7 @@
 import ActionButton from "@UIcomponents/action-button";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { Form, Link, NavLink } from "react-router-dom";
+import { Form, Link, NavLink, useLocation } from "react-router-dom";
 import AddSVG from "@images/Add.svg";
 import InlineMenuSVG from "@images/inline-menu.svg";
 
@@ -95,10 +95,7 @@ const NavItem = ({
         }}
         className="dropdown-toggler"
       >
-        <img
-          src={InlineMenuSVG}
-          alt="inline menu"
-        />
+        <img src={InlineMenuSVG} alt="inline menu" />
       </button>
 
       {showMenu && <Menu project={project} />}
