@@ -3,7 +3,7 @@ import { Form, useNavigate } from "react-router-dom";
 
 const NewForm = (props: NewFormProps) => {
   const navigate = useNavigate();
-  const createBtnRef = useRef(null);
+  const createBtnRef = useRef<HTMLButtonElement | null>(null);
 
   function localHandleChange() {
     createBtnRef.current ? (createBtnRef.current.disabled = false) : null;

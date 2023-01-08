@@ -4,6 +4,7 @@ import EditSVG from "@images/Edit.svg";
 import EditPenSVG from "@images/EditPen.svg";
 import DoneSVG from "@images/Checkmark.svg";
 import DeleteSVG from "@images/Delete.svg";
+import CloseSVG from "@images/Close.svg";
 import ActionButton from "@UIcomponents/action-button";
 import { editProject } from "@services/projects";
 import { setTaskStatus } from "@services/tasks";
@@ -38,7 +39,7 @@ const TaskCard = ({
     }
   }, [task.todos]);
 
-  useEffect(() => {
+  function changeShadowColor() {
     setShadowColor(() => {
       return task.status === "in progess"
         ? "yellow" // yellow means some todos have been done
@@ -48,6 +49,9 @@ const TaskCard = ({
         ? "red" // red means no todo has been done
         : "white"; // white means no todos
     });
+  }
+  useEffect(() => {
+    changeShadowColor();
   }, [task.status]);
 
   const projectQueryClient = useQueryClient();
@@ -57,6 +61,7 @@ const TaskCard = ({
       if (res) {
         projectQueryClient.setQueryData("projects", res);
       }
+      changeShadowColor();
       return res;
     });
 
@@ -70,11 +75,19 @@ const TaskCard = ({
       project.tasks.findIndex(prevTask => prevTask.id === task.id)
     ] = task;
     editAndSet(project);
-    toggleShowShadow(false);
   }
 
   async function editTodo(todoIndex: number, content: string) {
     task.todos[todoIndex].content = content;
+    project.tasks[
+      project.tasks.findIndex(prevTask => prevTask.id === task.id)
+    ] = task;
+    editAndSet(project);
+  }
+
+  async function unMarkTodoFn(todoIndex: number) {
+    task.todos[todoIndex].status = "awaiting";
+    task.status = setTaskStatus(task);
     project.tasks[
       project.tasks.findIndex(prevTask => prevTask.id === task.id)
     ] = task;
@@ -124,16 +137,14 @@ const TaskCard = ({
                 <TodoComponent
                   todo={todo}
                   key={key}
+                  unMarkTodoFn={() => unMarkTodoFn(key)}
                 />
               );
             }
             return null;
           })}
       </ul>
-      <Form
-        method="post"
-        className="task-actions"
-      >
+      <Form method="post" className="task-actions">
         <ActionButton
           name="editTask"
           title="Edit task"
@@ -167,14 +178,16 @@ const TodoComponent = ({
   todo,
   markTodoFn,
   editTodoFn,
+  unMarkTodoFn,
 }: {
   todo: Todo;
   markTodoFn?: () => void;
   editTodoFn?: (content: string) => Promise<void>;
+  unMarkTodoFn?: () => void;
 }) => {
   const [editMode, setEditMode] = useState(false);
 
-  if (editMode) {
+  if (editMode && editTodoFn) {
     return (
       <EditTodoComponent
         todo={todo}
@@ -200,17 +213,31 @@ const TodoComponent = ({
             <ActionButton
               name="markTodo"
               className="todo-icon"
-              title="Mark as done"
+              title="Done"
               icon={DoneSVG}
-              icon_alt="Mark as done"
+              icon_alt="Done"
               islazy={true}
               onClick={() => {
-                todo.status === "completed";
+                todo.status = "completed";
                 markTodoFn ? markTodoFn() : null;
               }}
             />
           </>
-        ) : null}
+        ) : (
+          <>
+            <ActionButton
+              className="todo-icon"
+              title="Not done"
+              icon={CloseSVG}
+              icon_alt="Not done"
+              islazy={true}
+              onClick={() => {
+                todo.status = "awaiting";
+                unMarkTodoFn ? unMarkTodoFn() : null;
+              }}
+            />
+          </>
+        )}
       </span>
     </li>
   );
@@ -241,10 +268,7 @@ const EditTodoComponent = ({
         >
           Confirm
         </button>
-        <button
-          className="btn btn-danger btn-sm"
-          onClick={cancel}
-        >
+        <button className="btn btn-danger btn-sm" onClick={cancel}>
           Cancel
         </button>
       </span>

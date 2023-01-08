@@ -2,9 +2,12 @@
 export default function debounce(fn: () => void, ms: number) {
   let timer: NodeJS.Timeout | null;
   return () => {
-    clearTimeout(timer);
+    if (timer) {
+      clearTimeout(timer);
+    }
     timer = setTimeout(() => {
       timer = null;
+      // @ts-ignore
       fn.apply(this, arguments);
     }, ms);
   };

@@ -34,12 +34,12 @@ export const removeUser = async () => {
 };
 
 export const getCurrentUser = async () => {
-  const user_details: SavedUser = await localforage.getItem(
+  const user_details = await localforage.getItem(
     "user_details",
-    (err, value: SavedUser) => {
+    (err: any, value: SavedUser | null) => {
       if (err || !value || (value && !value._id)) {
         err ? console.error(err) : null;
-        return false;
+        return undefined;
       }
       return value;
     }

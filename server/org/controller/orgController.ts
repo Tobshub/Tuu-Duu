@@ -1,4 +1,4 @@
-import Org from "../model/orgModel.js";
+import Org from "../orgModel.js";
 import { Request, Response } from "express";
 
 // create org
@@ -23,6 +23,7 @@ export const createOrg = async (req: Request, res: Response) => {
     });
   });
 };
+
 // bulk get orgs
 export const bulkRetrieve = async (req: Request, res: Response) => {
   try {

@@ -10,7 +10,7 @@ const ActionButton = (props: ActionButtonProps) => {
           ? props.className + " " + "action-button"
           : "action-button"
       }
-      onClick={props.onClick ? e => props.onClick(e) : null}
+      onClick={e => (props.onClick ? props.onClick(e) : undefined)}
       style={props.style ?? {}}
     >
       <img

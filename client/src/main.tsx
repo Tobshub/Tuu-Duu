@@ -8,13 +8,6 @@ import {
   redirect,
 } from "react-router-dom";
 import "./main.css";
-import { action as newOrgAction } from "./pages/Org/new-org";
-import { action as orgAction, loader as orgLoader } from "./pages/Org/org";
-import {
-  OrgsIndexPage,
-  action as orgsAction,
-  loader as orgsLoader,
-} from "./pages/Org/orgs-page";
 import { loader as editTaskLoader } from "./pages/Project/Task/edit-task";
 import { loader as newTaskLoader } from "./pages/Project/Task/new-task";
 import {
@@ -48,9 +41,6 @@ const ProjectErrorElement = lazy(
 );
 const SettingsPage = lazy(() => import("./pages/user-settings"));
 const LogoutPage = lazy(() => import("./pages/User/logout"));
-const OrgsRoot = lazy(() => import("./pages/Org/orgs-page"));
-const NewOrg = lazy(() => import("./pages/Org/new-org"));
-const OrgPage = lazy(() => import("./pages/Org/org"));
 const DeleteProjectComponent = lazy(
   () => import("./pages/Project/delete-project")
 );
@@ -114,29 +104,6 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/orgs",
-    element: <OrgsRoot />,
-    loader: orgsLoader,
-    action: orgsAction,
-    children: [
-      {
-        index: true,
-        element: <OrgsIndexPage />,
-      },
-      {
-        path: "/orgs/new",
-        element: <NewOrg />,
-        action: newOrgAction,
-      },
-      {
-        path: "/orgs/:orgId",
-        element: <OrgPage />,
-        loader: orgLoader,
-        action: orgAction,
-      },
-    ],
-  },
-  {
     path: "/login",
     element: <LoginPage />,
     action: loginAction,
@@ -161,7 +128,7 @@ const router = createBrowserRouter([
 // );
 
 // bypasses the reactdom re-render error
-let app_root = null;
+let app_root: HTMLElement | null = null;
 
 document.addEventListener("DOMContentLoaded", event => {
   if (!app_root) {

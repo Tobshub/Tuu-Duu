@@ -1,16 +1,21 @@
 import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, redirect } from "react-router-dom";
 import UserContext from "@context/user-context";
 
 const Index = () => {
   const { data: projects, error } = useQuery<Project[]>("projects");
-  const fav_projects: Project[] =
+  const fav_projects =
     projects && Array.isArray(projects) && projects.length
       ? projects.filter((project: Project) => project.favorite)
       : null;
 
-  const user = useContext<SavedUser>(UserContext);
+  const user = useContext<SavedUser | null>(UserContext);
+
+  if (!user) {
+    redirect("/login");
+    throw new Error("no user");
+  }
 
   return (
     <div className="index">
@@ -34,19 +39,16 @@ const Index = () => {
         </button>
       </Form> */}
       <div>
-        <h4 style={{ textAlign: "center" }}>
-          {!!fav_projects && !!fav_projects.length && "Favorites:"}
-        </h4>
-        <ul className="favorites-display">
-          {fav_projects && fav_projects.length
-            ? fav_projects.map((project: Project, key: number) => (
-                <ProjectBox
-                  project={project}
-                  key={key}
-                />
-              ))
-            : null}
-        </ul>
+        {fav_projects && fav_projects.length ? (
+          <>
+            <h4 style={{ textAlign: "center" }}>Favorites:</h4>
+            <ul className="favorites-display">
+              {fav_projects.map((project: Project, key: number) => (
+                <ProjectBox project={project} key={key} />
+              ))}
+            </ul>
+          </>
+        ) : null}
       </div>
     </div>
   );

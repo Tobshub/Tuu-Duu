@@ -15,13 +15,22 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 const EditProject = () => {
-  const project_id = useLoaderData().toString();
+  const project_id = useLoaderData() as string;
   const {
     data: projects,
     error,
     isLoading,
   } = useQuery<Project[]>("projects");
-  const project = projects?.find(project => project.id === project_id);
+
+  if (!projects) {
+    throw new Error("this user has no projects");
+  }
+
+  const project = projects.find(project => project.id === project_id);
+
+  if (!project) {
+    throw new Error("invalid project id");
+  }
   const [content, setContent] = useState({
     name: project.name,
     description: project.description,
@@ -38,21 +47,23 @@ const EditProject = () => {
   }
 
   async function formSubmit() {
-    const edits = new Project({
-      name: content.name,
-      description: content.description,
-      id: project.id,
-      tasks: project.tasks,
-      favorite: project.favorite,
-    });
-    if (JSON.stringify(edits) !== JSON.stringify(project)) {
-      await editProject(edits).then(res => {
-        if (res) {
-          projectsQuery.setQueryData("projects", res);
-        }
+    if (project) {
+      const edits = new Project({
+        name: content.name,
+        description: content.description,
+        id: project.id,
+        tasks: project.tasks,
+        favorite: project.favorite,
       });
+      if (JSON.stringify(edits) !== JSON.stringify(project)) {
+        await editProject(edits).then(res => {
+          if (res) {
+            projectsQuery.setQueryData("projects", res);
+          }
+        });
+      }
+      return navigate("..", { relative: "path" });
     }
-    return navigate("..", { relative: "path" });
   }
 
   if (error) throw new Error(error.toString());

@@ -1,10 +1,11 @@
 import { config } from "dotenv";
-config();
 import cors from "cors";
 import express from "express";
-const app = express();
 import db_connect from "./config/database";
 import api_router from "./api";
+config();
+
+const app = express();
 
 const { NODE_ENV_USER } = process.env;
 
