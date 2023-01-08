@@ -87,9 +87,38 @@ const NewTask = () => {
     }
   }
 
+  function navigatePrev() {
+    setMagicStyle("magictime holeOut");
+    setTimeout(() => {
+      navigate("..");
+    }, 200);
+  }
+
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const formContainerRef = useRef<HTMLDivElement | null>(null);
+
+  function closeOnClick(e: React.MouseEvent<HTMLDivElement | MouseEvent>) {
+    if (formRef.current && formContainerRef.current) {
+      const bounds = formRef.current.getBoundingClientRect();
+      if (
+        e.clientX < bounds.left ||
+        e.clientX > bounds.right ||
+        e.clientY < bounds.top ||
+        e.clientY > bounds.bottom
+      ) {
+        navigatePrev();
+      }
+    }
+  }
+
   return (
-    <div className="new-task">
+    <div
+      className="new-task"
+      onClick={closeOnClick}
+      ref={formContainerRef}
+    >
       <Form
+        ref={formRef}
         method="put"
         className={magicStyle}
         style={{
@@ -144,12 +173,7 @@ const NewTask = () => {
           type="button"
           className="btn btn-danger btn-sm"
           name="cancel"
-          onClick={() => {
-            setMagicStyle("magictime holeOut");
-            setTimeout(() => {
-              navigate("..");
-            }, 200);
-          }}
+          onClick={navigatePrev}
         >
           Cancel
         </button>

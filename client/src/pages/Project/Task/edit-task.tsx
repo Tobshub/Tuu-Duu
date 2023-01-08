@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   ActionFunctionArgs,
   Form,
@@ -112,9 +112,38 @@ const EditTask = () => {
     }
   }
 
+  function navigatePrev() {
+    setMagicStyle("magictime holeOut");
+    setTimeout(() => {
+      navigate("..");
+    }, 200);
+  }
+
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const formContainerRef = useRef<HTMLDivElement | null>(null);
+
+  function closeOnClick(e: React.MouseEvent<HTMLDivElement | MouseEvent>) {
+    if (formRef.current && formContainerRef.current) {
+      const bounds = formRef.current.getBoundingClientRect();
+      if (
+        e.clientX < bounds.left ||
+        e.clientX > bounds.right ||
+        e.clientY < bounds.top ||
+        e.clientY > bounds.bottom
+      ) {
+        navigatePrev();
+      }
+    }
+  }
+
   return (
-    <div className="edit-task">
+    <div
+      className="edit-task"
+      ref={formContainerRef}
+      onClick={closeOnClick}
+    >
       <Form
+        ref={formRef}
         method="put"
         className={magicStyle}
         style={{
@@ -198,12 +227,7 @@ const EditTask = () => {
         <button
           type="button"
           className="btn btn-danger"
-          onClick={() => {
-            setMagicStyle("magictime holeOut");
-            setTimeout(() => {
-              navigate("..", { relative: "route" });
-            }, 200);
-          }}
+          onClick={navigatePrev}
         >
           Back
         </button>
