@@ -1,9 +1,10 @@
 import { useRouteError } from "react-router";
 import { Link } from "react-router-dom";
+import SimpleBGSVG from "@images/simple-bg.svg";
 
 const RootErrorElement = () => {
   const error = useRouteError();
-  console.log({ error });
+  // console.log({ error });
   return (
     <div
       style={{
@@ -13,6 +14,7 @@ const RootErrorElement = () => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        background: `url(${SimpleBGSVG}) no-repeat center center cover`,
       }}
     >
       <h1>Oops...</h1>
