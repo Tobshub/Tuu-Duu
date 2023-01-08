@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import env from "@data/env.json";
 import {
   ActionFunctionArgs,
   Form,
@@ -100,6 +99,11 @@ const LoginPage = () => {
       }).finally(() => navigate("/"));
     } else if (is_valid_user === false) {
       showLoginError(true);
+      switchFormBtn.current
+        ? switchFormBtn.current.disabled
+          ? (switchFormBtn.current.disabled = false)
+          : null
+        : null;
     }
   }, [is_valid_user]);
 
@@ -199,10 +203,7 @@ const LoginPage = () => {
               value={user.password}
               onChange={handleChange}
             />
-            <span
-              className="input-group-btn"
-              style={{ padding: "0" }}
-            >
+            <span className="input-group-btn" style={{ padding: "0" }}>
               <button
                 type="button"
                 style={{
