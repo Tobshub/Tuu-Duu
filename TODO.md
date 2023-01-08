@@ -2,7 +2,7 @@
 
 ### General
 
-- allow logos/profile pictures for projects
+- allow logos for projects
 
 - allow archiving projects to remove them from the project list
 - implement percentage vizualization for project completeness
