@@ -39,7 +39,7 @@ const TaskCard = ({
     }
   }, [task.todos]);
 
-  useEffect(() => {
+  function changeShadowColor() {
     setShadowColor(() => {
       return task.status === "in progess"
         ? "yellow" // yellow means some todos have been done
@@ -49,6 +49,9 @@ const TaskCard = ({
         ? "red" // red means no todo has been done
         : "white"; // white means no todos
     });
+  }
+  useEffect(() => {
+    changeShadowColor();
   }, [task.status]);
 
   const projectQueryClient = useQueryClient();
@@ -58,6 +61,7 @@ const TaskCard = ({
       if (res) {
         projectQueryClient.setQueryData("projects", res);
       }
+      changeShadowColor();
       return res;
     });
 
@@ -71,7 +75,6 @@ const TaskCard = ({
       project.tasks.findIndex(prevTask => prevTask.id === task.id)
     ] = task;
     editAndSet(project);
-    toggleShowShadow(true);
   }
 
   async function editTodo(todoIndex: number, content: string) {
@@ -89,7 +92,6 @@ const TaskCard = ({
       project.tasks.findIndex(prevTask => prevTask.id === task.id)
     ] = task;
     editAndSet(project);
-    toggleShowShadow(true);
   }
 
   return (
