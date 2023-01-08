@@ -5,7 +5,7 @@ export class Task {
   name: string;
   status: "idle" | "in progess" | "completed";
   todos: Todo[];
-  deadline?: Date;
+  deadline?: Date | null;
   constructor({ id, name, status, todos, deadline }: TaskProps) {
     this.id = id ?? generateId();
     this.name = name ?? "Untitled";

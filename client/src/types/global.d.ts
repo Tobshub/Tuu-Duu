@@ -100,7 +100,7 @@ declare global {
     name: string;
     status?: "idle" | "in progess" | "completed";
     todos?: Todo[];
-    deadline?: Date;
+    deadline?: Date | null;
   }
 
   type Task = TaskProps & {
