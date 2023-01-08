@@ -7,7 +7,7 @@ import {
   useLoaderData,
   useNavigate,
 } from "react-router-dom";
-import AddSVG from "@images/Add_black.svg";
+import AddSVG from "@images/Add.svg";
 import { validDate } from "./new-task";
 import { useQuery } from "react-query";
 import { editProject, getProjects } from "@services/projects";
@@ -34,6 +34,8 @@ const EditTask = () => {
 
   if (!projects) {
     throw new Error("this user has no projects");
+  } else if (error) {
+    throw error;
   }
 
   const project = projects.find(project => project.id === project_id);
