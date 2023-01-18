@@ -65,10 +65,6 @@ const ProjectPage = () => {
     isLoading,
   } = useQuery<Project[]>("projects");
 
-  if (isLoading) {
-    return <SuspensePage />;
-  }
-
   if (!projects) {
     throw new Error("This user may have no projects");
   }
@@ -156,7 +152,9 @@ const ProjectPage = () => {
 
   const navigate = useNavigate();
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) {
+    return <SuspensePage />;
+  }
 
   return (
     <div className="project">
