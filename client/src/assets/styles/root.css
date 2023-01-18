@@ -19,16 +19,25 @@
   }
 }
 
+/* sidebar */
 .root-div > header {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   padding: 0.75em 0.5em 0;
-  background-color: #000008aa;
+  background-color: #000008ad;
   width: max(15%, 200px);
   height: 100vh;
+  overflow: hidden;
   position: relative;
+  transition: width 200ms;
+}
+
+@media (max-width: 500px) {
+  .root-div > header {
+    background-color: #000008ef;
+  }
 }
 
 .toggle-sidebar {
@@ -168,15 +177,17 @@
   outline: 0.5px solid slategrey;
 }
 
-li.nav-item-min {
+ul.nav-bar-list {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  overflow: hidden;
+  flex-wrap: nowrap;
 }
 
 .nav-item-min > a,
 .nav-item-min > a:hover {
+  border-radius: inherit;
+  height: 100%;
   display: grid;
   place-items: center;
   font-style: normal;
@@ -367,6 +378,14 @@ li.nav-item-min {
 
 .action-button {
   width: 25px;
+}
+
+.action-button.lg {
+  width: 30px;
+}
+
+.action-button.lg > button {
+  width: inherit;
 }
 
 .nav .project-delete {

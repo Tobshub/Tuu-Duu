@@ -27,32 +27,30 @@ const SideBar = ({
   }
   return (
     <header
-      style={{
-        scale: sideBarDisplay === "show" || !sideBarDisplay ? "1" : "0",
-        overflow: "hidden",
-      }}
+      style={
+        sideBarDisplay === "hide"
+          ? {
+              width: "0",
+            }
+          : {}
+      }
     >
       <div
         className="toggle-sidebar"
         style={{
-          justifyContent: "flex-start",
+          justifyContent: "center",
         }}
       >
         <ActionButton
           title="close sidebar"
-          style={{
-            width: "30px",
-          }}
+          className="lg"
           onClick={toggle}
           icon={sideBarDisplay === "show" ? CloseSVG : BurgerMenuSVG}
           icon_alt="Toggle sidebar"
         />
       </div>
       <h1>
-        <Link
-          to={`/`}
-          onClick={handleRedirectClick}
-        >
+        <Link to={`/`} onClick={handleRedirectClick}>
           Tuu-Duu
         </Link>
       </h1>
@@ -62,10 +60,7 @@ const SideBar = ({
           <button className="btn btn-primary">Settings</button>
         </Form>
         <Form action={isLoggedIn ? "/logout" : "/login"}>
-          <button
-            className="btn btn-danger"
-            type="submit"
-          >
+          <button className="btn btn-danger" type="submit">
             {isLoggedIn ? "Logout" : "Login"}
           </button>
         </Form>
@@ -89,9 +84,7 @@ const MinSideBar = ({
       <div className="toggle-sidebar">
         <ActionButton
           title="close sidebar"
-          style={{
-            width: "30px",
-          }}
+          className="lg"
           onClick={toggle}
           icon={sideBarDisplay === "show" ? CloseSVG : BurgerMenuSVG}
           icon_alt="Toggle sidebar"
@@ -99,6 +92,7 @@ const MinSideBar = ({
       </div>
       <Link to="/">
         <ActionButton
+          className="lg"
           icon={HomeSVG}
           icon_alt="home"
           islazy={true}
@@ -111,6 +105,7 @@ const MinSideBar = ({
       <div className="user-actions-min">
         <Form action="/settings">
           <ActionButton
+            className="lg"
             icon={SettingsSVG}
             icon_alt="settings"
             title="settings"
@@ -119,6 +114,7 @@ const MinSideBar = ({
         </Form>
         <Form action={isLoggedIn ? "/logout" : "/login"}>
           <ActionButton
+            className="lg"
             icon={isLoggedIn ? LogoutSVG : LoginSVG}
             icon_alt={isLoggedIn ? "logout" : "login"}
             title={isLoggedIn ? "logout" : "login"}

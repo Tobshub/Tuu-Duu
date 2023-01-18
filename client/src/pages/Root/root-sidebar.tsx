@@ -42,7 +42,7 @@ const SideBarProjectsList = ({
       </div>
       <ul className="nav navbar-nav nav-bar">
         {projects && projects.length ? (
-          projects.map((project, key) => {
+          projects.map(project => {
             if (
               project.name
                 .toLowerCase()

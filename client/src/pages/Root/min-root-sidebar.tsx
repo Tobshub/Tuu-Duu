@@ -11,12 +11,15 @@ const MinSideBarProjectList = () => {
     <nav className="nav-bar navbar navbar-default">
       <div
         className="nav-title"
-        style={{ justifyContent: "center", margin: "2rem 0" }}
+        style={{
+          justifyContent: "center",
+          margin: "2rem 0",
+        }}
       >
         <Link to="/projects/new">
           <ActionButton
             title="Create a new Project"
-            className="new-project-btn new-project-btn-min"
+            className="lg new-project-btn new-project-btn-min"
             value={1}
             icon={AddSVG}
             icon_alt="New project"
@@ -24,17 +27,14 @@ const MinSideBarProjectList = () => {
         </Link>
       </div>
       <ul
-        className="nav navbar-nav nav-bar nav-bar-list"
+        className="nav navbar-nav nav-bar-list"
         style={{
           scrollbarWidth: "thin",
         }}
       >
         {projects && projects.length
           ? projects.map((project: Project, key: number) => (
-              <MinNavItem
-                project={project}
-                key={key}
-              />
+              <MinNavItem project={project} key={key} />
             ))
           : null}
       </ul>
@@ -51,11 +51,10 @@ const MinNavItem = ({ project }: { project: Project }) => {
       style={{
         border: "2px solid #fff",
         borderRadius: "50%",
-        display: "grid",
-        placeItems: "center",
         padding: "0",
-        width: "40px",
-        margin: ".3rem 0",
+        width: "30px",
+        height: "30px",
+        margin: ".3em 0",
       }}
     >
       <NavLink
@@ -63,8 +62,11 @@ const MinNavItem = ({ project }: { project: Project }) => {
         className={({ isActive }) =>
           isActive ? "btn btn-primary" : "btn"
         }
+        style={{
+          padding: "0",
+        }}
       >
-        {project.name.substring(0, 2)}
+        {project.name.slice(0, 2)}
       </NavLink>
     </li>
   );

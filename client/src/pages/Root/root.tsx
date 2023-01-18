@@ -64,30 +64,32 @@ const Root = () => {
     setLoggedIn(user && user._id ? true : false);
   }, [user]);
 
-  // close the sidebar:
-  const handleRedirectClick = () => {
-    // when the screen-width is smaller 600px
-    if (window.innerWidth > 600) return;
-    setTimeout(() => {
-      setSideBarDisplay(false);
-    }, 100);
-  };
-
   const toggleSideBar = () => {
     setSideBarDisplay(state => !state);
   };
 
-  // re open the sidebar on window resize
   // to catch cases where the side bar is supposed to resize
-  let prevWidth = window.innerWidth;
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const sideBarBreakPoint = 500;
+
+  // close the sidebar:
+  const handleRedirectClick = () => {
+    // when the screen-width is smaller 600px
+    if (windowWidth > sideBarBreakPoint) {
+      return;
+    }
+    setSideBarDisplay(false);
+  };
+
   window.addEventListener(
     "resize",
     // use debounce function to reduce the number of re-renders
     debounce(() => {
-      if (prevWidth === window.innerWidth) return;
-      prevWidth = window.innerWidth;
-      setSideBarDisplay(true);
-    }, 500)
+      if (windowWidth === window.innerWidth) {
+        return;
+      }
+      setWindowWidth(window.innerWidth);
+    }, 200)
   );
 
   return (
@@ -115,7 +117,7 @@ const Root = () => {
           sideBarDisplay={
             sideBarDisplay
               ? "show"
-              : window.innerWidth > 600
+              : windowWidth > sideBarBreakPoint
               ? "min"
               : "hide"
           }
