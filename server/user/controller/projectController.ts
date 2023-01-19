@@ -16,7 +16,6 @@ export const getProjects = async (req: Request, res: Response) => {
         });
       })
       .catch(error => {
-        console.error(error);
         res.status(404).send({
           success: false,
           message: "Cannot find user",
@@ -53,7 +52,6 @@ export const addProject = async (req: Request, res: Response) => {
         });
       })
       .catch(error => {
-        console.error(error);
         res.status(404).send({
           success: false,
           message: "Cannot find user",
