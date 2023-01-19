@@ -38,7 +38,7 @@ const SideBar = ({
       <div
         className="toggle-sidebar"
         style={{
-          justifyContent: "center",
+          justifyContent: "flex-start",
         }}
       >
         <ActionButton
