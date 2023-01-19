@@ -69,15 +69,11 @@ const ProjectPage = () => {
     throw new Error("This user may have no projects");
   }
 
-  const [project] = useState(() => {
-    if (projects) {
-      let project = projects.find(project => project.id === project_id);
-      if (!project) {
-        throw new Error("no project found with that id");
-      }
-      return project;
-    }
-  });
+  const project = projects?.find(project => project.id === project_id);
+
+  if (!project && !isLoading) {
+    throw new Error("This project may no longer exists");
+  }
 
   const [isFav, setFav] = useState(project?.favorite ?? false);
   const [showNotification, setShowNotification] = useState(false);
