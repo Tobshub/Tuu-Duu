@@ -16,7 +16,7 @@ export const getUserByEmail = async (req: Request, res: Response) => {
           });
           return;
         }
-        const res_user = doc;
+        const res_user = doc.toObject();
 
         const valid = bcrypt.compareSync(
           user_details.password,
@@ -27,7 +27,13 @@ export const getUserByEmail = async (req: Request, res: Response) => {
           res.status(200).send({
             success: true,
             message: "user found & password is valid",
-            user: res_user,
+            user: {
+              _id: res_user._id.toString(),
+              email: res_user.email,
+              username: res_user.username,
+              projects: res_user.projects,
+              orgs: res_user.orgs,
+            },
           });
         } else {
           res.status(500).send({
@@ -69,10 +75,17 @@ export const addNewUser = async (req: Request, res: Response) => {
         });
         return;
       }
+      const res_user = doc.toObject();
       res.status(201).send({
         success: true,
         message: "user created",
-        user: doc,
+        user: {
+          _id: res_user._id,
+          email: res_user.email,
+          orgs: res_user.orgs,
+          projects: res_user.projects,
+          username: res_user.username,
+        },
       });
     });
   } catch (error) {
@@ -102,12 +115,29 @@ export const updateUser = async (req: Request, res: Response) => {
         doc.email = user_details.email;
         doc.username = user_details.username;
 
-        res.status(200).send({
-          success: true,
-          message: "user updated",
-          user: doc,
+        doc.save((err, doc) => {
+          if (err) {
+            res.status(500).send({
+              success: false,
+              message: "email is already in use",
+              error: err.message,
+            });
+            return;
+          }
+          console.log("user updated...");
+          const res_user = doc.toObject();
+          res.status(200).send({
+            success: true,
+            message: "user updated",
+            user: {
+              _id: res_user._id,
+              email: res_user.email,
+              orgs: res_user.orgs,
+              projects: res_user.projects,
+              username: res_user.username,
+            },
+          });
         });
-        doc.save((err, doc) => console.log("user updated..."));
       })
       .catch(e => {
         res.send({
