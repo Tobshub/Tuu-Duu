@@ -52,7 +52,8 @@ declare global {
     isLoggedIn: boolean;
     sideBarDisplay: "show" | "hide" | "min";
     handleRedirectClick?: () => void;
-    toggle: () => void;
+    open: () => void;
+    close: () => void;
     children: JSX.Element;
   }
 

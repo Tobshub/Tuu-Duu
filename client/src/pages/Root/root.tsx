@@ -49,6 +49,8 @@ const projectQueryClient = new QueryClient({
       queryKey: "projects",
       queryFn: () => getProjects(),
       staleTime: 5 * 60 * 1000 /* 5 minutes of stale time */,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
     },
   },
 });
@@ -64,8 +66,12 @@ const Root = () => {
     setLoggedIn(user && user._id ? true : false);
   }, [user]);
 
-  const toggleSideBar = () => {
-    setSideBarDisplay(state => !state);
+  const openSideBar = () => {
+    setSideBarDisplay(true);
+  };
+
+  const closeSideBar = () => {
+    setSideBarDisplay(false);
   };
 
   // to catch cases where the side bar is supposed to resize
@@ -95,23 +101,6 @@ const Root = () => {
   return (
     <QueryClientProvider client={projectQueryClient}>
       <div className="root-div">
-        <div
-          className="open-sidebar"
-          style={{
-            zIndex: "100",
-            justifyContent: "flex-start",
-          }}
-        >
-          <ActionButton
-            title="open sidebar"
-            style={{
-              width: "30px",
-            }}
-            onClick={toggleSideBar}
-            icon={BurgerMenuSVG}
-            icon_alt="Toggle sidebar"
-          />
-        </div>
         <SideBar
           isLoggedIn={isLoggedIn}
           sideBarDisplay={
@@ -122,7 +111,8 @@ const Root = () => {
               : "hide"
           }
           handleRedirectClick={handleRedirectClick}
-          toggle={toggleSideBar}
+          close={closeSideBar}
+          open={openSideBar}
         >
           {sideBarDisplay ? (
             <SideBarProjectsList

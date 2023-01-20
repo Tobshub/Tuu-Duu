@@ -11,14 +11,16 @@ const SideBar = ({
   isLoggedIn,
   sideBarDisplay,
   handleRedirectClick,
-  toggle,
+  open,
+  close,
   children,
 }: SideBarProps) => {
   if (sideBarDisplay === "min") {
     return (
       <MinSideBar
         isLoggedIn={isLoggedIn}
-        toggle={toggle}
+        open={open}
+        close={close}
         sideBarDisplay={sideBarDisplay}
       >
         {children}
@@ -26,55 +28,66 @@ const SideBar = ({
     );
   }
   return (
-    <header
-      style={
-        sideBarDisplay === "hide"
-          ? {
-              width: "0",
-            }
-          : {}
-      }
-    >
+    <>
       <div
-        className="toggle-sidebar"
+        className="open-sidebar"
         style={{
+          zIndex: "100",
           justifyContent: "flex-start",
         }}
       >
         <ActionButton
-          title="close sidebar"
-          className="lg"
-          onClick={toggle}
-          icon={sideBarDisplay === "show" ? CloseSVG : BurgerMenuSVG}
+          title="open sidebar"
+          style={{
+            width: "30px",
+          }}
+          onClick={open}
+          icon={BurgerMenuSVG}
           icon_alt="Toggle sidebar"
         />
       </div>
-      <h1>
-        <Link to={`/`} onClick={handleRedirectClick}>
-          Tuu-Duu
-        </Link>
-      </h1>
-      {children}
-      <div className="user-actions">
-        <Form action="/settings">
-          <button className="btn btn-primary">Settings</button>
-        </Form>
-        <Form action={isLoggedIn ? "/logout" : "/login"}>
-          <button className="btn btn-danger" type="submit">
-            {isLoggedIn ? "Logout" : "Login"}
-          </button>
-        </Form>
-      </div>
-    </header>
+      <header
+        style={{
+          width: sideBarDisplay === "show" ? "" : 0,
+          padding: sideBarDisplay === "hide" ? "0" : "",
+        }}
+      >
+        <div
+          className="toggle-sidebar"
+          style={{
+            justifyContent: "flex-start",
+          }}
+        >
+          <ActionButton
+            title="close sidebar"
+            className="lg"
+            onClick={close}
+            icon={sideBarDisplay === "show" ? CloseSVG : BurgerMenuSVG}
+            icon_alt="Toggle sidebar"
+          />
+        </div>
+        <h1>
+          <Link to={`/`} onClick={handleRedirectClick}>
+            Tuu-Duu
+          </Link>
+        </h1>
+        {children}
+        <div className="user-actions">
+          <Form action="/settings">
+            <button className="btn btn-primary">Settings</button>
+          </Form>
+          <Form action={isLoggedIn ? "/logout" : "/login"}>
+            <button className="btn btn-danger" type="submit">
+              {isLoggedIn ? "Logout" : "Login"}
+            </button>
+          </Form>
+        </div>
+      </header>
+    </>
   );
 };
 
-const MinSideBar = ({
-  children,
-  isLoggedIn,
-  toggle,
-  sideBarDisplay,
-}: SideBarProps) => {
+const MinSideBar = ({ children, isLoggedIn, open }: SideBarProps) => {
   return (
     <header
       style={{
@@ -83,10 +96,10 @@ const MinSideBar = ({
     >
       <div className="toggle-sidebar">
         <ActionButton
-          title="close sidebar"
+          title="maximize sidebar"
           className="lg"
-          onClick={toggle}
-          icon={sideBarDisplay === "show" ? CloseSVG : BurgerMenuSVG}
+          onClick={open}
+          icon={BurgerMenuSVG}
           icon_alt="Toggle sidebar"
         />
       </div>
