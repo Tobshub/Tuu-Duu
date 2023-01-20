@@ -197,13 +197,10 @@ const ProjectPage = () => {
           />
         </Form>
       </div>
-      <p className="project-description">
-        {!!project && project.description && (
-          <>
-            Description: <br />
-            {project.description.toString()}
-          </>
-        )}
+      <p className="project-description lead">
+        {project && project.description
+          ? project.description.toString()
+          : null}
       </p>
       <div>
         {!!project?.tasks && (
