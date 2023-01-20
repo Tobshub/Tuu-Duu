@@ -78,6 +78,7 @@ const EditProject = () => {
       <input
         type="text"
         name="name"
+        autoComplete="off"
         value={content.name}
         onChange={handleChange}
         placeholder="Project Name"
