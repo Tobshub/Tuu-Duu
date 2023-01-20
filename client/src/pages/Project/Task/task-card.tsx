@@ -193,6 +193,7 @@ const TodoComponent = ({
   unMarkTodoFn?: () => void;
 }) => {
   const [editMode, setEditMode] = useState(false);
+  const [hoverState, setHoverState] = useState(false);
 
   if (editMode && editTodoFn) {
     return (
@@ -204,7 +205,15 @@ const TodoComponent = ({
     );
   }
   return (
-    <li>
+    <li
+      style={{
+        boxShadow: hoverState
+          ? `0 0 0.5em ${todo.status === "awaiting" ? "red" : "green"}`
+          : "",
+      }}
+      onMouseOver={() => setHoverState(true)}
+      onMouseOut={() => setHoverState(false)}
+    >
       <span>{todo.content}</span>
       <span className="d-inline-flex align-items-center">
         {todo.status === "awaiting" ? (
