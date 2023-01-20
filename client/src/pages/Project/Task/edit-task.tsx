@@ -222,6 +222,7 @@ const EditTask = () => {
               id="new-todo"
               className="form-control"
               placeholder="New todo"
+              autoComplete="off"
               onChange={({ target }) => {
                 setTodo(target.value);
               }}

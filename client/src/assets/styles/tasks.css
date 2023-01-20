@@ -116,7 +116,7 @@ form:has(.new-task-btn) {
   font-size: 15px;
   color: #fff;
   font-weight: 600;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .new-task input {
