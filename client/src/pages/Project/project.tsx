@@ -65,21 +65,15 @@ const ProjectPage = () => {
     isLoading,
   } = useQuery<Project[]>("projects");
 
-  if (isLoading) {
-    return <SuspensePage />;
-  }
-
-  if (!projects) {
-    throw new Error("this user has no projects");
+  if (!projects && !isLoading) {
+    throw new Error("This user may have no projects");
   }
 
   const project = projects?.find(project => project.id === project_id);
 
-  if (!project) {
-    throw new Error("no project found with that id");
+  if (!project && !isLoading) {
+    throw new Error("This project may no longer exists");
   }
-
-  if (error) throw error;
 
   const [isFav, setFav] = useState(project?.favorite ?? false);
   const [showNotification, setShowNotification] = useState(false);
@@ -99,7 +93,7 @@ const ProjectPage = () => {
     if (project) {
       setFav(project.favorite);
     }
-  }, [project.id]);
+  }, [project?.id]);
 
   const projectQueryClient = useQueryClient();
   const editProjectMutation = useMutation(editProject, {
@@ -156,7 +150,12 @@ const ProjectPage = () => {
 
   const navigate = useNavigate();
 
-  if (isLoading) return <>Loading...</>;
+  if (error) {
+    throw error;
+  }
+  if (isLoading) {
+    return <SuspensePage />;
+  }
 
   return (
     <div className="project">
@@ -170,8 +169,10 @@ const ProjectPage = () => {
             className="set-fav-btn"
             onClick={async () => {
               setFav(state => !state);
-              project.favorite = !project.favorite;
-              await editProject(project);
+              if (project) {
+                project.favorite = !project.favorite;
+                await editProject(project);
+              }
             }}
             icon={isFav ? FavSVG : UnFavSVG}
             icon_alt="Toggle Favorite"

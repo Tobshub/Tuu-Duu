@@ -119,32 +119,14 @@ const router = createBrowserRouter([
   },
 ]);
 
-// ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-//   <React.StrictMode>
-//     <Suspense fallback={<SuspensePage />}>
-//       <RouterProvider router={router} />
-//     </Suspense>
-//   </React.StrictMode>
-// );
-
-// bypasses the reactdom re-render error
-let app_root: HTMLElement | null = null;
-
-document.addEventListener("DOMContentLoaded", event => {
-  if (!app_root) {
-    app_root = document.getElementById("root") as HTMLElement;
-    try {
-      const root = ReactDOM.createRoot(app_root);
-      root.render(
-        <React.StrictMode>
-          {/* use suspense fallback for lazy loaded components */}
-          <Suspense fallback={<SuspensePage />}>
-            <RouterProvider router={router} />
-          </Suspense>
-        </React.StrictMode>
-      );
-    } catch (e) {
-      console.error(e);
-    }
-  }
-});
+const rootElement = document.getElementById("root") as HTMLElement;
+if (!rootElement.innerHTML) {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      {/* use suspense fallback for lazy loaded components */}
+      <Suspense fallback={<SuspensePage />}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </React.StrictMode>
+  );
+}

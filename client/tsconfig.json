@@ -24,8 +24,7 @@
       "@UIcomponents/*": ["./components/ui/*"],
       "@context/*": ["./components/context/*"],
       "@utils/*": ["./utils/*"]
-    },
-    "plugins": [{ "transform": "ts-safe-cast/transformer" }]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

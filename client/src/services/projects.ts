@@ -1,6 +1,5 @@
 import useApi from "@utils/axios";
-import { getCurrentUser } from "./user";
-import { is, cast } from "ts-safe-cast";
+import { getCurrentUser, removeUser } from "./user";
 import { AxiosError } from "axios";
 
 export const addProject = async (project: Project) => {
@@ -40,16 +39,16 @@ export const getProjects = async () => {
           _id,
         },
       })
-      .then(value => value.data)
-      .then((res: GetProjectsServerResponse) => {
-        interface T extends Project {
-          _id: string;
+      .then(res => {
+        if (res.status === 400) {
+          console.warn(res.data.message);
+          removeUser();
+          location.reload();
         }
-        if (!is<T[]>(res.projects)) {
-          console.warn("Invalid data structure", res.projects);
-          return res.projects;
-        }
-        return res.projects;
+        return res.data;
+      })
+      .then((data: GetProjectsServerResponse) => {
+        return data.projects;
       })
       .catch((e: AxiosError) => {
         console.error(e);

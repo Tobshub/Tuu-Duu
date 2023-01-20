@@ -14,7 +14,7 @@ const ActionButton = (props: ActionButtonProps) => {
       style={props.style ?? {}}
     >
       <img
-        style={props.style?.width ? { width: props.style?.width } : {}}
+        style={props.style?.width ? { width: props.style.width } : {}}
         src={props.icon}
         alt={props.icon_alt}
         loading={props.islazy ? "lazy" : "eager"}
