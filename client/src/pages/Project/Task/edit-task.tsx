@@ -121,6 +121,7 @@ const EditTask = () => {
     }, 200);
   }
 
+  const deadlineInputRef = useRef<HTMLInputElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
   const formContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -159,6 +160,7 @@ const EditTask = () => {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
+            alignItems: "flex-start",
           }}
         >
           <label htmlFor="name">
@@ -176,17 +178,21 @@ const EditTask = () => {
           <label htmlFor="deadline">
             Deadline:
             <input
+              value={task_content.deadline?.toString()}
               type="date"
               id="deadline"
               name="deadline"
               className="form-control"
               onChange={handleChange}
             />
-            {form_errors.deadline && (
-              <span className="alert alert-danger m-0 p-0 text-2">
-                Deadline has passed
+            {form_errors.deadline ? (
+              <span className="text-danger fs-6">Deadline has passed</span>
+            ) : task_content.deadline?.toString() !==
+              task?.deadline?.toString() ? (
+              <span className="text-warning fs-6">
+                deadline will be changed
               </span>
-            )}
+            ) : null}
           </label>
         </fieldset>
         <fieldset>
