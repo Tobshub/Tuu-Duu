@@ -210,6 +210,7 @@ const TodoComponent = ({
         boxShadow: hoverState
           ? `0 0 0.5em ${todo.status === "awaiting" ? "red" : "green"}`
           : "",
+        cursor: "default",
       }}
       onMouseOver={() => setHoverState(true)}
       onMouseOut={() => setHoverState(false)}
