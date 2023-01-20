@@ -192,16 +192,19 @@ const EditTask = () => {
         <fieldset>
           <div className="display-todos mb-3">
             {task && task.todos && task.todos.length ? (
-              task.todos.map((todo, key) => (
-                <input
-                  value={todo.content}
-                  key={key}
-                  readOnly={true}
-                  className={
-                    "form-control form-control-sm" /** TODO: make existing todos looks better */
-                  }
-                />
-              ))
+              <>
+                <label>Todos: </label>
+                {task.todos.map((todo, key) => (
+                  <input
+                    value={todo.content}
+                    key={key}
+                    readOnly={true}
+                    className={
+                      "form-control form-control-sm" /** TODO: make existing todos looks better */
+                    }
+                  />
+                ))}
+              </>
             ) : (
               <em>No todos yet...</em>
             )}
