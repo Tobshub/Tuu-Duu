@@ -26,7 +26,7 @@ const TaskCard = ({
 }) => {
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const [gridRow, setGridRow] = useState("");
-  const [showShadow, toggleShowShadow] = useState(false);
+  const [showShadow, toggleShowShadow] = useState(true);
   const [shadowColor, setShadowColor] = useState("white");
   // change the span of task cards depending on their length
   const cardRef = useRef<HTMLDivElement>(null);
@@ -103,8 +103,8 @@ const TaskCard = ({
         animationDuration: "200ms",
         boxShadow: showShadow ? `0 0 0.6em 0.1em ${shadowColor}` : "",
       }}
-      onMouseEnter={() => toggleShowShadow(true)}
-      onMouseLeave={() => toggleShowShadow(false)}
+      onMouseEnter={() => toggleShowShadow(false)}
+      onMouseLeave={() => toggleShowShadow(true)}
     >
       <p className="h5">{task.name}</p>
       <h6
