@@ -145,7 +145,7 @@ const NewTask = () => {
           value={task_content.deadline}
           onChange={handleChange}
           className="form-control"
-          type="datetime-local"
+          type="date"
         />
         {form_errors.deadline && (
           <span className="invalid-date">Invalid deadline</span>

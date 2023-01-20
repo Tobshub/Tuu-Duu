@@ -71,13 +71,8 @@ form:has(.new-task-btn) {
   border-radius: 5px;
 }
 
-.new-todo-btn:hover,
-.new-todo-btn:focus {
-  scale: 1.4;
-}
-
 .new-todo-btn:active {
-  scale: 1;
+  scale: 0.9;
 }
 
 .new-task,
@@ -111,12 +106,13 @@ form:has(.new-task-btn) {
 .new-task > form,
 .edit-task > form,
 .delete-project > form {
-  background-color: #444444ec;
+  background-color: #201f1fbe;
   width: min(325px, 100%);
   padding: 1em 0.75em;
   /* border-radius: 10px; */
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   font-size: 15px;
   color: #fff;
   font-weight: 600;
@@ -130,6 +126,7 @@ form:has(.new-task-btn) {
 
 .edit-task > form {
   width: min(425px, 100%);
+  min-height: min(300px, 90%);
 }
 
 .invalid-date {

@@ -160,7 +160,7 @@ const ProjectPage = () => {
   return (
     <div className="project">
       <div className="project-title">
-        <h2>{project?.name}</h2>
+        <h1 className="display-5 m-1">{project?.name}</h1>
         <Form method="post">
           <ActionButton
             type="button"

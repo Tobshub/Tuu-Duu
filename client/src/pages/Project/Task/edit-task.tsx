@@ -38,9 +38,7 @@ const EditTask = () => {
     throw error;
   }
 
-  const [project] = useState(() =>
-    projects?.find(project => project.id === project_id)
-  );
+  const project = projects?.find(project => project.id === project_id);
 
   if (!project && !isLoading) {
     throw new Error("project does not exist");
@@ -191,52 +189,54 @@ const EditTask = () => {
             )}
           </label>
         </fieldset>
-        <div className="display-todos">
-          {task && task.todos && task.todos.length ? (
-            task.todos.map((todo, key) => (
-              <input
-                value={todo.content}
-                key={key}
-                readOnly={true}
-                className={
-                  "form-control form-control-sm" /** TODO: make existing todos looks better */
-                }
-              />
-            ))
-          ) : (
-            <em>No todos yet...</em>
-          )}
-        </div>
-        <div className="input-group">
-          <input
-            name="newTodo"
-            value={todo}
-            id="new-todo"
-            className="form-control"
-            placeholder="New todo"
-            onChange={({ target }) => {
-              setTodo(target.value);
-            }}
-          />
-          <div className="input-group-btn">
-            <ActionButton
-              type={"button"}
-              className="new-todo-btn"
-              name="addTodo"
-              icon={AddSVG}
-              icon_alt="Add todo"
-              islazy={true}
-              value={1}
-              title="Add a todo"
-              onClick={() => {
-                if (!todo.length) {
-                  return;
-                }
-                addTodo();
+        <fieldset>
+          <div className="display-todos mb-3">
+            {task && task.todos && task.todos.length ? (
+              task.todos.map((todo, key) => (
+                <input
+                  value={todo.content}
+                  key={key}
+                  readOnly={true}
+                  className={
+                    "form-control form-control-sm" /** TODO: make existing todos looks better */
+                  }
+                />
+              ))
+            ) : (
+              <em>No todos yet...</em>
+            )}
+          </div>
+          <div className="input-group">
+            <input
+              name="newTodo"
+              value={todo}
+              id="new-todo"
+              className="form-control"
+              placeholder="New todo"
+              onChange={({ target }) => {
+                setTodo(target.value);
               }}
             />
+            <div className="input-group-btn">
+              <ActionButton
+                type={"button"}
+                className="new-todo-btn"
+                name="addTodo"
+                icon={AddSVG}
+                icon_alt="Add todo"
+                islazy={true}
+                value={1}
+                title="Add a todo"
+                onClick={() => {
+                  if (!todo.length) {
+                    return;
+                  }
+                  addTodo();
+                }}
+              />
+            </div>
           </div>
-        </div>
+        </fieldset>
         <div
           style={{
             display: "flex",

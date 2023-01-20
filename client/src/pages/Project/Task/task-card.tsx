@@ -106,12 +106,19 @@ const TaskCard = ({
       onMouseEnter={() => toggleShowShadow(true)}
       onMouseLeave={() => toggleShowShadow(false)}
     >
-      <h5>{task.name}</h5>
-      <h6>
-        {!!task.deadline ? new Date(task.deadline).toLocaleString() : null}
+      <p className="h5">{task.name}</p>
+      <h6
+        className="text-muted"
+        style={{
+          fontSize: ".95rem",
+        }}
+      >
+        {task.deadline
+          ? `Deadline: ${new Date(task.deadline).toDateString()}`
+          : null}
       </h6>
       <ul className="todos">
-        {!!task.todos && !!task.todos.length ? (
+        {task.todos && task.todos.length ? (
           task.todos.map((todo, key) => {
             if (todo.status === "awaiting") {
               return (
