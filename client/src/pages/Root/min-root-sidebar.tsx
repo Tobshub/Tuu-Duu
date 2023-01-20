@@ -27,7 +27,7 @@ const MinSideBarProjectList = () => {
         </Link>
       </div>
       <ul
-        className="nav navbar-nav nav-bar-list"
+        className="nav navbar-nav nav-bar-list p-0 m-0"
         style={{
           scrollbarWidth: "thin",
         }}

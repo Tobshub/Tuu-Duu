@@ -182,6 +182,7 @@ ul.nav-bar-list {
   flex-direction: column;
   align-items: center;
   flex-wrap: nowrap;
+  overflow: scroll;
 }
 
 .nav-item-min > a,
