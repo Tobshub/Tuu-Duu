@@ -126,57 +126,71 @@ const NewTask = () => {
         }}
         onSubmit={handleSubmit}
       >
-        <label htmlFor="name">Task Name:</label>
-        <input
-          name="name"
-          value={task_content.name}
-          id="name"
-          className="form-control"
-          autoComplete="off"
-          onChange={handleChange}
-        />
+        <label htmlFor="name">
+          Task Name:
+          <input
+            placeholder="Untitled"
+            name="name"
+            value={task_content.name}
+            id="name"
+            className="form-control"
+            autoComplete="off"
+            onChange={handleChange}
+          />
+        </label>
         {form_errors.name && (
           <span className="invalid-date">Name cannot be blank</span>
         )}
-        <label htmlFor="deadline">Task Deadline:</label>
-        <input
-          id="deadline"
-          name="deadline"
-          value={task_content.deadline}
-          onChange={handleChange}
-          className="form-control"
-          type="datetime-local"
-        />
+        <label htmlFor="deadline">
+          Task Deadline:
+          <input
+            id="deadline"
+            name="deadline"
+            value={task_content.deadline}
+            onChange={handleChange}
+            className="form-control"
+            type="date"
+          />
+        </label>
         {form_errors.deadline && (
           <span className="invalid-date">Invalid deadline</span>
         )}
-        <button
-          type="submit"
-          className="btn btn-success btn-sm"
-          name="add"
-          ref={addBtnRef}
-          value={1}
-          onClick={e => {
-            const valid = checkFormErrors();
-            if (!valid) return e.preventDefault();
-            setMagicStyle("magictime holeOut");
-            setTimeout(() => {
-              addBtnRef.current
-                ? (addBtnRef.current.disabled = true)
-                : null;
-            }, 50);
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            gap: "1rem",
           }}
         >
-          Add
-        </button>
-        <button
-          type="button"
-          className="btn btn-danger btn-sm"
-          name="cancel"
-          onClick={navigatePrev}
-        >
-          Cancel
-        </button>
+          <button
+            type="submit"
+            className="btn btn-outline-success w-100"
+            name="add"
+            ref={addBtnRef}
+            value={1}
+            onClick={e => {
+              const valid = checkFormErrors();
+              if (!valid) return e.preventDefault();
+              setMagicStyle("magictime holeOut");
+              setTimeout(() => {
+                addBtnRef.current
+                  ? (addBtnRef.current.disabled = true)
+                  : null;
+              }, 50);
+            }}
+          >
+            Add
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline-danger w-100"
+            name="cancel"
+            onClick={navigatePrev}
+          >
+            Cancel
+          </button>
+        </div>
       </Form>
     </div>
   );

@@ -23,6 +23,7 @@ const NewForm = (props: NewFormProps) => {
       <input
         type="text"
         name="name"
+        autoComplete="off"
         required={props.required?.name ? true : false}
         value={props.formValues.name}
         onChange={e => {

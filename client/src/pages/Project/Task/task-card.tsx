@@ -26,7 +26,7 @@ const TaskCard = ({
 }) => {
   const [magicStyle, setMagicStyle] = useState("magictime swashIn");
   const [gridRow, setGridRow] = useState("");
-  const [showShadow, toggleShowShadow] = useState(false);
+  const [showShadow, toggleShowShadow] = useState(true);
   const [shadowColor, setShadowColor] = useState("white");
   // change the span of task cards depending on their length
   const cardRef = useRef<HTMLDivElement>(null);
@@ -103,15 +103,22 @@ const TaskCard = ({
         animationDuration: "200ms",
         boxShadow: showShadow ? `0 0 0.6em 0.1em ${shadowColor}` : "",
       }}
-      onMouseEnter={() => toggleShowShadow(true)}
-      onMouseLeave={() => toggleShowShadow(false)}
+      onMouseEnter={() => toggleShowShadow(false)}
+      onMouseLeave={() => toggleShowShadow(true)}
     >
-      <h5>{task.name}</h5>
-      <h6>
-        {!!task.deadline ? new Date(task.deadline).toLocaleString() : null}
+      <p className="h5">{task.name}</p>
+      <h6
+        className="text-muted"
+        style={{
+          fontSize: ".95rem",
+        }}
+      >
+        {task.deadline
+          ? `Deadline: ${new Date(task.deadline).toDateString()}`
+          : null}
       </h6>
       <ul className="todos">
-        {!!task.todos && !!task.todos.length ? (
+        {task.todos && task.todos.length ? (
           task.todos.map((todo, key) => {
             if (todo.status === "awaiting") {
               return (
@@ -186,6 +193,7 @@ const TodoComponent = ({
   unMarkTodoFn?: () => void;
 }) => {
   const [editMode, setEditMode] = useState(false);
+  const [hoverState, setHoverState] = useState(false);
 
   if (editMode && editTodoFn) {
     return (
@@ -197,7 +205,17 @@ const TodoComponent = ({
     );
   }
   return (
-    <li>
+    <li
+      style={{
+        boxShadow: hoverState
+          ? `0 0 0.5em ${todo.status === "awaiting" ? "red" : "green"}`
+          : "",
+        // gives it a more card like feel
+        cursor: "default",
+      }}
+      onMouseOver={() => setHoverState(true)}
+      onMouseOut={() => setHoverState(false)}
+    >
       <span>{todo.content}</span>
       <span className="d-inline-flex align-items-center">
         {todo.status === "awaiting" ? (

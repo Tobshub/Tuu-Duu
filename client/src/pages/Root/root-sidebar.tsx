@@ -16,8 +16,8 @@ const SideBarProjectsList = ({
 
   return (
     <nav className="nav-bar navbar navbar-default">
-      <div className="nav-title">
-        <h2>My Projects</h2>
+      <div className="nav-title mb-1">
+        <h2 className="m-0">My Projects</h2>
         <Link to={"/projects/new"}>
           <ActionButton
             title="Create a new Project"

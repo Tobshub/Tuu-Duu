@@ -160,7 +160,7 @@ const ProjectPage = () => {
   return (
     <div className="project">
       <div className="project-title">
-        <h2>{project?.name}</h2>
+        <h1 className="display-5 m-1">{project?.name}</h1>
         <Form method="post">
           <ActionButton
             type="button"
@@ -197,13 +197,10 @@ const ProjectPage = () => {
           />
         </Form>
       </div>
-      <p className="project-description">
-        {!!project && project.description && (
-          <>
-            Description: <br />
-            {project.description.toString()}
-          </>
-        )}
+      <p className="project-description lead">
+        {project && project.description
+          ? project.description.toString()
+          : null}
       </p>
       <div>
         {!!project?.tasks && (

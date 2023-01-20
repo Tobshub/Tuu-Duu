@@ -38,9 +38,7 @@ const EditTask = () => {
     throw error;
   }
 
-  const [project] = useState(() =>
-    projects?.find(project => project.id === project_id)
-  );
+  const project = projects?.find(project => project.id === project_id);
 
   if (!project && !isLoading) {
     throw new Error("project does not exist");
@@ -123,6 +121,7 @@ const EditTask = () => {
     }, 200);
   }
 
+  const deadlineInputRef = useRef<HTMLInputElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
   const formContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -161,6 +160,7 @@ const EditTask = () => {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
+            alignItems: "flex-start",
           }}
         >
           <label htmlFor="name">
@@ -178,65 +178,75 @@ const EditTask = () => {
           <label htmlFor="deadline">
             Deadline:
             <input
+              value={task_content.deadline?.toString()}
               type="date"
               id="deadline"
               name="deadline"
               className="form-control"
               onChange={handleChange}
             />
-            {form_errors.deadline && (
-              <span className="alert alert-danger m-0 p-0 text-2">
-                Deadline has passed
+            {form_errors.deadline ? (
+              <span className="text-danger fs-6">Deadline has passed</span>
+            ) : task_content.deadline?.toString() !==
+              task?.deadline?.toString() ? (
+              <span className="text-warning fs-6">
+                deadline will be changed
               </span>
-            )}
+            ) : null}
           </label>
         </fieldset>
-        <div className="display-todos">
-          {task && task.todos && task.todos.length ? (
-            task.todos.map((todo, key) => (
-              <input
-                value={todo.content}
-                key={key}
-                readOnly={true}
-                className={
-                  "form-control form-control-sm" /** TODO: make existing todos looks better */
-                }
-              />
-            ))
-          ) : (
-            <em>No todos yet...</em>
-          )}
-        </div>
-        <div className="input-group">
-          <input
-            name="newTodo"
-            value={todo}
-            id="new-todo"
-            className="form-control"
-            placeholder="New todo"
-            onChange={({ target }) => {
-              setTodo(target.value);
-            }}
-          />
-          <div className="input-group-btn">
-            <ActionButton
-              type={"button"}
-              className="new-todo-btn"
-              name="addTodo"
-              icon={AddSVG}
-              icon_alt="Add todo"
-              islazy={true}
-              value={1}
-              title="Add a todo"
-              onClick={() => {
-                if (!todo.length) {
-                  return;
-                }
-                addTodo();
+        <fieldset>
+          <div className="display-todos mb-3">
+            {task && task.todos && task.todos.length ? (
+              <>
+                <label>Todos: </label>
+                {task.todos.map((todo, key) => (
+                  <input
+                    value={todo.content}
+                    key={key}
+                    readOnly={true}
+                    className={
+                      "form-control form-control-sm" /** TODO: make existing todos looks better */
+                    }
+                  />
+                ))}
+              </>
+            ) : (
+              <em>No todos yet...</em>
+            )}
+          </div>
+          <div className="input-group">
+            <input
+              name="newTodo"
+              value={todo}
+              id="new-todo"
+              className="form-control"
+              placeholder="New todo"
+              autoComplete="off"
+              onChange={({ target }) => {
+                setTodo(target.value);
               }}
             />
+            <div className="input-group-btn">
+              <ActionButton
+                type={"button"}
+                className="new-todo-btn"
+                name="addTodo"
+                icon={AddSVG}
+                icon_alt="Add todo"
+                islazy={true}
+                value={1}
+                title="Add a todo"
+                onClick={() => {
+                  if (!todo.length) {
+                    return;
+                  }
+                  addTodo();
+                }}
+              />
+            </div>
           </div>
-        </div>
+        </fieldset>
         <div
           style={{
             display: "flex",
