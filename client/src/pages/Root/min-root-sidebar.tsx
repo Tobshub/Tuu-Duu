@@ -56,6 +56,7 @@ const MinNavItem = ({ project }: { project: Project }) => {
         height: "30px",
         margin: ".3em 0",
       }}
+      title={`Project: ${project.name}`}
     >
       <NavLink
         to={`projects/${project.id}`}
