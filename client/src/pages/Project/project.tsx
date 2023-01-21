@@ -4,10 +4,9 @@ import {
   useLoaderData,
   Form,
   Params,
-  useLocation,
   useNavigate,
 } from "react-router-dom";
-import { editProject, getProjects } from "@services/projects";
+import { editProject } from "@services/projects";
 import EditSVG from "@images/Edit.svg";
 import DeleteSVG from "@images/Delete.svg";
 import FavSVG from "@images/Star_filled.svg";
@@ -18,14 +17,9 @@ import "@styles/tasks.css";
 import ActionNotifcation from "@UIcomponents/action-notifcation";
 import TaskCard from "./Task/task-card";
 import ActionButton from "@UIcomponents/action-button";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import SuspensePage from "pages/suspense-page";
+import ProjectNotes from "./project-notes";
 
 export const loader = async ({ params }: { params: Params<string> }) => {
   const id = params.projectId;
@@ -223,6 +217,7 @@ const ProjectPage = () => {
           }}
         />
       )}
+      <ProjectNotes />
     </div>
   );
 };
