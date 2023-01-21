@@ -10,7 +10,7 @@ const Index = () => {
       ? projects.filter((project: Project) => project.favorite)
       : null;
 
-  const user = useContext<SavedUser | null>(UserContext);
+  const { user } = useContext(UserContext);
 
   if (!user) {
     redirect("/login");

@@ -11,6 +11,7 @@ import {
   redirect,
   useLoaderData,
   ActionFunctionArgs,
+  useLocation,
 } from "react-router-dom";
 import BurgerMenuSVG from "@images/BurgerMenu.svg";
 import CloseSVG from "@images/Close.svg";
@@ -23,7 +24,7 @@ import SideBarProjectsList from "./root-sidebar";
 import MinSideBarProjectList from "./min-root-sidebar";
 import debounce from "@utils/debounce";
 import SuspensePage from "pages/suspense-page";
-import UserContext from "@context/user-context";
+import UserContext, { defaultContext } from "@context/user-context";
 import { getProjects } from "@services/projects";
 
 // get the user on the first load
@@ -58,6 +59,9 @@ const projectQueryClient = new QueryClient({
 const Root = () => {
   const loaderData = useLoaderData();
   const [user] = useState(loaderData as SavedUser);
+  const [userSettings, setUserSettings] = useState(
+    defaultContext.settings
+  );
   const [sideBarDisplay, setSideBarDisplay] = useState(true);
 
   const [isLoggedIn, setLoggedIn] = useState<boolean>(true);
@@ -123,7 +127,7 @@ const Root = () => {
           )}
         </SideBar>
         <main style={{ backgroundImage: `url(${SprinkleBgSVG})` }}>
-          <UserContext.Provider value={user}>
+          <UserContext.Provider value={{ settings: userSettings, user }}>
             <Suspense fallback={<SuspensePage />}>
               <Outlet />
             </Suspense>

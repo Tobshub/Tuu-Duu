@@ -1,4 +1,4 @@
-import { Link, Form } from "react-router-dom";
+import { Link, Form, useNavigate } from "react-router-dom";
 import BurgerMenuSVG from "@images/BurgerMenu.svg";
 import CloseSVG from "@images/Close.svg";
 import HomeSVG from "@images/Home.svg";
@@ -13,6 +13,7 @@ const SideBar = ({
   handleRedirectClick,
   open,
   close,
+  showActions = true,
   children,
 }: SideBarProps) => {
   if (sideBarDisplay === "min") {
@@ -71,17 +72,20 @@ const SideBar = ({
             Tuu-Duu
           </Link>
         </h1>
+        {/* render children */}
         {children}
-        <div className="user-actions">
-          <Form action="/settings">
-            <button className="btn btn-primary">Settings</button>
-          </Form>
-          <Form action={isLoggedIn ? "/logout" : "/login"}>
-            <button className="btn btn-danger" type="submit">
-              {isLoggedIn ? "Logout" : "Login"}
-            </button>
-          </Form>
-        </div>
+        {showActions ? (
+          <div className="user-actions">
+            <Form action="/settings">
+              <button className="btn btn-primary">Settings</button>
+            </Form>
+            <Form action={isLoggedIn ? "/logout" : "/login"}>
+              <button className="btn btn-danger" type="submit">
+                {isLoggedIn ? "Logout" : "Login"}
+              </button>
+            </Form>
+          </div>
+        ) : null}
       </header>
     </>
   );
@@ -118,6 +122,7 @@ const MinSideBar = ({ children, isLoggedIn, open }: SideBarProps) => {
       <div className="user-actions-min">
         <Form action="/settings">
           <ActionButton
+            name=""
             className="lg"
             icon={SettingsSVG}
             icon_alt="settings"
@@ -127,6 +132,7 @@ const MinSideBar = ({ children, isLoggedIn, open }: SideBarProps) => {
         </Form>
         <Form action={isLoggedIn ? "/logout" : "/login"}>
           <ActionButton
+            name=""
             className="lg"
             icon={isLoggedIn ? LogoutSVG : LoginSVG}
             icon_alt={isLoggedIn ? "logout" : "login"}
