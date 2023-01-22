@@ -15,7 +15,7 @@ import {
   loader as deleteProjectLoader,
 } from "./pages/Project/delete-project";
 import { loader as editProjectLoader } from "./pages/Project/edit-projects";
-import {
+import ProjectPage, {
   action as projectAction,
   loader as projectLoader,
 } from "./pages/Project/project";
@@ -29,7 +29,6 @@ import { action as logoutAction } from "./pages/User/logout";
 import SuspensePage from "./pages/suspense-page";
 import Index from "./pages/index";
 // lazy load large react components
-const ProjectPage = lazy(() => import("./pages/Project/project"));
 const NewProject = lazy(() => import("./pages/Project/new-project"));
 const EditProject = lazy(() => import("./pages/Project/edit-projects"));
 const NewTask = lazy(() => import("./pages/Project/Task/new-task"));
@@ -39,7 +38,7 @@ const RootErrorElement = lazy(() => import("./pages/Root/root-error"));
 const ProjectErrorElement = lazy(
   () => import("./pages/Project/project-error")
 );
-const SettingsPage = lazy(() => import("./pages/user-settings"));
+const SettingsPage = lazy(() => import("./pages/Settings/user-settings"));
 const LogoutPage = lazy(() => import("./pages/User/logout"));
 const DeleteProjectComponent = lazy(
   () => import("./pages/Project/delete-project")
@@ -57,6 +56,11 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Index />,
+      },
+
+      {
+        path: "/settings",
+        element: <SettingsPage />,
       },
       {
         path: "/projects",
@@ -112,10 +116,6 @@ const router = createBrowserRouter([
     path: "/logout",
     element: <LogoutPage />,
     action: logoutAction,
-  },
-  {
-    path: "/settings",
-    element: <SettingsPage />,
   },
 ]);
 

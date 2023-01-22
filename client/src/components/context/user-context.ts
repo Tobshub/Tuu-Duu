@@ -1,5 +1,21 @@
 import { createContext } from "react";
 
-const UserContext = createContext<SavedUser | null>(null);
+type UserSettings = {
+  Theme: string;
+  Notifications: "email" | "off";
+};
+
+export const defaultContext: {
+  settings: UserSettings;
+  user: SavedUser | null;
+} = {
+  settings: {
+    Theme: "dark",
+    Notifications: "email",
+  },
+  user: null,
+};
+
+const UserContext = createContext<typeof defaultContext>(defaultContext);
 
 export default UserContext;
