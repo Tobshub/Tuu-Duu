@@ -52,7 +52,10 @@ const TaskCard = ({
   }
   useEffect(() => {
     changeShadowColor();
-  }, [task.status]);
+  }, [
+    task.status,
+    task.todos.length /* cover edge case of idle tasks with todos */,
+  ]);
 
   const projectQueryClient = useQueryClient();
 
