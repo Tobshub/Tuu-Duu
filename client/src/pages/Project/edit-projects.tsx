@@ -46,7 +46,8 @@ const EditProject = () => {
     }));
   }
 
-  async function formSubmit() {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     if (project) {
       const edits = new Project({
         name: content.name,
@@ -70,11 +71,7 @@ const EditProject = () => {
   if (isLoading) return <>Loading...</>;
 
   return (
-    <Form
-      className="edit-project"
-      method="put"
-      onSubmit={() => formSubmit()}
-    >
+    <Form className="edit-project" method="put" onSubmit={handleSubmit}>
       <input
         type="text"
         name="name"
