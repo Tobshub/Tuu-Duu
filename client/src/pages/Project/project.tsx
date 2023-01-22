@@ -81,7 +81,7 @@ const ProjectPage = () => {
     return () => {
       clearTimeout(removeNotification);
     };
-  }, [project]);
+  }, [showNotification]);
 
   useMemo(() => {
     if (project) {
