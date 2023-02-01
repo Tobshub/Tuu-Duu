@@ -1,4 +1,4 @@
-import Org from "../orgModel.js";
+import Org from "../orgModel";
 import { Request, Response } from "express";
 
 // create org
@@ -31,11 +31,11 @@ export const bulkRetrieve = async (req: Request, res: Response) => {
 
     const org_details = org_refs.map((org: { _id: string }) => {
       return Org.findById(org._id)
-        .then(doc => {
+        .then((doc) => {
           if (!doc) return null;
           return { org_id: doc.org_id, name: doc.name, _id: doc._id };
         })
-        .catch(e => null);
+        .catch((e) => null);
     });
     const resolved_orgs = await Promise.all([...org_details]);
 
@@ -68,7 +68,7 @@ export const getOrgData = async (req: Request, res: Response) => {
     const { _id } = await req.query;
 
     await Org.findById(_id)
-      .then(doc => {
+      .then((doc) => {
         if (!doc) {
           res.status(404).send({
             success: false,
@@ -81,7 +81,7 @@ export const getOrgData = async (req: Request, res: Response) => {
           org: doc,
         });
       })
-      .catch(e => {
+      .catch((e) => {
         res.status(404).send({
           success: false,
           message: "error find org",

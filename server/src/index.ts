@@ -14,9 +14,7 @@ db_connect();
 app.use(
   cors({
     origin:
-      NODE_ENV_USER === "development"
-        ? "*"
-        : "https://tuu-duu.netlify.app",
+      NODE_ENV_USER === "development" ? "*" : "https://tuu-duu.netlify.app",
   }),
   express.json()
 );
