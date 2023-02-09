@@ -17,3 +17,9 @@
 
 - create ui for adding members and/or admins
 - Create section for org invites, where on accept => gain access as the role given to you
+
+### settings
+
+- User account settings
+- notifications (for deadlines) settings
+- themes (maybe)
